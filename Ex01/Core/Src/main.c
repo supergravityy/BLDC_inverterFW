@@ -2,6 +2,7 @@
 #include "utils.h"
 #include "custom_clk.h"
 #include "custom_gpio.h"
+#include "custom_exti.h"
 
 int main(void)
 {
@@ -12,6 +13,7 @@ int main(void)
 
 	// 2. GPIO 설정
 	setUp_GPIO();
+	setUp_exti();
 
 	// 3. 컨트롤
 	while(1)
