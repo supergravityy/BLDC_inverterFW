@@ -5,6 +5,7 @@
 #include "custom_exti.h"
 #include "custom_adc.h"
 #include "custom_tim.h"
+#include "custom_uart.h"
 
 int main(void)
 {
@@ -18,6 +19,7 @@ int main(void)
 	setUp_exti4();
 	setUp_adc1();
 	setUp_tim1();
+	setUp_uart2();
 
 	// 3. 컨트롤
 	while(1)
