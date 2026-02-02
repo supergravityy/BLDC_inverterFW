@@ -4,6 +4,7 @@
 #include "custom_gpio.h"
 #include "custom_exti.h"
 #include "custom_adc.h"
+#include "custom_tim.h"
 
 int main(void)
 {
@@ -14,8 +15,9 @@ int main(void)
 
 	// 2. GPIO 설정
 	setUp_GPIO();
-	setUp_exti();
-	setUp_adc();
+	setUp_exti4();
+	setUp_adc1();
+	setUp_tim1();
 
 	// 3. 컨트롤
 	while(1)

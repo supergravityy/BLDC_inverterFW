@@ -9,7 +9,7 @@
 #include "utils.h"
 #include "custom_gpio.h"
 
-void setUp_exti(void)
+void setUp_exti4(void)
 {
     /* 1. GPIOD, GPIOC 클럭 ON */
     RCC->AHB1ENR |= AHB1ENR_GPIOD_EN | AHB1ENR_GPIOC_EN;

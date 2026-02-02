@@ -39,6 +39,6 @@
 // ─── EXTI 설정 ───
 #define EXTI_LINE_4          (SETUP_SHIFT_WRITE_BIT(GPIOD_BTN,1))
 
-void setUp_exti(void);
+void setUp_exti4(void);
 
 #endif /* INC_CUSTOM_EXTI_H_ */
