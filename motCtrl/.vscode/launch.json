@@ -1,0 +1,40 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "cwd": "${workspaceFolder}",
+      "executable": "./Debug/motCtrl.elf",
+      "name": "Debug with ST-Link",
+      "request": "launch",
+      "type": "cortex-debug",
+      "runToEntryPoint": "main",
+      "showDevDebugOutput": "none",
+      "servertype": "stlink",
+      "device": "STM32F103C8",
+      "windows": {
+        "serverpath": "C:\\ST\\STM32CubeCLT_1.19.0\\STLink-gdb-server\\bin\\ST-LINK_gdbserver.exe",
+        "stm32cubeprogrammer": "C:\\ST\\STM32CubeCLT_1.19.0\\STM32CubeProgrammer\\bin",
+        "svdFile": "C:\\ST\\STM32CubeCLT_1.19.0\\STMicroelectronics_CMSIS_SVD\\STM32F767.svd"
+      }
+    },
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": false,
+      "externalConsole": true,
+      "cwd": "d:/Motor_Control_proj/firmware/motCtrl/Core/Src",
+      "program": "d:/Motor_Control_proj/firmware/motCtrl/Core/Src/build/Debug/outDebug",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    }
+  ]
+}
