@@ -37,7 +37,8 @@ void gpio_set_input(GPIO_TypeDef* gpio, uint8_t pin, typGPIO_pull pullType)
 void gpio_set_analog(GPIO_TypeDef* gpio, uint8_t pin)
 {
     // Mode: 11 (Analog)
-    gpio->MODER |=  UTILS_BIT_SHIFT(pin * 2, 0x03);
+    gpio->MODER &= ~UTILS_BIT_SHIFT(pin * 2, 0x03);
+    gpio->MODER |= UTILS_BIT_SHIFT(pin * 2, 0x03);
     
     // Pull: 00 (Floating)
     gpio->PUPDR &= ~UTILS_BIT_SHIFT(pin * 2, 0x03);

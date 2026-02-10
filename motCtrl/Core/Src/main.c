@@ -3,6 +3,7 @@
 #include "system.h"
 #include "gpio.h"
 #include "tim.h"
+#include "dac.h"
 #include "isr.h"
 
 #include "../Drv/tasksch/tasksch.h"

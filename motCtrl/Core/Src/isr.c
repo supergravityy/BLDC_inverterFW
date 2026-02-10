@@ -3,14 +3,46 @@
 #include "tim.h"
 #include "../Drv/tasksch/tasksch.h"
 
-void TIM1_UP_TIM10_IRQHandler(void)
-{
-    
-}
-
 void SysTick_Handler(void)
 {
     tasksch_timeManager();
+}
+
+// 원래 EXTI0~4 까지는 단 하나의 핀하고 연결(SYSCFG->EXTICR)되서 PR레지스터만 clr해주면 됨
+// 하지만, 전기적인 노이즈 때문에 PR을 한번 더 확인함 방어적 프로그래밍임
+void EXTI0_IRQHandler(void)
+{
+    if (exti_check_extiPR(0)) 
+    {
+        exti_clear_extiPR(0); // 인터럽트 플래그 클리어
+        //Update_Hall_Sequence();
+        //SpeedCal();
+    }
+}
+
+void EXTI1_IRQHandler(void)
+{
+    if (exti_check_extiPR(1))   
+    {
+        exti_clear_extiPR(1); // 인터럽트 플래그 클리어
+        //Update_Hall_Sequence();
+        //SpeedCal();
+    }
+}
+
+void EXTI2_IRQHandler(void)
+{
+	if (exti_check_extiPR(2))
+	{
+        exti_clear_extiPR(2); // 인터럽트 플래그 클리어
+        //Update_Hall_Sequence();
+        //SpeedCal();
+    }
+}
+
+void TIM1_UP_TIM10_IRQHandler(void)
+{
+    
 }
 
 /* void TIM1_UP_TIM10_IRQHandler(void)

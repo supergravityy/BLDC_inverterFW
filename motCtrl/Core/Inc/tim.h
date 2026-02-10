@@ -45,6 +45,7 @@ typedef struct pwm_handle
     bool is_outputing;
     bool is_initialized;
 
+    float period_us;
     float u_posDuty;
     float v_posDuty;
     float w_posDuty;
