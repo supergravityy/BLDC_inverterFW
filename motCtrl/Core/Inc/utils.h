@@ -53,16 +53,44 @@
 #define OC_TRIP_COUNT                   (50) // 2.5ms@20kHz 예시
 #define RPM_TO_KMH(rpm)                 ((rpm) * (WHEEL_CIRCUM_M) * 60.0f / 1000.0f)
 
+/* ---------- LPF ---------- */ 
+#define UTILS_SAMPLING_TIME_SEC         (0.00005f)  // 20kHz 샘플링 기준 (PWM 주기-> center-aligned PWM)
+#define UTILS_PHASE_CURR_CUTOFF_HZ      (500.0f)    // 상 전류 LPF 컷오프 주파수
+#define UTILS_TEMPER_CUTOFF_HZ          (1.0f)      // 스로틀 LPF 컷오프 주파수
 
+/* ---------- SYS ---------- */ 
 #define UTILS_F_CLK_MZ                  (216UL)    
 
+
+/* ---------- REGISTER ---------- */ 
 #define UTILS_BIT_SHIFT(pos,val)        (val << pos)
 #define UTILS_BIT_MASK(pos,len)         (((1UL << (len)) - 1) << (pos)) // 시작비트 포지션에서 원하는 크기만큼 마스크를 만듬
 // 비트를 길이만큼 왼쪽으로 밀고, 1을 빼서 하위비트들을 전부 1로만듬 -> 이 비트들을 다시 시프팅함
 
+#define UTILS_FIND_MAX_VAL(a, b, c)     (((a) > (b)) ? (((a) > (c)) ? (a) : (c)) : (((b) > (c)) ? (b) : (c)))
+
 #define UTILS_DISABLE_ISR()             __disable_irq()
 #define UTILS_ENABLE_ISR()              __enable_irq()
 #define UTILS_ASSERT_FUNC()             do{while(1);}while(0)
+
+#pragma pack(push, 1)
+
+typedef struct lpf_handle
+{
+    float cutoff_hz;
+    float prev_out;
+    float Fx_coeff;
+    
+    bool is_1stRun; // 초기 응답성 확보
+    bool is_initialized;
+}typLpf_handle;
+
+#pragma pack(pop)
+
+void utils_LPF_temper_init(void);
+void utils_LPF_phaseCurr_init(void);
+float utils_LPF_temper_filter(float input);
+float utils_LPF_phaseCurr_filter(float input);
 
 uint16_t utils_ipol_u16u16(const uint16_t* mapX, const uint16_t* mapY, uint16_t mapSize, uint16_t input);
 uint32_t utils_ipol_u16u32(const uint16_t* mapX, const uint32_t* mapY, uint16_t mapSize, uint16_t input);

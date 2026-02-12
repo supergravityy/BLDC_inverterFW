@@ -312,3 +312,74 @@ int16_t utils_ipol_u32s16(const uint32_t* mapX, const int16_t* mapY, uint16_t ma
 	else if (result < (float)INT16_MIN)		return INT16_MIN;
 	else									return (int16_t)result;
 }
+
+/*----------------------------*/
+// LPF (FIRST ORDER LOW PASS FILTER)
+/*----------------------------*/
+
+typLpf_handle vLPF_phaseCurr_obj, vLPF_temper_obj;
+
+static float utils_LPF_get_Alpha(float sampling_t, uint32_t cutOff_f)
+{
+	float result, temp1, temp2;
+	temp1 = 2. * PI * cutOff_f * sampling_t;
+	temp2 = 1. + temp1;
+	result = temp1 / temp2;
+	return result;
+}
+
+void utils_LPF_temper_init(void)
+{
+	vLPF_temper_obj.cutoff_hz = UTILS_TEMPER_CUTOFF_HZ;
+	vLPF_temper_obj.prev_out = 0.0f;
+	vLPF_temper_obj.Fx_coeff = utils_LPF_get_Alpha(UTILS_SAMPLING_TIME_SEC, UTILS_TEMPER_CUTOFF_HZ);
+	vLPF_temper_obj.is_1stRun = true;
+	vLPF_temper_obj.is_initialized = true;
+}
+
+void utils_LPF_phaseCurr_init(void)
+{
+	vLPF_phaseCurr_obj.cutoff_hz = UTILS_PHASE_CURR_CUTOFF_HZ;
+	vLPF_phaseCurr_obj.prev_out = 0.0f;
+	vLPF_phaseCurr_obj.Fx_coeff = utils_LPF_get_Alpha(UTILS_SAMPLING_TIME_SEC, UTILS_PHASE_CURR_CUTOFF_HZ);
+	vLPF_phaseCurr_obj.is_1stRun = true;
+	vLPF_phaseCurr_obj.is_initialized = true;
+}
+
+float utils_LPF_temper_filter(float input)
+{
+	if (vLPF_temper_obj.is_initialized == false)
+	{
+		return 0.0f;
+	}
+	else if (vLPF_temper_obj.is_1stRun == true)
+	{
+		vLPF_temper_obj.prev_out = input;
+		vLPF_temper_obj.is_1stRun = false;
+		return input;
+	}
+	else
+	{
+		vLPF_temper_obj.prev_out = (1. - vLPF_temper_obj.Fx_coeff) * vLPF_temper_obj.prev_out + (vLPF_temper_obj.Fx_coeff * input);
+		return vLPF_temper_obj.prev_out;
+	}
+}
+
+float utils_LPF_phaseCurr_filter(float input)
+{
+	if (vLPF_phaseCurr_obj.is_initialized == false)
+	{
+		return 0.0f;
+	}
+	else if (vLPF_phaseCurr_obj.is_1stRun == true)
+	{
+		vLPF_phaseCurr_obj.prev_out = input;
+		vLPF_phaseCurr_obj.is_1stRun = false;
+		return input;
+	}
+	else
+	{
+		vLPF_phaseCurr_obj.prev_out = (1. - vLPF_phaseCurr_obj.Fx_coeff) * vLPF_phaseCurr_obj.prev_out + (vLPF_phaseCurr_obj.Fx_coeff * input);
+		return vLPF_phaseCurr_obj.prev_out;
+	}
+}

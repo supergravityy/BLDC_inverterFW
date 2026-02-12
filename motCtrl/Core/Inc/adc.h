@@ -32,3 +32,4 @@ uint16_t adc_conv_Vdc_polling(void);
 uint16_t adc_conv_Ias_polling(void);
 uint16_t adc_conv_Ibs_polling(void);
 uint16_t adc_conv_Ics_polling(void);
+void adc_offsetCalib_curr(uint32_t currOffsets[]);

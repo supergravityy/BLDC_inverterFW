@@ -28,6 +28,7 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal.h"
+#include "utils.h"
 
 /* --- ADC --- */
 #define IAS_ADC_Port          GPIOA
@@ -108,6 +109,7 @@ extern "C" {
 #define BLUETOOTH_TX_Pin      GPIO_PIN_8
 #define BLUETOOTH_RX_Port     GPIOD
 #define BLUETOOTH_RX_Pin      GPIO_PIN_9
+
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);

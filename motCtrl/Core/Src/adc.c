@@ -4,6 +4,8 @@
 #include "main.h"
 #include "../Inc/Gpio.h"
 
+#define ADC_12BIT_HALF_RESOLUTION   (2048UL)
+#define ADC_OFFSET_SMPLE_CNT        (10UL)
 #define ADC_SAMPLE_15CYC    0x02
 #define ADC_SMPR_ALL_15     ( (ADC_SAMPLE_15CYC << 0) | (ADC_SAMPLE_15CYC << 3) | \
                               (ADC_SAMPLE_15CYC << 6) | (ADC_SAMPLE_15CYC << 9) | \
@@ -14,11 +16,11 @@ typAdc_handle vAdc_handler[ADC_PERIPH_NUM];
 
 // todo : adc 초기화 -> polling 모드 대신 injection 모드로 바꾸기 (리소스 소모 엄청남) -> 타이머 트리거 사용
 
-static void adc_offsetCalib_curr(void)
+void adc_offsetCalib_curr(uint32_t* currOffsets)
 {
     uint32_t ias_sum = 0, ibs_sum = 0, ics_sum = 0;
 
-    for(int i = 0; i < 10; i++)
+    for(int i = 0; i < ADC_OFFSET_SMPLE_CNT; i++)
     {
         // 각 채널을 순차적으로 Polling 변환하여 10번 합산
         ias_sum += adc_conv_Ias_polling();
@@ -27,9 +29,13 @@ static void adc_offsetCalib_curr(void)
     }
 
     // 평균값 계산 및 핸들러 저장 (나중에 adc_get_current_A에서 사용)
-    vAdc_handler[0].offset_rawVal = (uint16_t)(ias_sum / 10);
-    vAdc_handler[1].offset_rawVal = (uint16_t)(ibs_sum / 10);
-    vAdc_handler[2].offset_rawVal = (uint16_t)(ics_sum / 10);
+    vAdc_handler[0].offset_rawVal = (uint16_t)(ias_sum / ADC_OFFSET_SMPLE_CNT);
+    vAdc_handler[1].offset_rawVal = (uint16_t)(ibs_sum / ADC_OFFSET_SMPLE_CNT);
+    vAdc_handler[2].offset_rawVal = (uint16_t)(ics_sum / ADC_OFFSET_SMPLE_CNT);
+
+    currOffsets[0] = vAdc_handler[0].offset_rawVal - ADC_12BIT_HALF_RESOLUTION;
+    currOffsets[1] = vAdc_handler[1].offset_rawVal - ADC_12BIT_HALF_RESOLUTION;
+    currOffsets[2] = vAdc_handler[2].offset_rawVal - ADC_12BIT_HALF_RESOLUTION;
 }
 
 void adc_init(void)
@@ -75,8 +81,6 @@ void adc_init(void)
     ADC1->CR2 |= ADC_CR2_ADON;
     ADC2->CR2 |= ADC_CR2_ADON;
     ADC3->CR2 |= ADC_CR2_ADON;
-
-    adc_offsetCalib_curr(); // 전류 오프셋 보정 함수 호출
 
     // 초기화 완료 플래그 설정
     vAdc_handler[0].is_initialized = ((ADC1->CR2 & ADC_CR2_ADON) == ADC_CR2_ADON);

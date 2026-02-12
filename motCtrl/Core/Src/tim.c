@@ -59,8 +59,8 @@ static void tim_pwm1_init(void)
 
     vPwm1_handler.inst = TIM1;
 
-    vPwm1_handler.inst->PSC = TIM1_PRESCALER_CNT; // 216MHz/(0+1) = 216MHz
-    vPwm1_handler.inst->ARR = TIM1_PERIOD_TICK;   // 216MHz/CNT_MAX/2 = 20kHz -> center allign
+    vPwm1_handler.inst->PSC = PWM1_PRESCALER_CNT; // 216MHz/(0+1) = 216MHz
+    vPwm1_handler.inst->ARR = PWM1_PERIOD_TICK;   // 216MHz/CNT_MAX/2 = 20kHz -> center allign
     
     // TIM1_CH1,2,3 = PWM mode 2
     vPwm1_handler.inst->CCMR1 &= (~TIM_CCMR1_CC1S_Msk); // PWM 출력모드로사용
@@ -74,7 +74,7 @@ static void tim_pwm1_init(void)
     vPwm1_handler.inst->CCER = TIM_CCER_CC1E | TIM_CCER_CC1NE | TIM_CCER_CC2E | TIM_CCER_CC2NE | TIM_CCER_CC3E | TIM_CCER_CC3NE;
 
     vPwm1_handler.inst->BDTR = TIM_BDTR_OSSI | TIM_BDTR_OSSR | TIM_BDTR_MOE;
-    vPwm1_handler.inst->BDTR |= TIM1_DEADTIME_1US_BIT;
+    vPwm1_handler.inst->BDTR |= PWM1_DEADTIME_1US_BIT;
 
     vPwm1_handler.inst->CR2 = TIM_CR2_MMS_1; // 안정적인 전류센싱을 위해 CNT의 한주기가 끝나면 ADC에 신호를 보냄
     vPwm1_handler.inst->CR1 = TIM_CR1_CEN | TIM_CR1_CMS_1; // 센터 얼리인 모드 확정 + 카운트 시작
@@ -86,7 +86,7 @@ static void tim_pwm1_init(void)
     vPwm1_handler.is_initialized = true;
 }
 
-static void tim_pwm1_nvic_setting(void)
+void tim_pwm1_nvic_counterSet(void)
 {
     vPwm1_handler.inst->DIER = TIM_DIER_UIE; // 오버플로 인터럽트 사용
 
@@ -100,7 +100,7 @@ void tim_init(void)
     tim_pwm1_init();
     tim_tim2_init();
 
-    tim_pwm1_nvic_setting();
+    tim_Pwm1_Mute_channel(TIM_SELECT_ALL_LINE);
 }
 
 void tim_Pwm1_Mute_channel(typTim_sigLineNum chNum)
@@ -153,7 +153,7 @@ void tim_Pwm1_Unmute_channel(typTim_sigLineNum chNum)
     }
 }
 
-void tim_Pwm1_setCompareVal(typTim_sigLineNum chNum, uint32_t ch_duty)
+void tim_Pwm1_setCmpVal(typTim_sigLineNum chNum, uint32_t ch_duty)
 {
     float max_tick = (float)vPwm1_handler.inst->ARR;
     if (max_tick == 0) return;
