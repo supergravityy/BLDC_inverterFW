@@ -20,8 +20,8 @@ static void tim_tim2_init(void)
 {
     vTim2_handler.inst = TIM2;
 
-    vTim2_handler.inst->PSC = TIM2_PERIOD_TICK;
-    vTim2_handler.inst->ARR = TIM2_PRESCALSER_CNT;
+    vTim2_handler.inst->PSC = TIM2_PRESCALSER_CNT;
+    vTim2_handler.inst->ARR = TIM2_PERIOD_TICK;
     vTim2_handler.inst->CNT = TIM2_INIT_CNT_VAL;
 
     vTim2_handler.inst->CR1 = TIM_CR1_CEN;

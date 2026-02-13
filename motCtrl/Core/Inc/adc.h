@@ -17,8 +17,6 @@ typedef struct adc_handle
 
     // 실제 물리 값으로 변환된 데이터 (float)
     uint16_t offset_rawVal;         // 오프셋 보정용 Raw 값 저장
-    float    curr_realVal;         // 변환된 전류 (A)
-    float    aux_realVal;          // 변환된 온도/스로틀/전압 (degC/V/%)
 
     bool is_initialized;
 }typAdc_handle;
@@ -26,10 +24,10 @@ typedef struct adc_handle
 #pragma pack(pop)
 
 void adc_init(void);
-uint16_t adc_conv_NTC_polling(void);
-uint16_t adc_conv_Throttle_polling(void);
-uint16_t adc_conv_Vdc_polling(void);
-uint16_t adc_conv_Ias_polling(void);
-uint16_t adc_conv_Ibs_polling(void);
-uint16_t adc_conv_Ics_polling(void);
+uint16_t adc_conv_rawNTC_polling(void);
+uint16_t adc_conv_rawThrottle_polling(void);
+uint16_t adc_conv_rawVdc_polling(void);
+uint16_t adc_conv_rawIas_polling(void);
+uint16_t adc_conv_rawIbs_polling(void);
+uint16_t adc_conv_rawIcs_polling(void);
 void adc_offsetCalib_curr(uint32_t currOffsets[]);

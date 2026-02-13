@@ -7,7 +7,17 @@
 #include "tim.h"
 #include "../mtrCtrl/mtrCtrl.h"
 
-#define HALLSENS_CAL_SUM(hallU, hallV, hallW)               ((hallU << 2) | (hallV << 1) | (hallW))
+#define HALLSENS_CNT_MAXTICK                (TIM2_PERIOD_TICK)
+#define HALLSENS_CLK_FREQ                   (54000000.0f)
+#define HALLSENS_MIN_DELTA_TICK             (500UL)
+#define HALLSENS_EDGES_PER_REV              (HALL_EDGES_PER_REV)
+
+// delta_time이 0이 아닐 때만 RPM 계산
+// 가정: 한 회전당 6개의 홀 센서 이벤트 발생 (6 edges per revolution)
+// Timer 주파수: 54MHz
+// RPM 계산 공식: RPM = (60 * Clock_Frequency) / (Edges_per_Revolution * delta_time)
+#define HALLSENS_CAL_MOTOR_RPM(dt)                  ((60.f * HALLSENS_CLK_FREQ) / ((float)dt * HALLSENS_EDGES_PER_REV))
+#define HALLSENS_CAL_SUM(hallU, hallV, hallW)       ((hallU << 2) | (hallV << 1) | (hallW))
 
 typHall_Handle vHallSens_handler;
 
@@ -41,9 +51,11 @@ void hallsens_init(void)
     vHallSens_handler.curr_hallSum = 0;
     vHallSens_handler.prev_hallSum = 0;
     vHallSens_handler.direction = MTR_DIR_STP;
-    vHallSens_handler.lastCaptureTime = 0;
-    vHallSens_handler.deltaTime = 0;
-    vHallSens_handler.rawRpm = 0.0f;
+
+    vHallSens_handler.prevTick = 0;
+    vHallSens_handler.currTick = 0;
+    vHallSens_handler.deltaTick = 0.0f;
+    vHallSens_handler.motorRPM = 0;
 
     hallsens_update_hallSeq();
 
@@ -62,7 +74,7 @@ static void hallsens_set_PWMduty(typMtrPhase phases[])
     vHallSens_handler.dutyVal[HALLSENS_W_IDX] = HALLSENS_DUTY_MAX /* -  */;
 
     // 2. 정지 신호인지 확인
-    if(/* todo : voltageRef가 뭔지 알아보고 대입 ||*/ mtrCtrl_getCrlContinue() == false)
+    if(/* todo : voltageRef가 뭔지 알아보고 대입 ||*/ mtrCtrl_getCtrlContinue() == false)
     {
         tim_Pwm1_Mute_channel(TIM_SELECT_ALL_LINE);
         tim_Pwm1_setCmpVal(TIM_SELECT_ALL_LINE,0);
@@ -151,4 +163,34 @@ void hallsens_update_swtPattern(void)
 	#else
 		hallsens_setPhase_REV();
 	#endif
+}
+
+/*-------------------------------------*/
+// 모터 rpm 계산
+/*-------------------------------------*/
+
+void hallsens_cal_motorRPM(void)
+{
+    vHallSens_handler.currTick = tim_getTim2_cnt();
+
+    if (vHallSens_handler.currTick >= HALLSENS_CNT_MAXTICK)
+    {
+        vHallSens_handler.deltaTick = vHallSens_handler.currTick - vHallSens_handler.prevTick;
+    }
+    else // 오버플로우 발생: 타이머가 ARR 값에 도달하여 리셋됨
+    {
+        vHallSens_handler.deltaTick = (HALLSENS_CNT_MAXTICK - vHallSens_handler.prevTick) + (vHallSens_handler.currTick + 1);
+    }
+
+    vHallSens_handler.prevTick = vHallSens_handler.currTick;
+
+    if (vHallSens_handler.deltaTick > HALLSENS_MIN_DELTA_TICK) // noise filtering
+    {
+        vHallSens_handler.motorRPM = HALLSENS_CAL_MOTOR_RPM(vHallSens_handler.deltaTick);
+    }
+}
+
+float hallsens_get_motorRPM(void)
+{
+    return vHallSens_handler.motorRPM;
 }

@@ -24,7 +24,11 @@
 // Hall 엣지 수 (한 바퀴당 인터럽트 수
 //소형 BLDC모터:24.0f, 인휠모터:90.0f로 수정
 #ifndef HALL_EDGES_PER_REV
+#ifdef USE_INWHEEL
 #define HALL_EDGES_PER_REV              (90.0f)
+#else
+#define HALL_EDGES_PER_REV              (24.0f)
+#endif
 #endif
 
 // 1: 시계방향(CW), 0: 반시계(CCW)
@@ -37,7 +41,6 @@
 #define MOTOR_DIR MOTOR_DIR_CW
 #endif
 
-// gpt 야 이 아래의 매크로와 디파인 문들을 위의 형태에 맞게 괄호와 공백을 신경써서 작성해줘
 /* ---------- ADC & Sensors ---------- */ 
 #define ADC_VREF                        (3.3f)
 #define ADC_FS                          (4095.0f)

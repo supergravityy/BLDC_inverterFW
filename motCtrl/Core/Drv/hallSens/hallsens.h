@@ -8,9 +8,9 @@
 #include "../mtrCtrl/mtrCtrl.h"
 
 #define HALLSENS_PH_NUM             (MTRCTRL_PHASE_CURR_NUM)
-#define HALLSENS_U_IDX              (0UL)
-#define HALLSENS_V_IDX              (1UL)    
-#define HALLSENS_W_IDX              (2UL)
+#define HALLSENS_U_IDX              (MTRCTRL_PHASE_CURR_U_IDX)
+#define HALLSENS_V_IDX              (MTRCTRL_PHASE_CURR_V_IDX)    
+#define HALLSENS_W_IDX              (MTRCTRL_PHASE_CURR_W_IDX)
 #define HALLSENS_DUTY_MAX           (PWM1_PERIOD_TICK)
 
 typedef enum mtrPhase
@@ -31,9 +31,11 @@ typedef struct hall_handle
     uint8_t prev_hallSum;
     typMtrPhase direction;              // 1: Fwd, -1: Rev, 0: Stop
     
-    uint32_t lastCaptureTime;
-    uint32_t deltaTime;
-    float    rawRpm;
+    // 속도측정
+    volatile uint32_t prevTick;
+    volatile uint32_t currTick;
+    volatile uint32_t deltaTick;
+    volatile float motorRPM;
 
     bool is_initialized;
 }typHall_Handle;
@@ -41,3 +43,5 @@ typedef struct hall_handle
 void hallsens_update_hallSeq(void);
 void hallsens_init(void);
 void hallsens_update_swtPattern(void);
+void hallsens_cal_motorRPM(void);
+float hallsens_get_motorRPM(void);

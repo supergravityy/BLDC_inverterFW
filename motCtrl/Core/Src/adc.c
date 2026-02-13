@@ -23,9 +23,9 @@ void adc_offsetCalib_curr(uint32_t* currOffsets)
     for(int i = 0; i < ADC_OFFSET_SMPLE_CNT; i++)
     {
         // 각 채널을 순차적으로 Polling 변환하여 10번 합산
-        ias_sum += adc_conv_Ias_polling();
-        ibs_sum += adc_conv_Ibs_polling();
-        ics_sum += adc_conv_Ics_polling();
+        ias_sum += adc_conv_rawIas_polling();
+        ibs_sum += adc_conv_rawIbs_polling();
+        ics_sum += adc_conv_rawIcs_polling();
     }
 
     // 평균값 계산 및 핸들러 저장 (나중에 adc_get_current_A에서 사용)
@@ -90,7 +90,7 @@ void adc_init(void)
 
 // 보조 ADC 변환 함수들 (polling 방식)
 
-uint16_t adc_conv_NTC_polling(void)
+uint16_t adc_conv_rawNTC_polling(void)
 {
     vAdc_handler[0].moduleInst->SQR3 &= ~ADC_SQR3_SQ1_Msk;
     vAdc_handler[0].moduleInst->SQR3 |= UTILS_BIT_SHIFT(0,6); // ADC1_IN6 (NTC)
@@ -102,7 +102,7 @@ uint16_t adc_conv_NTC_polling(void)
     return vAdc_handler[0].aux_rawVal;
 }
 
-uint16_t adc_conv_Throttle_polling(void)
+uint16_t adc_conv_rawThrottle_polling(void)
 {
     vAdc_handler[1].moduleInst->SQR3 &= ~ADC_SQR3_SQ1_Msk;
     vAdc_handler[1].moduleInst->SQR3 |= UTILS_BIT_SHIFT(0,7); // ADC2_IN7 (throttle)
@@ -114,7 +114,7 @@ uint16_t adc_conv_Throttle_polling(void)
     return vAdc_handler[1].aux_rawVal;
 }
 
-uint16_t adc_conv_Vdc_polling(void)
+uint16_t adc_conv_rawVdc_polling(void)
 {
     vAdc_handler[2].moduleInst->SQR3 &= ~ADC_SQR3_SQ1_Msk;
     vAdc_handler[2].moduleInst->SQR3 |= UTILS_BIT_SHIFT(0,3); // ADC3_IN3 (vdc)
@@ -128,7 +128,7 @@ uint16_t adc_conv_Vdc_polling(void)
 
 // 전류 ADC 변환 함수들 (polling 방식)
 
-uint16_t adc_conv_Ias_polling(void)
+uint16_t adc_conv_rawIas_polling(void)
 {
     vAdc_handler[0].moduleInst->SQR3 &= ~ADC_SQR3_SQ1_Msk;
     vAdc_handler[0].moduleInst->SQR3 |= UTILS_BIT_SHIFT(0,0); // ADC1_IN0 (Ias)
@@ -140,7 +140,7 @@ uint16_t adc_conv_Ias_polling(void)
     return vAdc_handler[0].curr_rawVal;
 }
 
-uint16_t adc_conv_Ibs_polling(void)
+uint16_t adc_conv_rawIbs_polling(void)
 {
     vAdc_handler[1].moduleInst->SQR3 &= ~ADC_SQR3_SQ1_Msk;
     vAdc_handler[1].moduleInst->SQR3 |= UTILS_BIT_SHIFT(0,1); // ADC2_IN1 (Ibs)
@@ -152,7 +152,7 @@ uint16_t adc_conv_Ibs_polling(void)
     return vAdc_handler[1].curr_rawVal;
 }
 
-uint16_t adc_conv_Ics_polling(void)
+uint16_t adc_conv_rawIcs_polling(void)
 {
     vAdc_handler[2].moduleInst->SQR3 &= ~ADC_SQR3_SQ1_Msk;
     vAdc_handler[2].moduleInst->SQR3 |= UTILS_BIT_SHIFT(0,2); // ADC3_IN2 (Ics)
@@ -164,7 +164,7 @@ uint16_t adc_conv_Ics_polling(void)
     return vAdc_handler[2].curr_rawVal;
 }
 
-// 1. 전류(A) 변환 함수
+/* // 1. 전류(A) 변환 함수
 float adc_get_currentVal(typAdc_handle* hAdc, uint16_t offset_raw)
 {
     // 원본: ias_Cal=((float)(result - Ias_Offset)*ADC_VREF/ADC_FS-OFFSET_Volt)/OPAMP_GAIN;
@@ -224,4 +224,4 @@ float adc_get_throttle_val(void)
         vAdc_handler[1].aux_realVal = 1.0f;
 
     return vAdc_handler[1].aux_realVal;
-}
+} */

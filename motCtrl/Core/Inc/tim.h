@@ -3,13 +3,13 @@
 #include "stm32f767xx.h"
 #include "utils.h"
 
-#define PWM1_PERIOD_TICK        (5400U)
+#define PWM1_PERIOD_TICK        (5400UL)
 #define PWM1_PRESCALER_CNT      (0)
 #define PWM1_DEADTIME_1US_BIT   (0xB4)
 #define PWM1_INIT_CNT_VAL       (0)
 
-#define TIM2_PERIOD_TICK        ((1000000 - 1))
-#define TIM2_PRESCALSER_CNT     (216 - 1)
+#define TIM2_PERIOD_TICK        (54000000UL - 1UL)
+#define TIM2_PRESCALSER_CNT     (4UL - 1UL)
 #define TIM2_INIT_CNT_VAL       (0)
 
 #pragma pack(1,push)

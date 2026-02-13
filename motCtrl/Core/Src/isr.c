@@ -2,6 +2,10 @@
 #include "utils.h"
 #include "tim.h"
 #include "../Drv/tasksch/tasksch.h"
+#include "../Drv/hallSens/hallsens.h"
+#include "../Drv/mtrCtrl/mtrCtrl.h"
+
+uint32_t isr_pwm1_intrrpt_cnt_debug;
 
 void SysTick_Handler(void)
 {
@@ -15,8 +19,8 @@ void EXTI0_IRQHandler(void)
     if (exti_check_extiPR(0)) 
     {
         exti_clear_extiPR(0); // 인터럽트 플래그 클리어
-        //Update_Hall_Sequence();
-        //SpeedCal();
+        hallsens_update_hallSeq();
+        hallsens_cal_motorRPM();
     }
 }
 
@@ -25,8 +29,8 @@ void EXTI1_IRQHandler(void)
     if (exti_check_extiPR(1))   
     {
         exti_clear_extiPR(1); // 인터럽트 플래그 클리어
-        //Update_Hall_Sequence();
-        //SpeedCal();
+        hallsens_update_hallSeq();
+        hallsens_cal_motorRPM();
     }
 }
 
@@ -35,13 +39,16 @@ void EXTI2_IRQHandler(void)
 	if (exti_check_extiPR(2))
 	{
         exti_clear_extiPR(2); // 인터럽트 플래그 클리어
-        //Update_Hall_Sequence();
-        //SpeedCal();
+        hallsens_update_hallSeq();
+        hallsens_cal_motorRPM();
     }
 }
 
 void TIM1_UP_TIM10_IRQHandler(void)
 {
+    isr_pwm1_intrrpt_cnt_debug++;
+
+    
     
 }
 

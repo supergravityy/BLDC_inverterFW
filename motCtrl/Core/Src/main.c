@@ -11,8 +11,6 @@
 #include "../Drv/hallSens/hallsens.h"
 #include "../Drv/mtrCtrl/mtrCtrl.h"
 
-typMotorCtrl_handle vMotorCtrl_handler;
-
 int main(void)
 {
     system_clock_init();
@@ -29,16 +27,19 @@ int main(void)
     utils_LPF_temper_init();
     utils_LPF_phaseCurr_init();
 
-    adc_offsetCalib_curr(vMotorCtrl_handler.phaseCurr_offset);
+    // todo : 전류 오프셋 완성하기
 
-    if(vMotorCtrl_handler.errCode == MTRCTRL_ERR_ADC_FAIL)
+    // adc_offsetCalib_curr(vMotorCtrl_handler.phaseCurr_offset);
+    
+
+    /* if(vMotorCtrl_handler.errCode == MTRCTRL_ERR_ADC_FAIL)
     {
         vMotorCtrl_handler.calib_cmplt = false;
     }
     else
     {
         vMotorCtrl_handler.calib_cmplt = true;
-    }
+    } */
 
     tim_pwm1_nvic_counterSet();
     hallsens_init();
