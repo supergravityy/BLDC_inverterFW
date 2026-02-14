@@ -29,7 +29,7 @@ int main(void)
 
     // todo : 전류 오프셋 완성하기
 
-    // adc_offsetCalib_curr(vMotorCtrl_handler.phaseCurr_offset);
+    // adc_offsetCalib(vMotorCtrl_handler.phaseCurr_offset);
     
 
     /* if(vMotorCtrl_handler.errCode == MTRCTRL_ERR_ADC_FAIL)

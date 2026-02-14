@@ -19,6 +19,9 @@
 #define HALLSENS_CAL_MOTOR_RPM(dt)                  ((60.f * HALLSENS_CLK_FREQ) / ((float)dt * HALLSENS_EDGES_PER_REV))
 #define HALLSENS_CAL_SUM(hallU, hallV, hallW)       ((hallU << 2) | (hallV << 1) | (hallW))
 
+// center 얼라인드 모드이기에 CCR 값이 높아질 수록 듀티가 낮아지는 형태
+#define HALLSENS_CAL_DUTY_CNTR_ALIGNED_PWM(duty)    (HALLSENS_DUTY_MAX - (duty))
+
 typHall_Handle vHallSens_handler;
 
 void hallsens_update_hallSeq(void)
@@ -65,16 +68,16 @@ void hallsens_init(void)
 static void hallsens_set_PWMduty(typMtrPhase phases[])
 {
     uint8_t idx;
-    uint32_t tempDutyVal = 0;
+    uint32_t tempCCR_refVal;
 
     // 1. PWM 듀티 계산
-    // todo : voltageRef가 뭔지 알아보고 대입하기
-    vHallSens_handler.dutyVal[HALLSENS_U_IDX] = HALLSENS_DUTY_MAX /* -  */;
-    vHallSens_handler.dutyVal[HALLSENS_V_IDX] = HALLSENS_DUTY_MAX /* -  */;
-    vHallSens_handler.dutyVal[HALLSENS_W_IDX] = HALLSENS_DUTY_MAX /* -  */;
+    tempCCR_refVal = throttle_get_CCR_ref();
+    vHallSens_handler.dutyVal[HALLSENS_U_IDX] = HALLSENS_CAL_DUTY_CNTR_ALIGNED_PWM(tempCCR_refVal);
+    vHallSens_handler.dutyVal[HALLSENS_V_IDX] = HALLSENS_CAL_DUTY_CNTR_ALIGNED_PWM(tempCCR_refVal);
+    vHallSens_handler.dutyVal[HALLSENS_W_IDX] = HALLSENS_CAL_DUTY_CNTR_ALIGNED_PWM(tempCCR_refVal);
 
     // 2. 정지 신호인지 확인
-    if(/* todo : voltageRef가 뭔지 알아보고 대입 ||*/ mtrCtrl_getCtrlContinue() == false)
+    if(tempCCR_refVal == 0 || mtrCtrl_getCtrlContinue() == false)
     {
         tim_Pwm1_Mute_channel(TIM_SELECT_ALL_LINE);
         tim_Pwm1_setCmpVal(TIM_SELECT_ALL_LINE,0);
@@ -84,11 +87,11 @@ static void hallsens_set_PWMduty(typMtrPhase phases[])
     // 3. PWM 위상 세팅
     for(idx = 0; idx < HALLSENS_PH_NUM ; idx++)
     {
-        if(phases[idx] == MTR_DIR_FWD)      tempDutyVal = vHallSens_handler.dutyVal[idx];
-        else if(phases[idx] == MTR_DIR_REV) tempDutyVal = HALLSENS_DUTY_MAX;
-        else                                tempDutyVal = 0;
+        if(phases[idx] == MTR_DIR_FWD)      tempCCR_refVal = vHallSens_handler.dutyVal[idx];
+        else if(phases[idx] == MTR_DIR_REV) tempCCR_refVal = HALLSENS_DUTY_MAX;
+        else                                tempCCR_refVal = 0;
 
-        tim_Pwm1_setCmpVal((typTim_sigLineNum)idx, tempDutyVal);
+        tim_Pwm1_setCmpVal((typTim_sigLineNum)idx, tempCCR_refVal);
         tim_Pwm1_Unmute_channel((typTim_sigLineNum)idx);
     }
 }

@@ -71,6 +71,7 @@
 // 비트를 길이만큼 왼쪽으로 밀고, 1을 빼서 하위비트들을 전부 1로만듬 -> 이 비트들을 다시 시프팅함
 
 #define UTILS_FIND_MAX_VAL(a, b, c)     (((a) > (b)) ? (((a) > (c)) ? (a) : (c)) : (((b) > (c)) ? (b) : (c)))
+#define UTILS_ABS(x)                    (((x) < 0) ? (-x) : (x))
 
 #define UTILS_DISABLE_ISR()             __disable_irq()
 #define UTILS_ENABLE_ISR()              __enable_irq()

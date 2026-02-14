@@ -13,19 +13,20 @@
                               (ADC_SAMPLE_15CYC << 18) | (ADC_SAMPLE_15CYC << 21) )
 
 typAdc_handle vAdc_handler[ADC_PERIPH_NUM];
+uint32_t vAdc_currOffsets[ADC_PERIPH_NUM]; // 전류 오프셋 보정값 저장 배열
 
 // todo : adc 초기화 -> polling 모드 대신 injection 모드로 바꾸기 (리소스 소모 엄청남) -> 타이머 트리거 사용
 
-void adc_offsetCalib_curr(uint32_t* currOffsets)
+void adc_offsetCalib(void)
 {
     uint32_t ias_sum = 0, ibs_sum = 0, ics_sum = 0;
 
     for(int i = 0; i < ADC_OFFSET_SMPLE_CNT; i++)
     {
         // 각 채널을 순차적으로 Polling 변환하여 10번 합산
-        ias_sum += adc_conv_rawIas_polling();
-        ibs_sum += adc_conv_rawIbs_polling();
-        ics_sum += adc_conv_rawIcs_polling();
+        ias_sum += adc_conv_rawIus_polling();
+        ibs_sum += adc_conv_rawIvs_polling();
+        ics_sum += adc_conv_rawIws_polling();
     }
 
     // 평균값 계산 및 핸들러 저장 (나중에 adc_get_current_A에서 사용)
@@ -33,9 +34,25 @@ void adc_offsetCalib_curr(uint32_t* currOffsets)
     vAdc_handler[1].offset_rawVal = (uint16_t)(ibs_sum / ADC_OFFSET_SMPLE_CNT);
     vAdc_handler[2].offset_rawVal = (uint16_t)(ics_sum / ADC_OFFSET_SMPLE_CNT);
 
-    currOffsets[0] = vAdc_handler[0].offset_rawVal - ADC_12BIT_HALF_RESOLUTION;
-    currOffsets[1] = vAdc_handler[1].offset_rawVal - ADC_12BIT_HALF_RESOLUTION;
-    currOffsets[2] = vAdc_handler[2].offset_rawVal - ADC_12BIT_HALF_RESOLUTION;
+    for(int i = 0; i < ADC_PERIPH_NUM; i++)
+    {
+        if(vAdc_handler[i].offset_rawVal <= ADC_12BIT_HALF_RESOLUTION)
+        {
+            vAdc_handler[i].offset_rawVal = ADC_12BIT_HALF_RESOLUTION;
+        }
+        else
+        {
+            vAdc_handler[i].offset_rawVal = vAdc_handler[i].offset_rawVal - ADC_12BIT_HALF_RESOLUTION;
+        }
+    }
+}
+
+void adc_getOffsetCalib_val(uint32_t currOffsets[])
+{
+    for(int i = 0; i < ADC_PERIPH_NUM; i++)
+    {
+        currOffsets[i] = vAdc_handler[i].offset_rawVal;
+    }
 }
 
 void adc_init(void)
@@ -128,7 +145,7 @@ uint16_t adc_conv_rawVdc_polling(void)
 
 // 전류 ADC 변환 함수들 (polling 방식)
 
-uint16_t adc_conv_rawIas_polling(void)
+uint16_t adc_conv_rawIus_polling(void)
 {
     vAdc_handler[0].moduleInst->SQR3 &= ~ADC_SQR3_SQ1_Msk;
     vAdc_handler[0].moduleInst->SQR3 |= UTILS_BIT_SHIFT(0,0); // ADC1_IN0 (Ias)
@@ -140,7 +157,7 @@ uint16_t adc_conv_rawIas_polling(void)
     return vAdc_handler[0].curr_rawVal;
 }
 
-uint16_t adc_conv_rawIbs_polling(void)
+uint16_t adc_conv_rawIvs_polling(void)
 {
     vAdc_handler[1].moduleInst->SQR3 &= ~ADC_SQR3_SQ1_Msk;
     vAdc_handler[1].moduleInst->SQR3 |= UTILS_BIT_SHIFT(0,1); // ADC2_IN1 (Ibs)
@@ -152,7 +169,7 @@ uint16_t adc_conv_rawIbs_polling(void)
     return vAdc_handler[1].curr_rawVal;
 }
 
-uint16_t adc_conv_rawIcs_polling(void)
+uint16_t adc_conv_rawIws_polling(void)
 {
     vAdc_handler[2].moduleInst->SQR3 &= ~ADC_SQR3_SQ1_Msk;
     vAdc_handler[2].moduleInst->SQR3 |= UTILS_BIT_SHIFT(0,2); // ADC3_IN2 (Ics)
