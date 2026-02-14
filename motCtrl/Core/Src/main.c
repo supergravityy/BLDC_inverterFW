@@ -24,7 +24,7 @@ int main(void)
     uart_debug_init(9600, 8, 1, UART_PARITY_NONE);
     tasksch_init();
 
-    utils_LPF_temper_init();
+    utils_LPF_RPM_init();
     utils_LPF_phaseCurr_init();
 
     // todo : 전류 오프셋 완성하기

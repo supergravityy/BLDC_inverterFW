@@ -28,7 +28,9 @@
 #define THROTTLE_ON_VOLT        (1.05f)
 #define THROTTLE_RAMP_UNIT      (0.15f)
 #define THROTTLE_PWM_PERIOD_VAL (PWM1_PERIOD_TICK) // 타이머의 최대 카운트 값
-#define THROTTLE_MAX_MARGIN     (100UL) // 최대 듀티에서 마진을 주어 100% 듀티 방지
+#define THROTTLE_MAX_MARGIN     (100UL)
+// 100% 듀티를 방지하기 위해 -> 하프브리지 구조에서 100%는 위험
+#define THROTTLE_CCR_MAXVAL     (THROTTLE_PWM_PERIOD_VAL - THROTTLE_MAX_MARGIN)
 
 #define NTC_OVERHEAT_VOLTAGE    (100.0f) // NTC 과열 판단 기준 전압 (예시값, 실제로는 센서 특성에 따라 다름)
 #define NTC_NORMAL_VOLTAGE      (90.0f) // NTC 정상 판단 기준 전압 (예시값)
@@ -39,6 +41,10 @@
 #define DC_VOLT_LOW_THRESH      (20.0f) // 저전압 판단 기준 전압
 #endif
 
+#define IPHASE_CURR_NUM         (3UL)
+#define IPHASE_U_IDX            (0UL)
+#define IPHASE_V_IDX            (1UL)
+#define IPHASE_W_IDX            (2UL)
 #define IPHASE_OVERCURR_THRESH  (35.0f) // 과전류 판단 기준 전류 (예시값)
 #define IPHASE_NORMAL_THRESH    (34.0f) // 정상 판단 기준 전류 (예시값)
 
@@ -80,7 +86,7 @@ typedef struct Iphase_handle
 
 typedef struct sensingCurr_handle
 {
-    typIphase_handle Iphase[MTRCTRL_PHASE_CURR_NUM];
+    typIphase_handle Iphase[IPHASE_CURR_NUM];
 
     float Iphase_max; // 과전류 판단 기준 전류 -> 위상차이기에 제일 큰 거 선택
     bool is_overCurrent;

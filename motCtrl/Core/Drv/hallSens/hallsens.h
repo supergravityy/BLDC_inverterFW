@@ -35,7 +35,8 @@ typedef struct hall_handle
     volatile uint32_t prevTick;
     volatile uint32_t currTick;
     volatile uint32_t deltaTick;
-    volatile float motorRPM;
+    volatile float rawMtrRPM;
+    float filteredMtrRPM;
 
     bool is_initialized;
 }typHall_Handle;

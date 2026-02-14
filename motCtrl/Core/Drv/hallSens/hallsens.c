@@ -58,7 +58,8 @@ void hallsens_init(void)
     vHallSens_handler.prevTick = 0;
     vHallSens_handler.currTick = 0;
     vHallSens_handler.deltaTick = 0.0f;
-    vHallSens_handler.motorRPM = 0;
+    vHallSens_handler.rawMtrRPM = 0;
+    vHallSens_handler.filteredMtrRPM = 0;
 
     hallsens_update_hallSeq();
 
@@ -189,11 +190,14 @@ void hallsens_cal_motorRPM(void)
 
     if (vHallSens_handler.deltaTick > HALLSENS_MIN_DELTA_TICK) // noise filtering
     {
-        vHallSens_handler.motorRPM = HALLSENS_CAL_MOTOR_RPM(vHallSens_handler.deltaTick);
+        vHallSens_handler.rawMtrRPM = HALLSENS_CAL_MOTOR_RPM(vHallSens_handler.deltaTick);
+
+        // 저역통과필터 적용
+        vHallSens_handler.filteredMtrRPM = utils_LPF_RPM_filter(vHallSens_handler.rawMtrRPM);
     }
 }
 
 float hallsens_get_motorRPM(void)
 {
-    return vHallSens_handler.motorRPM;
+    return vHallSens_handler.filteredMtrRPM;
 }

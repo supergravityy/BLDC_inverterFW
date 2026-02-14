@@ -8,8 +8,6 @@
 
 // 스로틀 전압을 pwm 듀티 카운트(CCR)로 변환 -> 엑셀파일의 표 참고
 #define THROTTLE_RAW_VOLT_2_PWM_DUTY_CNT(volt)  (volt * 3400.f - 3540.f + 1000.f)
-// 100% 듀티를 방지하기 위해 -> 하프브리지 구조에서 100%는 위험
-#define THROTTLE_CCR_MAXVAL                     (THROTTLE_PWM_PERIOD_VAL - THROTTLE_MAX_MARGIN)
 
 // NTC raw값을 전압으로 변환 (예시, 실제로는 센서 특성에 따라 다름) -> 엑셀파일의 그래프 참고
 #define NTC_VOLT_2_TEMPER(volt)  (-11.48f*volt*volt*volt+63.23*volt*volt-149.02*volt+181.97f) 
@@ -183,9 +181,9 @@ bool sensingCurr_getOverCurrent_st(void)
     float tempCalibVal;
     int32_t tempRawVal;
     // 1. adc로 전류 raw값 읽기
-    vSensingCurr_handler.Iphase[MTRCTRL_PHASE_CURR_U_IDX].rawVal = adc_conv_rawIus_polling();
-    vSensingCurr_handler.Iphase[MTRCTRL_PHASE_CURR_V_IDX].rawVal = adc_conv_rawIvs_polling();
-    vSensingCurr_handler.Iphase[MTRCTRL_PHASE_CURR_W_IDX].rawVal = adc_conv_rawIws_polling();
+    vSensingCurr_handler.Iphase[IPHASE_U_IDX].rawVal = adc_conv_rawIus_polling();
+    vSensingCurr_handler.Iphase[IPHASE_V_IDX].rawVal = adc_conv_rawIvs_polling();
+    vSensingCurr_handler.Iphase[IPHASE_W_IDX].rawVal = adc_conv_rawIws_polling();
 
     // 2. raw값을 전류값으로 변환 (예시, 실제로는 센서 특성에 따라 다름)
     for(uint8_t i = 0; i < MTRCTRL_PHASE_CURR_NUM; i++)
@@ -203,9 +201,9 @@ bool sensingCurr_getOverCurrent_st(void)
 
     // 3. 최대전류 계산 (방향을 고려하지 않고 절대값으로 최대 전류 계산)
     vSensingCurr_handler.Iphase_max = UTILS_FIND_MAX_VAL(
-        UTILS_ABS(vSensingCurr_handler.Iphase[MTRCTRL_PHASE_CURR_U_IDX].filteredCurr_A),
-        UTILS_ABS(vSensingCurr_handler.Iphase[MTRCTRL_PHASE_CURR_V_IDX].filteredCurr_A),
-        UTILS_ABS(vSensingCurr_handler.Iphase[MTRCTRL_PHASE_CURR_W_IDX].filteredCurr_A)
+        UTILS_ABS(vSensingCurr_handler.Iphase[IPHASE_U_IDX].filteredCurr_A),
+        UTILS_ABS(vSensingCurr_handler.Iphase[IPHASE_V_IDX].filteredCurr_A),
+        UTILS_ABS(vSensingCurr_handler.Iphase[IPHASE_W_IDX].filteredCurr_A)
     );
 
     // 4. 과전류 판단

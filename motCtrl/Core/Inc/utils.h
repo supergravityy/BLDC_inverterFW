@@ -54,12 +54,12 @@
 
 #define OC_LEVEL                        (35.0f)
 #define OC_TRIP_COUNT                   (50) // 2.5ms@20kHz 예시
-#define RPM_TO_KMH(rpm)                 ((rpm) * (WHEEL_CIRCUM_M) * 60.0f / 1000.0f)
+#define UTILS_RPM_TO_KMH(rpm)                 ((rpm) * (WHEEL_CIRCUM_M) * 60.0f / 1000.0f)
 
 /* ---------- LPF ---------- */ 
 #define UTILS_SAMPLING_TIME_SEC         (0.00005f)  // 20kHz 샘플링 기준 (PWM 주기-> center-aligned PWM)
 #define UTILS_PHASE_CURR_CUTOFF_HZ      (500.0f)    // 상 전류 LPF 컷오프 주파수
-#define UTILS_TEMPER_CUTOFF_HZ          (1.0f)      // 스로틀 LPF 컷오프 주파수
+#define UTILS_RPM_CUTOFF_HZ             (1.0f)      // RPM LPF 컷오프 주파수
 
 /* ---------- SYS ---------- */ 
 #define UTILS_F_CLK_MZ                  (216UL)    
@@ -77,8 +77,6 @@
 #define UTILS_ENABLE_ISR()              __enable_irq()
 #define UTILS_ASSERT_FUNC()             do{while(1);}while(0)
 
-#pragma pack(push, 1)
-
 typedef struct lpf_handle
 {
     float cutoff_hz;
@@ -89,11 +87,9 @@ typedef struct lpf_handle
     bool is_initialized;
 }typLpf_handle;
 
-#pragma pack(pop)
-
-void utils_LPF_temper_init(void);
+void utils_LPF_RPM_init(void);
 void utils_LPF_phaseCurr_init(void);
-float utils_LPF_temper_filter(float input);
+float utils_LPF_RPM_filter(float input);
 float utils_LPF_phaseCurr_filter(float input);
 
 uint16_t utils_ipol_u16u16(const uint16_t* mapX, const uint16_t* mapY, uint16_t mapSize, uint16_t input);
