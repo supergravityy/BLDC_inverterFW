@@ -166,7 +166,7 @@ bool dcVolt_getLowVolt_st(void)
 
 void sensingCurr_init(void)
 {
-    for(uint8_t i = 0; i < MTRCTRL_PHASE_CURR_NUM; i++)
+    for(uint8_t i = 0; i < IPHASE_CURR_NUM; i++)
     {
         vSensingCurr_handler.Iphase[i].rawVal = 0;
         vSensingCurr_handler.Iphase[i].offset_rawVal = 0;
@@ -186,7 +186,7 @@ bool sensingCurr_getOverCurrent_st(void)
     vSensingCurr_handler.Iphase[IPHASE_W_IDX].rawVal = adc_conv_rawIws_polling();
 
     // 2. raw값을 전류값으로 변환 (예시, 실제로는 센서 특성에 따라 다름)
-    for(uint8_t i = 0; i < MTRCTRL_PHASE_CURR_NUM; i++)
+    for(uint8_t i = 0; i < IPHASE_CURR_NUM; i++)
     {
         // 2.1 오프셋 보정
         tempRawVal = vSensingCurr_handler.Iphase[i].rawVal;

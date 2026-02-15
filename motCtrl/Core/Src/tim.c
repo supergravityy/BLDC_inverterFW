@@ -90,7 +90,9 @@ void tim_pwm1_nvic_counterSet(void)
 {
     vPwm1_handler.inst->DIER = TIM_DIER_UIE; // 오버플로 인터럽트 사용
 
-    while(vPwm1_handler.inst->DIER & TIM_CR1_DIR == 1); // 업카운팅 -> 다운카운팅 까지 대기(싱크맞추기용)
+    NVIC_EnableIRQ(TIM1_UP_TIM10_IRQn);
+
+    while((vPwm1_handler.inst->CR1 & TIM_CR1_DIR) == 0); // 업카운팅 -> 다운카운팅 까지 대기(싱크맞추기용)
 
     vPwm1_handler.inst->RCR = 0x01;  // 센터 얼라인이기 때문에, 업카운팅->다운카운팅 해야 업데이트 인터럽트 발생
 }

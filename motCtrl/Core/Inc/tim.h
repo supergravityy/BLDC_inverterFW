@@ -12,7 +12,6 @@
 #define TIM2_PRESCALSER_CNT     (4UL - 1UL)
 #define TIM2_INIT_CNT_VAL       (0)
 
-#pragma pack(1,push)
 
 typedef enum tim_sigLineNum
 {
@@ -53,7 +52,6 @@ typedef struct pwm_handle
     uint32_t isr_count;
 }typPwm_handle;
 
-#pragma pack(pop)
 
 void tim_init(void);
 void tim_Pwm1_Mute_channel(typTim_sigLineNum chNum);

@@ -5,6 +5,7 @@
 #include "exti.h"
 #include "../Inc/Gpio.h"
 #include "tim.h"
+#include "../hallsens/hallsens.h"
 #include "../sensing/sensing.h"
 
 #define MTRCTRL_PI_MAX_CCR_VAL   (THROTTLE_CCR_MAXVAL) // PI 제어로 계산된 CCR 값이 최대 듀티 카운트 값을 넘지 않도록 제한

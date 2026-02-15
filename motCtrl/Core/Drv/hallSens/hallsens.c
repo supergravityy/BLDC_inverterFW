@@ -128,6 +128,7 @@ static void hallsens_setPhase_FWD(void)
     hallsens_set_PWMduty(phases);
 }
 
+#if (MOTOR_DIR == MOTOR_DIR_CCW)
 static void hallsens_setPhase_REV(void)
 {
     typMtrPhase phases[HALLSENS_PH_NUM] = {0};
@@ -159,6 +160,7 @@ static void hallsens_setPhase_REV(void)
 #endif
     hallsens_set_PWMduty(phases);
 }
+#endif
 
 void hallsens_update_swtPattern(void)
 {

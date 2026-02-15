@@ -10,8 +10,8 @@
 typUart_handle uart3_handler;
 typUart_handle uart2_handler;
 
-#define UART_AT09_HANDLER      (&uart3_handler)
-#define UART_DEBUG_HANDLER     (&uart2_handler)
+#define UART_AT09_HANDLER      (USART3)
+#define UART_DEBUG_HANDLER     (USART2)
 
 static void uart_base_init(typUart_handle* hUart, uint32_t baudrate, uint8_t dataBits, uint8_t stopBits, typUart_parity parity)
 {
@@ -72,7 +72,7 @@ void uart_debug_init(uint32_t baudrate, uint8_t dataBits, uint8_t stopBits, typU
     gpio_set_alterFunc(USART2_RX_Port, 6, 7, GPIO_SPD_VERY_HIGH);
 
     // 공용 로직 호출
-    uart_base_init(UART_DEBUG_HANDLER, baudrate, dataBits, stopBits, parity);
+    uart_base_init(&uart2_handler, baudrate, dataBits, stopBits, parity);
 }
 
 static inline void uart_sendChar_polling(typUart_handle* hUart, char c)
@@ -195,32 +195,32 @@ void uart_sendFloat(typUart_handle* hUart, float val, uint8_t decimals)
 
 void uart_AT09_sendStr_polling(char* str, uint32_t len)
 {
-    uart_sendStr_polling(UART_AT09_HANDLER, str, len);
+    uart_sendStr_polling(&uart3_handler, str, len);
 }
 
 void uart_AT09_recvStr_polling(char* buff, uint32_t len)
 {
-    uart_recvStr_polling(UART_AT09_HANDLER, buff, len);
+    uart_recvStr_polling(&uart3_handler, buff, len);
 }
 
 void uart_AT09_sendFloat_polling(float val, uint8_t decimals)
 {
-    uart_sendFloat(UART_AT09_HANDLER, val, decimals);
+    uart_sendFloat(&uart3_handler, val, decimals);
 }
 
 void uart_debug_reportSpd_polling(float rpm)
 {
-    uart_sendStr_polling(UART_DEBUG_HANDLER, "속도: ", 9);      // 한글 “속도: ”
-    uart_sendFloat(UART_DEBUG_HANDLER, rpm, 0);                 // 소수점 0자리
-    uart_sendStr_polling(UART_DEBUG_HANDLER, " RPM\r\n", 7);    // 단위 표시
+    uart_sendStr_polling(&uart2_handler, "속도: ", 9);      // 한글 “속도: ”
+    uart_sendFloat(&uart2_handler, rpm, 0);                 // 소수점 0자리
+    uart_sendStr_polling(&uart2_handler, " RPM\r\n", 7);    // 단위 표시
 }
 
 void uart_debug_sendStr_polling(char* str, uint32_t len)
 {
-    uart_sendStr_polling(UART_DEBUG_HANDLER, str, len);
+    uart_sendStr_polling(&uart2_handler, str, len);
 }
 
 void uart_debug_sendFloat_polling(float val, uint8_t decimals)
 {
-    uart_sendFloat(UART_DEBUG_HANDLER, val, decimals);
+    uart_sendFloat(&uart2_handler, val, decimals);
 }

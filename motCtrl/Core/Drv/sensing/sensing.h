@@ -5,7 +5,6 @@
 #include "main.h"
 #include "tim.h"
 #include "../../Inc/adc.h"
-#include "../mtrCtrl/mtrCtrl.h"
 
 /*
 * 스로틀 객체에 필요한 부분들
