@@ -97,6 +97,7 @@ bool mtrCtrl_check_RPM_timeout(void)
 
         if(vMotorCtrl_manager.rpm_timeout_cnt >= MTRCTRL_RPM_TIMEOUT_MAXCNT)
         {
+            vMotorCtrl_manager.new_rpm = 0;
             return true; // 타임아웃 발생
         }
     }
@@ -250,4 +251,14 @@ void mtrCtrl_setErrCode(typMtrCtrl_errCode setErr) // 입력 : 어떤 에러체�
 typMtrCtrl_errCode mtrCtrl_getErrCode(void)
 {
     return vMotorCtrl_manager.errCode;
+}
+
+bool mtrCtrl_getAppInit_flg(void)
+{
+    return vMotorCtrl_manager.app_init;
+}
+
+void mtrCtrl_setAppInit_flg(void)
+{
+    vMotorCtrl_manager.app_init = true;
 }

@@ -72,7 +72,7 @@ static void hallsens_set_PWMduty(typMtrPhase phases[])
     uint32_t tempCCR_refVal;
 
     // 1. PWM 듀티 계산
-    tempCCR_refVal = throttle_get_CCR_ref();
+    tempCCR_refVal = mtrCtrl_getFinalCCR_refVal();
     vHallSens_handler.dutyVal[HALLSENS_U_IDX] = HALLSENS_CAL_DUTY_CNTR_ALIGNED_PWM(tempCCR_refVal);
     vHallSens_handler.dutyVal[HALLSENS_V_IDX] = HALLSENS_CAL_DUTY_CNTR_ALIGNED_PWM(tempCCR_refVal);
     vHallSens_handler.dutyVal[HALLSENS_W_IDX] = HALLSENS_CAL_DUTY_CNTR_ALIGNED_PWM(tempCCR_refVal);

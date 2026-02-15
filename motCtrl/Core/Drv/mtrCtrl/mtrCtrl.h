@@ -69,8 +69,9 @@ typedef struct motorCtrl_manager
     // 상태관리
     float motor_speed_KMH;
     typMtrCtrl_errCode errCode;
-    bool     ctrlContinue_debug;
-    bool     calib_cmplt;
+    bool    ctrlContinue_debug;
+    bool    calib_cmplt;
+    bool    app_init;
 } typMtrCtrl_manager;
 
 
@@ -102,3 +103,6 @@ void mtrCtrl_CalibCmplt(void);
 
 void mtrCtrl_setCtrlContinue(bool isContinue);
 bool mtrCtrl_getCtrlContinue(void);
+
+bool mtrCtrl_getAppInit_flg(void);
+void mtrCtrl_setAppInit_flg(void);
