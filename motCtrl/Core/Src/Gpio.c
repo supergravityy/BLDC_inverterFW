@@ -67,7 +67,7 @@ void gpio_write_pin(GPIO_TypeDef* gpio, uint8_t pin, uint8_t val)
     if(val == 0)
     {
         // BSRR의 상위 16비트는 Reset(0)을 담당
-        gpio->BSRR = UTILS_BIT_SHIFT(pin + 16, 1);
+        gpio->BSRR = UTILS_BIT_SHIFT((pin + 16), 1);
     }
     else
     {

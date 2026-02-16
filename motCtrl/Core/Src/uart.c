@@ -141,12 +141,44 @@ static inline void uart_sendStr_polling(typUart_handle* hUart, char* str, uint32
     }
 }
 
-void uart_sendFloat(typUart_handle* hUart, float val, uint8_t decimals)
+static inline void uart_send_uint(typUart_handle* hUart, uint32_t val)
+{
+    char tempBuff[11]; // 32비트 최대값 4,294,967,295 (10자리) + 여유분
+    uint8_t idx = 0;
+
+    if (val == 0)
+    {
+        uart_sendChar_polling(hUart, '0');
+        return;
+    }
+
+    // 1. 역순으로 버퍼에 저장
+    while (val > 0 && idx < 10)
+    {
+        tempBuff[idx++] = (char)((val % 10) + '0');
+        val /= 10;
+    }
+
+    // 2. 버퍼를 역순으로 읽어 출력
+    while (idx > 0)
+    {
+        uart_sendChar_polling(hUart, tempBuff[--idx]);
+    }
+}
+
+static inline void uart_send_int(typUart_handle* hUart, int32_t val)
+{
+    if(val < 0) {
+        uart_sendChar_polling(hUart, '-');
+        val = -val;
+    }
+    uart_send_uint(hUart, (uint32_t)val);
+}
+
+static inline void uart_sendFloat(typUart_handle* hUart, float val, uint8_t decimals)
 {
     uint32_t intPart = 0;
     float fracPart = 0.0f;
-    char tempBuff[20];
-    uint8_t tempBuff_idx = 0;
 
     // 1. 부호처리
     if(val < 0)
@@ -158,25 +190,7 @@ void uart_sendFloat(typUart_handle* hUart, float val, uint8_t decimals)
     // 2. 정수부 처리
     intPart = (uint32_t)val;
     fracPart = val - (float)intPart;
-    
-    if(intPart == 0)
-    {
-        uart_sendChar_polling(hUart, '0');
-    }
-    else
-    {
-        // 정수부를 역순으로 버퍼에 저장
-        while(intPart > 0 && tempBuff_idx < 19)
-        {
-            tempBuff[tempBuff_idx++] = (char)((intPart % 10) + '0');
-            intPart /= 10;
-        }
-        // 역순으로 다시 출력
-        while(tempBuff_idx > 0)
-        {
-            uart_sendChar_polling(hUart, tempBuff[--tempBuff_idx]);
-        }
-    }
+    uart_send_uint(hUart, intPart);
 
     if(decimals > 0)
     {
@@ -203,16 +217,23 @@ void uart_AT09_recvStr_polling(char* buff, uint32_t len)
     uart_recvStr_polling(&uart3_handler, buff, len);
 }
 
+void art_AT09_sendInteger_polling(int32_t val)
+{
+    uart_send_int(&uart3_handler, val);
+}
+
 void uart_AT09_sendFloat_polling(float val, uint8_t decimals)
 {
     uart_sendFloat(&uart3_handler, val, decimals);
 }
 
-void uart_debug_reportSpd_polling(float rpm)
+void uart_debug_reportSeq_polling(float rpm, float spd)
 {
     uart_sendStr_polling(&uart2_handler, "속도: ", 9);      // 한글 “속도: ”
+    uart_sendFloat(&uart2_handler, spd, 2);
+    uart_sendStr_polling(&uart2_handler, ", RPM: ", 8);      // “ RPM: ”
     uart_sendFloat(&uart2_handler, rpm, 0);                 // 소수점 0자리
-    uart_sendStr_polling(&uart2_handler, " RPM\r\n", 7);    // 단위 표시
+    uart_sendStr_polling(&uart2_handler, "\r\n\n", 3);    // 단위 표시
 }
 
 void uart_debug_sendStr_polling(char* str, uint32_t len)

@@ -8,7 +8,6 @@
 #include "isr.h"
 #include "uart.h"
 #include "../Drv/tasksch/tasksch.h"
-#include "../Drv/hallSens/hallsens.h"
 #include "../Drv/mtrCtrl/mtrCtrl.h"
 
 int main(void)
@@ -23,24 +22,10 @@ int main(void)
     uart_AT09_init(9600, 8, 1, UART_PARITY_NONE);
     uart_debug_init(9600, 8, 1, UART_PARITY_NONE);
     tasksch_init();
+    mtrCtrl_objInit(0,0);
+    mtrCtrl_setPeriphInit();
 
-    utils_LPF_RPM_init();
-    utils_LPF_phaseCurr_init();
+    tim_pwm1_nvic_counterSet(); // TIM1의 ISR에서 모듈을 사용하기에 제일 마지막에 호출 될 것
 
-    // todo : 전류 오프셋 완성하기
-
-    // adc_offsetCalib(vMotorCtrl_handler.phaseCurr_offset);
-    
-
-    /* if(vMotorCtrl_handler.errCode == MTRCTRL_ERR_ADC_FAIL)
-    {
-        vMotorCtrl_handler.calib_cmplt = false;
-    }
-    else
-    {
-        vMotorCtrl_handler.calib_cmplt = true;
-    } */
-
-    tim_pwm1_nvic_counterSet();
-    hallsens_init();
+    tasksch_execTask();
 }

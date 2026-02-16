@@ -33,8 +33,9 @@ typedef struct uart_handle
 
 void uart_AT09_sendStr_polling(char* str, uint32_t len);
 void uart_AT09_recvStr_polling(char* buff, uint32_t len);
+void art_AT09_sendInteger_polling(int32_t val);
 void uart_AT09_sendFloat_polling(float val, uint8_t decimals);
-void uart_debug_reportSpd_polling(float rpm);
+void uart_debug_reportSeq_polling(float rpm, float spd);
 void uart_debug_sendStr_polling(char* str, uint32_t len);
 void uart_debug_sendFloat_polling(float val, uint8_t decimals);
 

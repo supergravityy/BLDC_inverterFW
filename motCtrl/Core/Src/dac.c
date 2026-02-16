@@ -18,8 +18,8 @@ void dac_init(void)
     // DAC on
     DAC->CR |= DAC_CR_EN1 | DAC_CR_EN2;
 
-    vDac_Handler.is_initialized_ch1 = ((DAC->CR & DAC_CR_EN1) == 1);
-    vDac_Handler.is_initialized_ch2 = ((DAC->CR & DAC_CR_EN2) == 1);
+    vDac_Handler.is_initialized_ch1 = ((DAC->CR & DAC_CR_EN1) != 0);
+    vDac_Handler.is_initialized_ch2 = ((DAC->CR & DAC_CR_EN2) != 0);
 }
 
 void DAC_setValue_ch1(uint16_t val) 

@@ -12,6 +12,12 @@
 
 /*---- USER INCLUDE ----*/
 
+#include"../../Inc/uart.h"
+#include "../hallSens/hallsens.h"
+#include "../sensing/sensing.h"
+#include "../mtrCtrl/mtrCtrl.h"
+#include <string.h>
+
 // NOTE : Declare user includes
 
 #define VALIDATE_TASK_INFO(taskPtr, taskPeriod) ((taskPtr == NULL) || (taskPeriod == 0U))
@@ -26,28 +32,86 @@ static IWDG_HandleTypeDef hiwdg; // IWDG handle in STM32 HAL
 
 static typUserRegiTaskObj vUserRegiTaskObj[TASKSCH_NUMBER];
 
+/* user 변수 */
+typedef struct mtrCtrl_sys
+{
+    float userKp;
+    float userKi;
+    float userRefRPM;
+
+    bool ctrlContinue_debug;
+    bool turnOff;
+    typMtrCtrl_selCtrl_mode userMode;
+}typMtrCtrl_sys;
+
+typMtrCtrl_sys vMtrCtrl_system;
+
+
 /* Define your Task */
 
 // INFO : The prototype of the function is "void function01(void)"
 
 void Task_1ms(void)
 {
-
+    mtrCtrl_PI_update();
 }
 
 void Task_10ms(void)
 {
+    mtrCtrl_setSelCtrlMode(vMtrCtrl_system.userMode);
+    mtrCtrl_setCtrlContinue(vMtrCtrl_system.ctrlContinue_debug);
 
+    if(mtrCtrl_getSelCtrlMode() == MTRCTRL_CTRL_THROTTLE)
+    {
+        throttle_update_proc();
+    }
+    else
+    {
+        mtrCtrl_PI_setTunings(vMtrCtrl_system.userKp, vMtrCtrl_system.userKi);
+        mtrCtrl_PI_setRPMRef(vMtrCtrl_system.userRefRPM);
+    }
+        
+    mtrCtrl_setErrCode(MTRCTRL_ERR_MOS_HOT);
+    mtrCtrl_setErrCode(MTRCTRL_ERR_UNDER_VOLT);
+    mtrCtrl_setErrCode(MTRCTRL_ERR_RPM_CALC_TIMEOUT); 
 }
 
 void Task_100ms(void)
 {
+    if(mtrCtrl_getSelCtrlMode() == MTRCTRL_CTRL_THROTTLE)
+    {
+        uart_debug_sendStr_polling("reference voltage : ", strlen("reference voltage : "));
+        uart_debug_sendFloat_polling(throttle_get_refVolt(),2);
+        uart_debug_sendStr_polling("\r\n", strlen("\r\n"));
+    }
+    else
+    {
+        uart_debug_sendStr_polling("reference RPM : ", strlen("reference RPM : "));
+        uart_debug_sendFloat_polling(mtrCtrl_PI_getRPMRef(),2);
+        uart_debug_sendStr_polling("\r\n", strlen("\r\n"));
+    }
 
+    uart_debug_reportSeq_polling(hallsens_get_motorRPM(), mtrCtrl_getMotorSpeed_KMH());
 }
 
 void Task_500ms(void)
 {
+    uart_AT09_sendStr_polling("Spd : ", strlen("Spd : "));
+    uart_AT09_sendFloat_polling(mtrCtrl_getMotorSpeed_KMH(),2);
 
+    uart_AT09_sendStr_polling("\r\nRPM : ", strlen("\r\nRPM : "));
+    uart_AT09_sendFloat_polling(hallsens_get_motorRPM(),2);
+
+    uart_AT09_sendStr_polling("\r\nVdc : ", strlen("\r\nVdc : "));
+    uart_AT09_sendFloat_polling(dcVolt_voltage(),1);
+
+    uart_AT09_sendStr_polling("\r\ntemp : ",strlen("\r\ntemp : "));
+    uart_AT09_sendFloat_polling(NTC_getTemper(),1);
+
+    uart_AT09_sendStr_polling("\r\nfaultNum : ", strlen("\r\ntnfaultNum : "));
+    art_AT09_sendInteger_polling(mtrCtrl_getErrCode());
+
+    uart_AT09_sendStr_polling("\r\n\n",strlen("\r\n\n"));
 }
 
 void Task_1sec(void)
@@ -94,6 +158,30 @@ void tasksch_init_RegiTaskObj(void)
 */
 
 /* Define your Watchdog Functions */
+
+void tasksch_userInitCmpltHook(void)
+{
+    // MCAL 상위 계층의 모듈들 전부 초기화
+
+    utils_LPF_RPM_init();
+    utils_LPF_phaseCurr_init();
+    hallsens_init();
+    sensing_objs_Init();
+
+    vMtrCtrl_system.ctrlContinue_debug = true;
+    vMtrCtrl_system.userMode = MTRCTRL_CTRL_THROTTLE;
+    vMtrCtrl_system.userKi = 0;
+    vMtrCtrl_system.userKp = 0;
+    vMtrCtrl_system.userRefRPM = 0;
+    vMtrCtrl_system.turnOff = false;
+
+    mtrCtrl_setAppInit_flg();
+}
+
+bool tasksch_requestExit(void)
+{
+    return vMtrCtrl_system.turnOff;
+}
 
 bool tasksch_initWatchdog(void)
 {

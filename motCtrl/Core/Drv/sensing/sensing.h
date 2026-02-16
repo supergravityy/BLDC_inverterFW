@@ -31,8 +31,8 @@
 // 100% 듀티를 방지하기 위해 -> 하프브리지 구조에서 100%는 위험
 #define THROTTLE_CCR_MAXVAL     (THROTTLE_PWM_PERIOD_VAL - THROTTLE_MAX_MARGIN)
 
-#define NTC_OVERHEAT_VOLTAGE    (100.0f) // NTC 과열 판단 기준 전압 (예시값, 실제로는 센서 특성에 따라 다름)
-#define NTC_NORMAL_VOLTAGE      (90.0f) // NTC 정상 판단 기준 전압 (예시값)
+#define NTC_OVERHEAT_CELCIUS    (100.0f) // NTC 과열 판단 기준 전압 (예시값, 실제로는 센서 특성에 따라 다름)
+#define NTC_NORMAL_CELCIUS      (90.0f) // NTC 정상 판단 기준 전압 (예시값)
 
 #ifdef USE_INWHEEL
 #define DC_VOLT_LOW_THRESH      (32.0f) // 저전압 판단 기준 전압 
@@ -51,19 +51,19 @@ typedef struct throttle_handle
 {
     // 센싱
     uint32_t rawVal;
-    float procVal;
+    float rawVolt_Val;
     bool val_is_validate; // 히스테리시스(on/off 기준 틀림)를 주어 데드존을 만들어 채터링 방지
 
     // 제어
     float refVal;
     float rampVal;
-    uint32_t CCR_refVal;
+    volatile uint32_t CCR_refVal;
 }typThrottle_handle;
 
 typedef struct NTC_handle
 {
     uint32_t rawVal;
-    float procVal;
+    float rawVolt_Val;
     float temper; // 온도값으로 변환된 NTC 센서 값
     bool is_mosOverheat; // MOSFET 과열 여부 판단
 }typNTC_handle;
@@ -92,8 +92,14 @@ typedef struct sensingCurr_handle
 }typSensingCurr_handle;
 
 void throttle_update_proc(void);
+float throttle_get_refVolt(void);
 uint32_t throttle_get_CCR_ref(void);
+
 bool NTC_getHeat_st(void);
+float NTC_getTemper(void);
+
+float dcVolt_voltage(void);
 bool dcVolt_getLowVolt_st(void);
+
 void sensing_objs_Init(void);
 bool sensingCurr_getOverCurrent_st(void);

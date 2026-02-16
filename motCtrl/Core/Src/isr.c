@@ -47,18 +47,15 @@ void EXTI2_IRQHandler(void)
 
 void TIM1_UP_TIM10_IRQHandler(void) // 20KHz 로 호출됨
 {
-    // mtrCtrl_setErrCode(MTRCTRL_ERR_OVER_CURRENT);
+    mtrCtrl_setErrCode(MTRCTRL_ERR_OVER_CURRENT);
     isr_pwm1_intrrpt_cnt_debug++;
-
-    mtrCtrl_setErrCode(MTRCTRL_ERR_RPM_CALC_TIMEOUT); // todo : 오류 발생시, 계산된 RPM = 0화 시킬 것
 
     if (tim_getPwm1_ISR_flg() == true)
     {
         tim_clrPwm1_ISR_flg();
 
-        if (mtrCtrl_isCalibCmplt() == true && mtrCtrl_getAppInit_flg() == true)
+        if (mtrCtrl_getPeriphInit() == true && mtrCtrl_getAppInit_flg() == true)
         {
-            mtrCtrl_setErrCode(MTRCTRL_ERR_OVER_CURRENT);
             mtrCtrl_calc_mtrSpeed();
 
             // 스로틀 데이터는 태스크에서 읽는걸로 바꾸자..

@@ -3,6 +3,7 @@
 #include "utils.h"
 #include "main.h"
 #include "../Inc/Gpio.h"
+#include "../Inc/adc.h"
 
 #define TIM_DET_RUNNING_FLAG(reg)   ((reg & TIM_CR1_CEN) == 1)
 #define TIM_DET_OUTPUT_FLAG(reg)    ((reg & TIM_BDTR_MOE) == 1)
@@ -88,6 +89,8 @@ static void tim_pwm1_init(void)
 
 void tim_pwm1_nvic_counterSet(void)
 {
+    adc_offsetCalib();
+
     vPwm1_handler.inst->DIER = TIM_DIER_UIE; // 오버플로 인터럽트 사용
 
     NVIC_EnableIRQ(TIM1_UP_TIM10_IRQn);

@@ -27,7 +27,7 @@ typSensingCurr_handle vSensingCurr_handler;
 void throttle_init(void)
 {
     vThrottle_handler.rawVal = 0;
-    vThrottle_handler.procVal = 0;
+    vThrottle_handler.rawVolt_Val = 0;
     vThrottle_handler.val_is_validate = false;
 
     vThrottle_handler.refVal = 0;
@@ -41,14 +41,14 @@ static void throttle_sensing(void)
     vThrottle_handler.rawVal = adc_conv_rawThrottle_polling();
 
     // 2. adc raw값을 전압값으로 변환
-    vThrottle_handler.procVal = (float)vThrottle_handler.rawVal * SENSING_ADC_2_VOLT;
+    vThrottle_handler.rawVolt_Val = (float)vThrottle_handler.rawVal * SENSING_ADC_2_VOLT;
 
     // 3. adc 노이즈를 고려한 히스테리시스 처리
-    if(vThrottle_handler.procVal < THROTTLE_OFF_VOLT)
+    if(vThrottle_handler.rawVolt_Val < THROTTLE_OFF_VOLT)
     {
         vThrottle_handler.val_is_validate = false;
     }
-    else if(vThrottle_handler.procVal > THROTTLE_ON_VOLT)
+    else if(vThrottle_handler.rawVolt_Val > THROTTLE_ON_VOLT)
     {
         vThrottle_handler.val_is_validate = true;
     }
@@ -84,7 +84,7 @@ static void throttle_postProcess(void)
     }
     else
     {
-        vThrottle_handler.refVal = THROTTLE_RAW_VOLT_2_PWM_DUTY_CNT(vThrottle_handler.procVal);
+        vThrottle_handler.refVal = THROTTLE_RAW_VOLT_2_PWM_DUTY_CNT(vThrottle_handler.rawVolt_Val);
     }
 
     // 5. 스로틀 램프함수 처리
@@ -111,6 +111,11 @@ void throttle_update_proc(void)
     }
 }
 
+float throttle_get_refVolt(void)
+{
+    return vThrottle_handler.rawVolt_Val;
+}
+
 uint32_t throttle_get_CCR_ref(void)
 {
     return vThrottle_handler.CCR_refVal;
@@ -119,20 +124,26 @@ uint32_t throttle_get_CCR_ref(void)
 void NTC_init(void)
 {
     vNTC_handler.rawVal = 0;
-    vNTC_handler.procVal = 0;
+    vNTC_handler.rawVolt_Val = 0;
     vNTC_handler.is_mosOverheat = false;
+}
+
+float NTC_getTemper(void)
+{
+    return vNTC_handler.temper;
 }
 
 bool NTC_getHeat_st(void)
 {
     vNTC_handler.rawVal = adc_conv_rawNTC_polling();
-    vNTC_handler.procVal = NTC_VOLT_2_TEMPER((float)vNTC_handler.rawVal * SENSING_ADC_2_VOLT);
+    vNTC_handler.rawVolt_Val = (float)vNTC_handler.rawVal * SENSING_ADC_2_VOLT;
+    vNTC_handler.temper = NTC_VOLT_2_TEMPER(vNTC_handler.rawVolt_Val );
 
-    if(vNTC_handler.procVal > NTC_OVERHEAT_VOLTAGE)
+    if(vNTC_handler.temper > NTC_OVERHEAT_CELCIUS)
     {
         vNTC_handler.is_mosOverheat = true;
     }
-    else if(vNTC_handler.procVal < NTC_NORMAL_VOLTAGE)
+    else if(vNTC_handler.temper < NTC_NORMAL_CELCIUS)
     {
         vNTC_handler.is_mosOverheat = false;
     }
@@ -145,6 +156,11 @@ void dcVolt_init(void)
     vDcVolt_handler.rawVal = 0;
     vDcVolt_handler.volt = 0;
     vDcVolt_handler.is_lowVolt = false;
+}
+
+float dcVolt_voltage(void)
+{
+    return vDcVolt_handler.volt;
 }
 
 bool dcVolt_getLowVolt_st(void)
