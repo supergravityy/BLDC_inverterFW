@@ -12,7 +12,7 @@
 #define MTRCTRL_PHASE_CURR_W_IDX     (2UL)
 
 // RPM 계산 타임아웃 판단 기준 카운트 (예시값, 실제로는 시스템 주기와 요구사항에 따라 조정 필요)
-#define MTRCTRL_RPM_TIMEOUT_MAXCNT   (20000UL) // 1sec 동안 확인 
+#define MTRCTRL_RPM_TIMEOUT_MAXCNT   (2000UL) // 1sec 동안 확인
 #define MTRCTRL_OVERCURR_MAXCNT      (1000UL) // 50ms 동안 확인
 
 #define MTRCTRL_PI_CTRL_MS          (1)
@@ -72,7 +72,7 @@ typedef struct motorCtrl_manager
     // 상태관리
     float motor_speed_KMH;
     typMtrCtrl_errCode errCode;
-    bool    ctrlContinue_debug;
+    bool    thrttl_Ctrl;
     bool    peripheral_init;
     bool    app_init;
 } typMtrCtrl_manager;
@@ -91,7 +91,7 @@ void mtrCtrl_setFinalCCR_refVal(void);
 void mtrCtrl_calc_mtrSpeed(void);
 
 /* --- 상태 및 에러 관리 관련 --- */
-void mtrCtrl_setErrCode(typMtrCtrl_errCode setErr);
+void mtrCtrl_chkErrSt(typMtrCtrl_errCode setErr);
 typMtrCtrl_errCode mtrCtrl_getErrCode(void);
 bool mtrCtrl_check_RPM_timeout(void);
 

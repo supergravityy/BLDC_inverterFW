@@ -106,9 +106,12 @@ void adc_init(void)
 }
 
 // 보조 ADC 변환 함수들 (polling 방식)
+// NOTE : 상전류 측정 함수는 ISR에서 실행되기에, 보조변환 함수의 작업이 취소되는 경우가 발생할 수 있음 -> 크리티컬 섹션
 
 uint16_t adc_conv_rawNTC_polling(void)
 {
+	UTILS_DISABLE_ISR(); // critical section start
+
     vAdc_handler[0].moduleInst->SQR3 &= ~ADC_SQR3_SQ1_Msk;
     vAdc_handler[0].moduleInst->SQR3 |= UTILS_BIT_SHIFT(0,6); // ADC1_IN6 (NTC)
     vAdc_handler[0].moduleInst->CR2 |= ADC_CR2_SWSTART;
@@ -116,11 +119,16 @@ uint16_t adc_conv_rawNTC_polling(void)
     while(!(vAdc_handler[0].moduleInst->SR & ADC_SR_EOC));
     
     vAdc_handler[0].aux_rawVal = vAdc_handler[0].moduleInst->DR;
+
+    UTILS_ENABLE_ISR(); // critical section end
+
     return vAdc_handler[0].aux_rawVal;
 }
 
 uint16_t adc_conv_rawThrottle_polling(void)
 {
+	UTILS_DISABLE_ISR(); // critical section start
+
     vAdc_handler[1].moduleInst->SQR3 &= ~ADC_SQR3_SQ1_Msk;
     vAdc_handler[1].moduleInst->SQR3 |= UTILS_BIT_SHIFT(0,7); // ADC2_IN7 (throttle)
     vAdc_handler[1].moduleInst->CR2 |= ADC_CR2_SWSTART;
@@ -128,11 +136,16 @@ uint16_t adc_conv_rawThrottle_polling(void)
     while(!(vAdc_handler[1].moduleInst->SR & ADC_SR_EOC));
     
     vAdc_handler[1].aux_rawVal = vAdc_handler[1].moduleInst->DR;
+
+    UTILS_ENABLE_ISR(); // critical section end
+
     return vAdc_handler[1].aux_rawVal;
 }
 
 uint16_t adc_conv_rawVdc_polling(void)
 {
+	UTILS_DISABLE_ISR(); // critical section start
+
     vAdc_handler[2].moduleInst->SQR3 &= ~ADC_SQR3_SQ1_Msk;
     vAdc_handler[2].moduleInst->SQR3 |= UTILS_BIT_SHIFT(0,3); // ADC3_IN3 (vdc)
     vAdc_handler[2].moduleInst->CR2 |= ADC_CR2_SWSTART;
@@ -140,6 +153,9 @@ uint16_t adc_conv_rawVdc_polling(void)
     while(!(vAdc_handler[2].moduleInst->SR & ADC_SR_EOC));
     
     vAdc_handler[2].aux_rawVal = vAdc_handler[2].moduleInst->DR;
+
+    UTILS_ENABLE_ISR(); // critical section end
+
     return vAdc_handler[2].aux_rawVal;
 }
 

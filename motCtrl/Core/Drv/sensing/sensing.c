@@ -13,9 +13,9 @@
 #define NTC_VOLT_2_TEMPER(volt)  (-11.48f*volt*volt*volt+63.23*volt*volt-149.02*volt+181.97f) 
 
 // 저항분배 비율고려 -> 회로도 참고
-#define DCVOLT_VOLT_2_ACTUAL(volt)  (volt * VDIV_RATIO) 
+#define DCVOLT_VOLT_2_ACTUAL(volt)  (volt / VDIV_RATIO)
 
-#define SENSING_ADC_2_CURR(val) ((val * (ADC_VREF / ADC_FS) - OFFSET_Volt) / OPAMP_GAIN)
+#define SENSING_ADC_2_CURR(val) ((val * (ADC_VREF / ADC_FS)) / OPAMP_GAIN)
 
 
 typThrottle_handle vThrottle_handler;
@@ -81,6 +81,7 @@ static void throttle_postProcess(void)
     if(vThrottle_handler.val_is_validate == false)
     {
         vThrottle_handler.refVal = 0.0f;
+        vThrottle_handler.rampVal = 0.0f;
     }
     else
     {
@@ -109,6 +110,11 @@ void throttle_update_proc(void)
     {
         vThrottle_handler.CCR_refVal = tempCCR_Val;
     }
+}
+
+bool throttle_get_validateFlg(void)
+{
+	return vThrottle_handler.val_is_validate;
 }
 
 float throttle_get_refVolt(void)
@@ -182,10 +188,13 @@ bool dcVolt_getLowVolt_st(void)
 
 void sensingCurr_init(void)
 {
+	uint32_t tempArr[IPHASE_CURR_NUM] = {0};
+	adc_getOffsetCalib_val(tempArr);
+
     for(uint8_t i = 0; i < IPHASE_CURR_NUM; i++)
     {
         vSensingCurr_handler.Iphase[i].rawVal = 0;
-        vSensingCurr_handler.Iphase[i].offset_rawVal = 0;
+        vSensingCurr_handler.Iphase[i].offset_rawVal = tempArr[i];
         vSensingCurr_handler.Iphase[i].rawCurr_A = 0;
     }
     vSensingCurr_handler.is_overCurrent = false;
@@ -206,7 +215,7 @@ bool sensingCurr_getOverCurrent_st(void)
     {
         // 2.1 오프셋 보정
         tempRawVal = vSensingCurr_handler.Iphase[i].rawVal;
-        tempCalibVal = (float)tempRawVal - (float)vSensingCurr_handler.Iphase[i].offset_rawVal; // 오프셋 보정
+        tempCalibVal = (float)(tempRawVal - (int32_t)vSensingCurr_handler.Iphase[i].offset_rawVal); // 오프셋 보정
         
         // 2.2 전류값으로 변환
         vSensingCurr_handler.Iphase[i].rawCurr_A = SENSING_ADC_2_CURR(tempCalibVal);

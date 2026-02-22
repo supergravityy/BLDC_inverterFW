@@ -78,10 +78,10 @@ static void tim_pwm1_init(void)
     vPwm1_handler.inst->BDTR |= PWM1_DEADTIME_1US_BIT;
 
     vPwm1_handler.inst->CR2 = TIM_CR2_MMS_1; // 안정적인 전류센싱을 위해 CNT의 한주기가 끝나면 ADC에 신호를 보냄
-    vPwm1_handler.inst->CR1 = TIM_CR1_CEN | TIM_CR1_CMS_1; // 센터 얼리인 모드 확정 + 카운트 시작
+    vPwm1_handler.inst->CR1 = TIM_CR1_CEN | TIM_CR1_CMS_0 | TIM_CR1_CMS_1 | TIM_CR1_URS;
+    // 센터 얼리인 모드 확정(카운터가 증가->감소가 완벽히 이루어져야 intrpt 실행) + 카운트 시작 + CCR 업데이트 시점 (글리칭현상) =update 인터럽트 발생시점
 
     vPwm1_handler.period_us = tim_pwm1_cal_period_us();
-    vPwm1_handler.isr_count = 0;
     vPwm1_handler.is_running = TIM_DET_RUNNING_FLAG(vPwm1_handler.inst->CR1);
     vPwm1_handler.is_outputing = TIM_DET_OUTPUT_FLAG(vPwm1_handler.inst->BDTR);
     vPwm1_handler.is_initialized = true;
@@ -89,8 +89,6 @@ static void tim_pwm1_init(void)
 
 void tim_pwm1_nvic_counterSet(void)
 {
-    adc_offsetCalib();
-
     vPwm1_handler.inst->DIER = TIM_DIER_UIE; // 오버플로 인터럽트 사용
 
     NVIC_EnableIRQ(TIM1_UP_TIM10_IRQn);

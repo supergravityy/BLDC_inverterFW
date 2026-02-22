@@ -48,8 +48,6 @@ typedef struct pwm_handle
     float u_posDuty;
     float v_posDuty;
     float w_posDuty;
-
-    uint32_t isr_count;
 }typPwm_handle;
 
 

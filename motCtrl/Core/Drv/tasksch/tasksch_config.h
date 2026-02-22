@@ -36,7 +36,7 @@
 // NOTE : Please divide the long-term tasks into short-term tasks with different phases
 #define TASKSCH_OVERRUN_DETECT_ENABLE       (1)
 #define TASKSCH_OVERRUN_DETECT_DISABLE      (0)
-#define TASKSCH_OVERRUN_DETECT              (TASKSCH_OVERRUN_DETECT_ENABLE)     // NOTE : USER DEFINE
+#define TASKSCH_OVERRUN_DETECT              (TASKSCH_OVERRUN_DETECT_DISABLE)     // NOTE : USER DEFINE
 
 #define TASKSCH_CYCLE_MEASURE_ENABLE        (1)
 #define TASKSCH_CYCLE_MEASURE_DISABLE       (0)

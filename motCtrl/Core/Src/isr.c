@@ -47,7 +47,7 @@ void EXTI2_IRQHandler(void)
 
 void TIM1_UP_TIM10_IRQHandler(void) // 20KHz 로 호출됨
 {
-    mtrCtrl_setErrCode(MTRCTRL_ERR_OVER_CURRENT);
+    mtrCtrl_chkErrSt(MTRCTRL_ERR_OVER_CURRENT);
     isr_pwm1_intrrpt_cnt_debug++;
 
     if (tim_getPwm1_ISR_flg() == true)
@@ -57,14 +57,14 @@ void TIM1_UP_TIM10_IRQHandler(void) // 20KHz 로 호출됨
         if (mtrCtrl_getPeriphInit() == true && mtrCtrl_getAppInit_flg() == true)
         {
             mtrCtrl_calc_mtrSpeed();
-
-            // 스로틀 데이터는 태스크에서 읽는걸로 바꾸자..
+            hallsens_update_hallSeq();
 
             mtrCtrl_setFinalCCR_refVal();
 
-            if(mtrCtrl_getErrCode() == MTRCTRL_ERR_NONE)
+            if(mtrCtrl_getErrCode() == MTRCTRL_ERR_NONE && throttle_get_validateFlg() == true) // PI제어일때도 역시 스로틀이 눌려야 실질적으로 모터가 동작함
             {
                 tim_Pwm1_Unmute_channel(TIM_SELECT_ALL_LINE);
+                // hallsens_update_hallSeq();
                 hallsens_update_swtPattern();
             }
             else

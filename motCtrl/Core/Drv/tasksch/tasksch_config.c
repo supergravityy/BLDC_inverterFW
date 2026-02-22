@@ -12,7 +12,8 @@
 
 /*---- USER INCLUDE ----*/
 
-#include"../../Inc/uart.h"
+#include "../../Inc/Gpio.h"
+#include "../../Inc/uart.h"
 #include "../hallSens/hallsens.h"
 #include "../sensing/sensing.h"
 #include "../mtrCtrl/mtrCtrl.h"
@@ -53,6 +54,7 @@ typMtrCtrl_sys vMtrCtrl_system;
 
 void Task_1ms(void)
 {
+	throttle_update_proc();
     mtrCtrl_PI_update();
 }
 
@@ -61,19 +63,15 @@ void Task_10ms(void)
     mtrCtrl_setSelCtrlMode(vMtrCtrl_system.userMode);
     mtrCtrl_setCtrlContinue(vMtrCtrl_system.ctrlContinue_debug);
 
-    if(mtrCtrl_getSelCtrlMode() == MTRCTRL_CTRL_THROTTLE)
+    if(mtrCtrl_getSelCtrlMode() == MTRCTRL_CTRL_PI)
     {
-        throttle_update_proc();
-    }
-    else
-    {
-        mtrCtrl_PI_setTunings(vMtrCtrl_system.userKp, vMtrCtrl_system.userKi);
-        mtrCtrl_PI_setRPMRef(vMtrCtrl_system.userRefRPM);
+    	mtrCtrl_PI_setTunings(vMtrCtrl_system.userKp, vMtrCtrl_system.userKi);
+    	mtrCtrl_PI_setRPMRef(vMtrCtrl_system.userRefRPM);
     }
         
-    mtrCtrl_setErrCode(MTRCTRL_ERR_MOS_HOT);
-    mtrCtrl_setErrCode(MTRCTRL_ERR_UNDER_VOLT);
-    mtrCtrl_setErrCode(MTRCTRL_ERR_RPM_CALC_TIMEOUT); 
+    mtrCtrl_chkErrSt(MTRCTRL_ERR_MOS_HOT);
+    mtrCtrl_chkErrSt(MTRCTRL_ERR_UNDER_VOLT);
+    mtrCtrl_chkErrSt(MTRCTRL_ERR_RPM_CALC_TIMEOUT); 
 }
 
 void Task_100ms(void)
@@ -108,10 +106,12 @@ void Task_500ms(void)
     uart_AT09_sendStr_polling("\r\ntemp : ",strlen("\r\ntemp : "));
     uart_AT09_sendFloat_polling(NTC_getTemper(),1);
 
-    uart_AT09_sendStr_polling("\r\nfaultNum : ", strlen("\r\ntnfaultNum : "));
-    art_AT09_sendInteger_polling(mtrCtrl_getErrCode());
+    uart_AT09_sendStr_polling("\r\nfaultNum : ", strlen("\r\nfaultNum : "));
+    uart_AT09_sendFloat_polling(mtrCtrl_getErrCode(),1);
 
     uart_AT09_sendStr_polling("\r\n\n",strlen("\r\n\n"));
+
+    gpio_toggle_pin(GPIOC, 6);
 }
 
 void Task_1sec(void)
@@ -162,7 +162,7 @@ void tasksch_init_RegiTaskObj(void)
 void tasksch_userInitCmpltHook(void)
 {
     // MCAL 상위 계층의 모듈들 전부 초기화
-
+	adc_offsetCalib();
     utils_LPF_RPM_init();
     utils_LPF_phaseCurr_init();
     hallsens_init();

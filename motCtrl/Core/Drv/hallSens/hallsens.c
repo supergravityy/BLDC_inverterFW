@@ -53,7 +53,6 @@ void hallsens_init(void)
 
     vHallSens_handler.curr_hallSum = 0;
     vHallSens_handler.prev_hallSum = 0;
-    vHallSens_handler.direction = MTR_DIR_STP;
 
     vHallSens_handler.prevTick = 0;
     vHallSens_handler.currTick = 0;
@@ -69,34 +68,49 @@ void hallsens_init(void)
 static void hallsens_set_PWMduty(typMtrPhase phases[])
 {
     uint8_t idx;
-    uint32_t tempCCR_refVal;
+    uint32_t tempCCR_refVal = mtrCtrl_getFinalCCR_refVal();
+    typTim_sigLineNum tempLineNum;
 
-    // 1. PWM 듀티 계산
-    tempCCR_refVal = mtrCtrl_getFinalCCR_refVal();
+    // 1. 정지 신호인지 확인
+
+    if (tempCCR_refVal == 0 || mtrCtrl_getCtrlContinue() == false)
+    {
+		tim_Pwm1_Mute_channel(TIM_SELECT_ALL_LINE);
+		tim_Pwm1_setCmpVal(TIM_SELECT_ALL_LINE, 0);
+		return;
+	}
+
+    // 2. 센터얼라인드 모드의 듀티값과 파형의 전력값이 반비례임을 고려
     vHallSens_handler.dutyVal[HALLSENS_U_IDX] = HALLSENS_CAL_DUTY_CNTR_ALIGNED_PWM(tempCCR_refVal);
     vHallSens_handler.dutyVal[HALLSENS_V_IDX] = HALLSENS_CAL_DUTY_CNTR_ALIGNED_PWM(tempCCR_refVal);
     vHallSens_handler.dutyVal[HALLSENS_W_IDX] = HALLSENS_CAL_DUTY_CNTR_ALIGNED_PWM(tempCCR_refVal);
 
-    // 2. 정지 신호인지 확인
-    if(tempCCR_refVal == 0 || mtrCtrl_getCtrlContinue() == false)
-    {
-        tim_Pwm1_Mute_channel(TIM_SELECT_ALL_LINE);
-        tim_Pwm1_setCmpVal(TIM_SELECT_ALL_LINE,0);
-        return ;
-    }
+    // 3. 각 상의 상태에 따른 제어
+	for (idx = 0; idx < HALLSENS_PH_NUM; idx++)
+	{
+        tempLineNum = idx + 1;
 
-    // 3. PWM 위상 세팅
-    for(idx = 0; idx < HALLSENS_PH_NUM ; idx++)
-    {
-        if(phases[idx] == MTR_DIR_FWD)      tempCCR_refVal = vHallSens_handler.dutyVal[idx];
-        else if(phases[idx] == MTR_DIR_REV) tempCCR_refVal = HALLSENS_DUTY_MAX;
-        else                                tempCCR_refVal = 0;
-
-        tim_Pwm1_setCmpVal((typTim_sigLineNum)idx, tempCCR_refVal);
-        tim_Pwm1_Unmute_channel((typTim_sigLineNum)idx);
-    }
+		if (phases[idx] == MTR_DIR_FWD) // (1) 전압 인가 상
+		{
+			// 상측 MOSFET의 게이트에 PWM 파형을 출력
+			tim_Pwm1_setCmpVal(tempLineNum, vHallSens_handler.dutyVal[idx]);
+			tim_Pwm1_Unmute_channel(tempLineNum);
+		}
+		else if (phases[idx] == MTR_DIR_REV) // (-1) 전류가 빠져나가는 상 (GND)
+		{
+			// 하측 MOSFET만 켜지게 함
+			tim_Pwm1_setCmpVal(tempLineNum, HALLSENS_DUTY_MAX);
+			tim_Pwm1_Unmute_channel(tempLineNum);
+		}
+		else // (0) 플로팅 상 (STP)
+		{
+			// CCR 값과 상관없이 출력을 아예 차단(Floating)
+			tim_Pwm1_Mute_channel(tempLineNum);
+		}
+	}
 }
 
+#if (MOTOR_DIR == MOTOR_DIR_CW)
 static void hallsens_setPhase_FWD(void)
 {
     typMtrPhase phases[HALLSENS_PH_NUM] = {0};
@@ -127,6 +141,7 @@ static void hallsens_setPhase_FWD(void)
 #endif
     hallsens_set_PWMduty(phases);
 }
+#endif
 
 #if (MOTOR_DIR == MOTOR_DIR_CCW)
 static void hallsens_setPhase_REV(void)
@@ -179,7 +194,7 @@ void hallsens_cal_motorRPM(void)
 {
     vHallSens_handler.currTick = tim_getTim2_cnt();
 
-    if (vHallSens_handler.currTick >= HALLSENS_CNT_MAXTICK)
+    if (vHallSens_handler.currTick >= vHallSens_handler.prevTick)
     {
         vHallSens_handler.deltaTick = vHallSens_handler.currTick - vHallSens_handler.prevTick;
     }

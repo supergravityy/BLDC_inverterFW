@@ -25,11 +25,11 @@ typedef struct hall_handle
     GPIO_TypeDef* port[HALLSENS_PH_NUM];
     uint8_t       pin[HALLSENS_PH_NUM];
 
+    // 홀센서 위치측정
     uint8_t hallPin_state[HALLSENS_PH_NUM];   // 각 홀 센서의 현재 상태 (0 또는 1)
     uint32_t dutyVal[HALLSENS_PH_NUM];
     uint8_t curr_hallSum;                        // 1~6 사이의 HallSum 값
     uint8_t prev_hallSum;
-    typMtrPhase direction;              // 1: Fwd, -1: Rev, 0: Stop
     
     // 속도측정
     volatile uint32_t prevTick;

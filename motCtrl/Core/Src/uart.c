@@ -217,7 +217,7 @@ void uart_AT09_recvStr_polling(char* buff, uint32_t len)
     uart_recvStr_polling(&uart3_handler, buff, len);
 }
 
-void art_AT09_sendInteger_polling(int32_t val)
+void uart_AT09_sendInteger_polling(int32_t val)
 {
     uart_send_int(&uart3_handler, val);
 }

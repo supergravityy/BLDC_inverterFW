@@ -25,7 +25,7 @@
 
 #define THROTTLE_OFF_VOLT       (1.0f)
 #define THROTTLE_ON_VOLT        (1.05f)
-#define THROTTLE_RAMP_UNIT      (0.15f)
+#define THROTTLE_RAMP_UNIT      (3.f)
 #define THROTTLE_PWM_PERIOD_VAL (PWM1_PERIOD_TICK) // 타이머의 최대 카운트 값
 #define THROTTLE_MAX_MARGIN     (100UL)
 // 100% 듀티를 방지하기 위해 -> 하프브리지 구조에서 100%는 위험
@@ -34,7 +34,7 @@
 #define NTC_OVERHEAT_CELCIUS    (100.0f) // NTC 과열 판단 기준 전압 (예시값, 실제로는 센서 특성에 따라 다름)
 #define NTC_NORMAL_CELCIUS      (90.0f) // NTC 정상 판단 기준 전압 (예시값)
 
-#ifdef USE_INWHEEL
+#if (USE_INWHEEL == 1)
 #define DC_VOLT_LOW_THRESH      (32.0f) // 저전압 판단 기준 전압 
 #else
 #define DC_VOLT_LOW_THRESH      (20.0f) // 저전압 판단 기준 전압
@@ -92,6 +92,7 @@ typedef struct sensingCurr_handle
 }typSensingCurr_handle;
 
 void throttle_update_proc(void);
+bool throttle_get_validateFlg(void);
 float throttle_get_refVolt(void);
 uint32_t throttle_get_CCR_ref(void);
 

@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 #ifndef USE_INWHEEL
-#define USE_INWHEEL 1
+#define USE_INWHEEL 0
 #endif
 
 /* ---------- math ---------- */ 
@@ -24,7 +24,7 @@
 // Hall 엣지 수 (한 바퀴당 인터럽트 수
 //소형 BLDC모터:24.0f, 인휠모터:90.0f로 수정
 #ifndef HALL_EDGES_PER_REV
-#ifdef USE_INWHEEL
+#if (USE_INWHEEL == 1)
 #define HALL_EDGES_PER_REV              (90.0f)
 #else
 #define HALL_EDGES_PER_REV              (24.0f)
