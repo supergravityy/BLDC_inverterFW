@@ -1,209 +1,82 @@
-/* USER CODE BEGIN Header */
-/**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2026 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
-/* USER CODE END Header */
-/* Includes ------------------------------------------------------------------*/
-#include "main.h"
+#include "stm32f767xx.h"
+#include "utils.h"
+#include "system.h"
+#include "gpio.h"
+#include "tim.h"
+#include "adc.h"
+#include "dac.h"
+#include "isr.h"
+#include "uart.h"
+#include "../Drv/tasksch/tasksch.h"
+#include "../Drv/mtrCtrl/mtrCtrl.h"
 
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
-
-/* USER CODE END Includes */
-
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
-
-/* USER CODE END PD */
-
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
-/* Private variables ---------------------------------------------------------*/
-
-/* USER CODE BEGIN PV */
-
-/* USER CODE END PV */
-
-/* Private function prototypes -----------------------------------------------*/
-void SystemClock_Config(void);
-static void MPU_Config(void);
-/* USER CODE BEGIN PFP */
-
-/* USER CODE END PFP */
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
-
-/**
-  * @brief  The application entry point.
-  * @retval int
-  */
 int main(void)
 {
+    system_clock_init();
+    system_sysTick_init();
+    gpio_init();
+    tim_init();
+    exti_init();
+    adc_init();
+    dac_init();
+    uart_AT09_init(9600, 8, 1, UART_PARITY_NONE);
+    uart_debug_init(9600, 8, 1, UART_PARITY_NONE);
+    tasksch_init();
+    mtrCtrl_objInit(0,0);
+    mtrCtrl_setPeriphInit();
 
-  /* USER CODE BEGIN 1 */
+    tim_pwm1_nvic_counterSet(); // TIM1의 ISR에서 모듈을 사용하기에 제일 마지막에 호출 될 것
 
-  /* USER CODE END 1 */
-
-  /* MPU Configuration--------------------------------------------------------*/
-  MPU_Config();
-
-  /* MCU Configuration--------------------------------------------------------*/
-
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
-
-  /* USER CODE BEGIN Init */
-
-  /* USER CODE END Init */
-
-  /* Configure the system clock */
-  SystemClock_Config();
-
-  /* USER CODE BEGIN SysInit */
-
-  /* USER CODE END SysInit */
-
-  /* Initialize all configured peripherals */
-  /* USER CODE BEGIN 2 */
-
-  /* USER CODE END 2 */
-
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-    /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
-  }
-  /* USER CODE END 3 */
+    tasksch_execTask();
 }
 
-/**
-  * @brief System Clock Configuration
-  * @retval None
-  */
-void SystemClock_Config(void)
-{
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+/*---------------------------------------
+ * 이슈노트
+ *
+ * tasksch_config.h 의 오버런 디텍션설정이 enable로 되어있었음 (오버런 감지) -> disable로 수정
+ *
+ * Vdc를 제대로 읽지 못해서 언더볼테지 에러 발생 -> DCVOLT_VOLT_2_ACTUAL가 전압 분배값으로 나누는게 아닌 곱하는 매크로였음
+ *
+ * ADC 설정이 틀려서 스로틀이 안먹는거 같음 -> isr과 태스크 adc 측정함수간의 경쟁조건으로 값이 오염됨
+ *
+ * 전류객체의 전류값이 -단으로 찍힘 (원본은 +로 찍힘) -> 초기화 순서가 잘못되었음 sensing 객체 초기화 전에 adc_offsetCalib 이 끝났어야 함
+ * 										-> SENSING_ADC_2_CURR 매크로가 다시 오프셋 측정값을 빼는 문제가 있었음
+ *
+ * 현재 스로틀로 모터를 동작시키면 우드득 소리가 나면서 덜덜 떨림 -> mcal 단의 cr1 레지스터 설정이 완전하지 않았음
+ *									-> REV(-1) 상은 gnd를 출력하기 위해선 CCR = HALLSENS_DUTY_MAX 여야할 것
+ *									-> STP(0) 상은 floating 상태를 갖기 위해선 pwm 출력자체를 차단해야함
+ *
+ * 스로틀을 당기면 손으로 살짝 축을 조작해야 동작을 시작 및 반응성 낮음 -> 반응성 저하 : 스로틀 측정 로직이 10ms에서 동작 => ramp 슬로프 단위가 큼
+ *					-> 손으로 살짝 축을 조작 : hallsens_set_PWMduty 에서 tim_Pwm1_Unmute_channel, tim_Pwm1_setCmpVal 함수에 상 번호를 전달하는데,
+ *					enum 타입 변환이 안되어서 W상이 아예 동작을 안했었음
+ *
+ * 스로틀을 동작시키지 않은 정지상태에서 타임아웃 에러가 발생함 -> 스로틀제어 PI 모두 throttle validateFlg 을 확인해야 할 것
+ *
+ * rpm 계산로직이 이상한 값을 출력함 -> hallsens_cal_motorRPM 에서 deltaTick 구하는 조건이 생뚱맞게 작성됨
+ *
+ * rpm 계산이 모터가 동작할때만 업데이트 됨 ->
+ *
+ * 스로틀 제어시 CCR 값의 반응성이 너무 느림 -> 스로틀을 최대출력으로 놓고 떼면 최종 CCR값이 너무 천천히 떨어져서, 0이되기전 스로틀을 당기면 모터가 흔들리며 급발진 하는 문제가 발생
+ *
+ * --------------------------------------*/
 
-  /** Configure the main internal regulator output voltage
-  */
-  __HAL_RCC_PWR_CLK_ENABLE();
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE3);
+// 질문 -> ramp 함수를 품은 모터 제어 로직이 태스크에서 돌아갈 때, 태스크 주기는 무조건 짧은게 좋음
+// 근데 만약, 비선점형 스케줄러일 경우 -> 정확한 함수동작 시간 측정 필요
+// 이럴때는 모터제어로직을 fsm으로 짜는것보단 input process output이 명확한 함수형태로 짜는게 더 적합?
 
-  /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
+/*---------------------------------------
+ * 수정노트
+ *
+ * 500ms 태스크에 led 토글 추가
+ * 태스크 adc 측정 함수에 critical section 구획
+ * DCVOLT_VOLT_2_ACTUAL를 나누는 매크로로 변경
+ * adc_offsetCalib을 task_init_hook 함수 상단에서 호출 + SENSING_ADC_2_CURR 매크로 수정
+ * tim1(=pwm1)의 cr1 레지스터를 수정 + hallsens_set_PWMduty 함수에서 홀센서 값에 따른 igbt제어(상전류 출력) 로직 수정
+ * 반응성이 저하 되기에 스로틀 변환로직을 1ms 태스크에서 호출하게 함
+ * hallsens_set_PWMduty 에서 각 상의 상태에 따른 제어시 timer 모듈을 호출시, 전달하는 상번호를 타입변환해서 전달
+ * mtrCtrl_check_RPM_timeout 로직의 초반부에서 throttle_get_validateFlg 가 false이면 카운트 초기화 하고 나가게 수정
+ * hallsens_cal_motorRPM 에서 deltaTick 구하는 조건문을 올바르게 수정
+ *
+ * 스로틀을 뗏다고 판단이 되면 강제적으로 0값을 가지게끔 만듬
+ * --------------------------------------*/
 
-  /** Initializes the CPU, AHB and APB buses clocks
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
-  {
-    Error_Handler();
-  }
-}
-
-/* USER CODE BEGIN 4 */
-
-/* USER CODE END 4 */
-
- /* MPU Configuration */
-
-void MPU_Config(void)
-{
-  MPU_Region_InitTypeDef MPU_InitStruct = {0};
-
-  /* Disables the MPU */
-  HAL_MPU_Disable();
-
-  /** Initializes and configures the Region and the memory to be protected
-  */
-  MPU_InitStruct.Enable = MPU_REGION_ENABLE;
-  MPU_InitStruct.Number = MPU_REGION_NUMBER0;
-  MPU_InitStruct.BaseAddress = 0x0;
-  MPU_InitStruct.Size = MPU_REGION_SIZE_4GB;
-  MPU_InitStruct.SubRegionDisable = 0x87;
-  MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
-  MPU_InitStruct.AccessPermission = MPU_REGION_NO_ACCESS;
-  MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_DISABLE;
-  MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
-  MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
-  MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
-
-  HAL_MPU_ConfigRegion(&MPU_InitStruct);
-  /* Enables the MPU */
-  HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
-
-}
-
-/**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
-void Error_Handler(void)
-{
-  /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
-  while (1)
-  {
-  }
-  /* USER CODE END Error_Handler_Debug */
-}
-#ifdef USE_FULL_ASSERT
-/**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
-void assert_failed(uint8_t *file, uint32_t line)
-{
-  /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* USER CODE END 6 */
-}
-#endif /* USE_FULL_ASSERT */

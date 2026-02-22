@@ -114,7 +114,7 @@ typedef enum
   *           - Z  : GPIO mode (Input, Output, Alternate or Analog) on 2 bits
   * @{
   */
-#define  GPIO_MODE_INPUT                        MODE_INPUT                                                  /*!< Input Floating Mode                   */
+#define  INPUT_MODE                             MODE_INPUT                                                  /*!< Input Floating Mode                   */
 #define  GPIO_MODE_OUTPUT_PP                    (MODE_OUTPUT | OUTPUT_PP)                                   /*!< Output Push Pull Mode                 */
 #define  GPIO_MODE_OUTPUT_OD                    (MODE_OUTPUT | OUTPUT_OD)                                   /*!< Output Open Drain Mode                */
 #define  GPIO_MODE_AF_PP                        (MODE_AF | OUTPUT_PP)                                       /*!< Alternate Function Push Pull Mode     */
@@ -278,7 +278,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
   */
 #define IS_GPIO_PIN_ACTION(ACTION) (((ACTION) == GPIO_PIN_RESET) || ((ACTION) == GPIO_PIN_SET))
 #define IS_GPIO_PIN(__PIN__)        ((((uint32_t)(__PIN__) & GPIO_PIN_MASK) != 0x00U))
-#define IS_GPIO_MODE(MODE) (((MODE) == GPIO_MODE_INPUT)              ||\
+#define IS_GPIO_MODE(MODE) (((MODE) == INPUT_MODE)              ||\
                             ((MODE) == GPIO_MODE_OUTPUT_PP)          ||\
                             ((MODE) == GPIO_MODE_OUTPUT_OD)          ||\
                             ((MODE) == GPIO_MODE_AF_PP)              ||\
