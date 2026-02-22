@@ -11,8 +11,12 @@
       "intelliSenseMode": "windows-gcc-x64",
       "compilerArgs": [
         ""
+<<<<<<< HEAD
+      ]
+=======
       ],
       "compileCommands": "./Debug/compile_commands.json"
+>>>>>>> mot_inverter
     }
   ],
   "version": 4
