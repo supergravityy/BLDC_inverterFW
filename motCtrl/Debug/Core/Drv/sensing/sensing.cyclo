@@ -1,0 +1,17 @@
+../Core/Drv/sensing/sensing.c:27:6:throttle_init	1
+../Core/Drv/sensing/sensing.c:38:13:throttle_sensing	3
+../Core/Drv/sensing/sensing.c:57:13:throttle_ramp2Tgt	5
+../Core/Drv/sensing/sensing.c:78:13:throttle_postProcess	2
+../Core/Drv/sensing/sensing.c:96:6:throttle_update_proc	2
+../Core/Drv/sensing/sensing.c:115:6:throttle_get_validateFlg	1
+../Core/Drv/sensing/sensing.c:120:7:throttle_get_refVolt	1
+../Core/Drv/sensing/sensing.c:125:10:throttle_get_CCR_ref	1
+../Core/Drv/sensing/sensing.c:130:6:NTC_init	1
+../Core/Drv/sensing/sensing.c:137:7:NTC_getTemper	1
+../Core/Drv/sensing/sensing.c:142:6:NTC_getHeat_st	3
+../Core/Drv/sensing/sensing.c:160:6:dcVolt_init	1
+../Core/Drv/sensing/sensing.c:167:7:dcVolt_voltage	1
+../Core/Drv/sensing/sensing.c:172:6:dcVolt_getLowVolt_st	2
+../Core/Drv/sensing/sensing.c:189:6:sensingCurr_init	2
+../Core/Drv/sensing/sensing.c:204:6:sensingCurr_getOverCurrent_st	17
+../Core/Drv/sensing/sensing.c:251:6:sensing_objs_Init	1

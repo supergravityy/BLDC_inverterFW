@@ -1,0 +1,9 @@
+../Core/Src/adc.c:20:6:adc_offsetCalib	4
+../Core/Src/adc.c:50:6:adc_getOffsetCalib_val	2
+../Core/Src/adc.c:58:6:adc_init	1
+../Core/Src/adc.c:111:10:adc_conv_rawNTC_polling	2
+../Core/Src/adc.c:128:10:adc_conv_rawThrottle_polling	2
+../Core/Src/adc.c:145:10:adc_conv_rawVdc_polling	2
+../Core/Src/adc.c:164:10:adc_conv_rawIus_polling	2
+../Core/Src/adc.c:176:10:adc_conv_rawIvs_polling	2
+../Core/Src/adc.c:188:10:adc_conv_rawIws_polling	2

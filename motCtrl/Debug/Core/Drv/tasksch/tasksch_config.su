@@ -1,0 +1,13 @@
+../Core/Drv/tasksch/tasksch_config.c:55:6:Task_1ms	8	static
+../Core/Drv/tasksch/tasksch_config.c:61:6:Task_10ms	8	static
+../Core/Drv/tasksch/tasksch_config.c:77:6:Task_100ms	16	static
+../Core/Drv/tasksch/tasksch_config.c:95:6:Task_500ms	8	static
+../Core/Drv/tasksch/tasksch_config.c:117:6:Task_1sec	4	static
+../Core/Drv/tasksch/tasksch_config.c:122:6:tasksch_init_RegiTaskObj	4	static
+../Core/Drv/tasksch/tasksch_config.c:162:6:tasksch_userInitCmpltHook	8	static
+../Core/Drv/tasksch/tasksch_config.c:181:6:tasksch_requestExit	4	static
+../Core/Drv/tasksch/tasksch_config.c:186:6:tasksch_initWatchdog	16	static
+../Core/Drv/tasksch/tasksch_config.c:202:6:tasksch_beginWatchdog	16	static
+../Core/Drv/tasksch/tasksch_config.c:225:6:tasksch_feedWatchdog	16	static
+../Core/Drv/tasksch/tasksch_config.c:245:6:tasksch_ValidateUser_RegiTaskInfos	16	static
+../Core/Drv/tasksch/tasksch_config.c:260:6:tasksch_getUserRegi_taskInfo	16	static

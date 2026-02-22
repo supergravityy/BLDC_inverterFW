@@ -1,0 +1,172 @@
+[
+    {
+        "command": "arm-none-eabi-gcc \"../Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.d\" -MT\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Drivers\\STM32F7xx_HAL_Driver\\Src\\stm32f7xx_hal.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.d\" -MT\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Drivers\\STM32F7xx_HAL_Driver\\Src\\stm32f7xx_hal_cortex.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma.d\" -MT\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Drivers\\STM32F7xx_HAL_Driver\\Src\\stm32f7xx_hal_dma.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma_ex.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma_ex.d\" -MT\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma_ex.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma_ex.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Drivers\\STM32F7xx_HAL_Driver\\Src\\stm32f7xx_hal_dma_ex.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_exti.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_exti.d\" -MT\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_exti.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_exti.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Drivers\\STM32F7xx_HAL_Driver\\Src\\stm32f7xx_hal_exti.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_flash.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_flash.d\" -MT\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_flash.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_flash.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Drivers\\STM32F7xx_HAL_Driver\\Src\\stm32f7xx_hal_flash.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_flash_ex.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_flash_ex.d\" -MT\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_flash_ex.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_flash_ex.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Drivers\\STM32F7xx_HAL_Driver\\Src\\stm32f7xx_hal_flash_ex.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.d\" -MT\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Drivers\\STM32F7xx_HAL_Driver\\Src\\stm32f7xx_hal_gpio.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c.d\" -MT\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Drivers\\STM32F7xx_HAL_Driver\\Src\\stm32f7xx_hal_i2c.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c_ex.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c_ex.d\" -MT\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c_ex.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c_ex.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Drivers\\STM32F7xx_HAL_Driver\\Src\\stm32f7xx_hal_i2c_ex.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr.d\" -MT\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Drivers\\STM32F7xx_HAL_Driver\\Src\\stm32f7xx_hal_pwr.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.d\" -MT\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Drivers\\STM32F7xx_HAL_Driver\\Src\\stm32f7xx_hal_pwr_ex.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.d\" -MT\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Drivers\\STM32F7xx_HAL_Driver\\Src\\stm32f7xx_hal_rcc.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.d\" -MT\"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Drivers\\STM32F7xx_HAL_Driver\\Src\\stm32f7xx_hal_rcc_ex.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Core/Src/Gpio.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Core/Src/Gpio.d\" -MT\"Core/Src/Gpio.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Core/Src/Gpio.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Core\\Src\\Gpio.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Core/Src/adc.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Core/Src/adc.d\" -MT\"Core/Src/adc.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Core/Src/adc.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Core\\Src\\adc.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Core/Src/dac.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Core/Src/dac.d\" -MT\"Core/Src/dac.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Core/Src/dac.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Core\\Src\\dac.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Core/Src/exti.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Core/Src/exti.d\" -MT\"Core/Src/exti.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Core/Src/exti.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Core\\Src\\exti.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Core/Src/isr.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Core/Src/isr.d\" -MT\"Core/Src/isr.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Core/Src/isr.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Core\\Src\\isr.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Core/Src/main.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Core/Src/main.d\" -MT\"Core/Src/main.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Core/Src/main.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Core\\Src\\main.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Core/Src/stm32f7xx_hal_msp.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Core/Src/stm32f7xx_hal_msp.d\" -MT\"Core/Src/stm32f7xx_hal_msp.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Core/Src/stm32f7xx_hal_msp.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Core\\Src\\stm32f7xx_hal_msp.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Core/Src/stm32f7xx_it.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Core/Src/stm32f7xx_it.d\" -MT\"Core/Src/stm32f7xx_it.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Core/Src/stm32f7xx_it.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Core\\Src\\stm32f7xx_it.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Core/Src/syscalls.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Core/Src/syscalls.d\" -MT\"Core/Src/syscalls.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Core/Src/syscalls.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Core\\Src\\syscalls.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Core/Src/sysmem.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Core/Src/sysmem.d\" -MT\"Core/Src/sysmem.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Core/Src/sysmem.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Core\\Src\\sysmem.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Core/Src/system.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Core/Src/system.d\" -MT\"Core/Src/system.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Core/Src/system.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Core\\Src\\system.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Core/Src/system_stm32f7xx.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Core/Src/system_stm32f7xx.d\" -MT\"Core/Src/system_stm32f7xx.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Core/Src/system_stm32f7xx.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Core\\Src\\system_stm32f7xx.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Core/Src/tim.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Core/Src/tim.d\" -MT\"Core/Src/tim.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Core/Src/tim.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Core\\Src\\tim.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Core/Src/uart.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Core/Src/uart.d\" -MT\"Core/Src/uart.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Core/Src/uart.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Core\\Src\\uart.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Core/Src/utils.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Core/Src/utils.d\" -MT\"Core/Src/utils.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Core/Src/utils.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Core\\Src\\utils.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Core/Drv/tasksch/tasksch.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Core/Drv/tasksch/tasksch.d\" -MT\"Core/Drv/tasksch/tasksch.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Core/Drv/tasksch/tasksch.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Core\\Drv\\tasksch\\tasksch.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Core/Drv/tasksch/tasksch_config.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Core/Drv/tasksch/tasksch_config.d\" -MT\"Core/Drv/tasksch/tasksch_config.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Core/Drv/tasksch/tasksch_config.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Core\\Drv\\tasksch\\tasksch_config.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Core/Drv/sensing/sensing.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Core/Drv/sensing/sensing.d\" -MT\"Core/Drv/sensing/sensing.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Core/Drv/sensing/sensing.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Core\\Drv\\sensing\\sensing.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Core/Drv/mtrCtrl/mtrCtrl.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Core/Drv/mtrCtrl/mtrCtrl.d\" -MT\"Core/Drv/mtrCtrl/mtrCtrl.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Core/Drv/mtrCtrl/mtrCtrl.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Core\\Drv\\mtrCtrl\\mtrCtrl.c"
+    },
+    {
+        "command": "arm-none-eabi-gcc \"../Core/Drv/hallSens/hallsens.c\" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF\"Core/Drv/hallSens/hallsens.d\" -MT\"Core/Drv/hallSens/hallsens.o\" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o \"Core/Drv/hallSens/hallsens.o\"",
+        "directory": "d:/Motor_Control_proj/firmware/motCtrl/Debug",
+        "file": "d:\\Motor_Control_proj\\firmware\\motCtrl\\Core\\Drv\\hallSens\\hallsens.c"
+    }
+]

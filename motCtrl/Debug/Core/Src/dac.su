@@ -1,0 +1,3 @@
+../Core/Src/dac.c:9:6:dac_init	8	static
+../Core/Src/dac.c:25:6:DAC_setValue_ch1	16	static
+../Core/Src/dac.c:31:6:DAC_setValue_ch2	16	static

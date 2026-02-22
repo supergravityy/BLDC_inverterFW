@@ -1,0 +1,4 @@
+../Drivers/CMSIS/Include/core_cm7.h:1896:22:__NVIC_EnableIRQ	2
+../Core/Src/exti.c:11:6:exti_init	1
+../Core/Src/exti.c:47:13:exti_check_extiPR	5
+../Core/Src/exti.c:62:13:exti_clear_extiPR	5

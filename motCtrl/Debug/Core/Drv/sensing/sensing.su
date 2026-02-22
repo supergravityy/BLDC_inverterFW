@@ -1,0 +1,17 @@
+../Core/Drv/sensing/sensing.c:27:6:throttle_init	4	static
+../Core/Drv/sensing/sensing.c:38:13:throttle_sensing	8	static
+../Core/Drv/sensing/sensing.c:57:13:throttle_ramp2Tgt	24	static
+../Core/Drv/sensing/sensing.c:78:13:throttle_postProcess	8	static
+../Core/Drv/sensing/sensing.c:96:6:throttle_update_proc	16	static
+../Core/Drv/sensing/sensing.c:115:6:throttle_get_validateFlg	4	static
+../Core/Drv/sensing/sensing.c:120:7:throttle_get_refVolt	4	static
+../Core/Drv/sensing/sensing.c:125:10:throttle_get_CCR_ref	4	static
+../Core/Drv/sensing/sensing.c:130:6:NTC_init	4	static
+../Core/Drv/sensing/sensing.c:137:7:NTC_getTemper	4	static
+../Core/Drv/sensing/sensing.c:142:6:NTC_getHeat_st	8	static
+../Core/Drv/sensing/sensing.c:160:6:dcVolt_init	4	static
+../Core/Drv/sensing/sensing.c:167:7:dcVolt_voltage	4	static
+../Core/Drv/sensing/sensing.c:172:6:dcVolt_getLowVolt_st	8	static
+../Core/Drv/sensing/sensing.c:189:6:sensingCurr_init	24	static
+../Core/Drv/sensing/sensing.c:204:6:sensingCurr_getOverCurrent_st	32	static
+../Core/Drv/sensing/sensing.c:251:6:sensing_objs_Init	8	static
