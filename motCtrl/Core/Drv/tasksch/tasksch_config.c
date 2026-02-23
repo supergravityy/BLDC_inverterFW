@@ -56,10 +56,14 @@ void Task_1ms(void)
 {
 	throttle_update_proc();
     mtrCtrl_PI_update();
+
+    mtrCtrl_setFinalCCR_refVal();
 }
 
 void Task_10ms(void)
 {
+	hallsens_check_zeroSpd();
+	mtrCtrl_calc_mtrSpeed();
     mtrCtrl_setSelCtrlMode(vMtrCtrl_system.userMode);
     mtrCtrl_setCtrlContinue(vMtrCtrl_system.ctrlContinue_debug);
 
@@ -71,7 +75,6 @@ void Task_10ms(void)
         
     mtrCtrl_chkErrSt(MTRCTRL_ERR_MOS_HOT);
     mtrCtrl_chkErrSt(MTRCTRL_ERR_UNDER_VOLT);
-    mtrCtrl_chkErrSt(MTRCTRL_ERR_RPM_CALC_TIMEOUT); 
 }
 
 void Task_100ms(void)

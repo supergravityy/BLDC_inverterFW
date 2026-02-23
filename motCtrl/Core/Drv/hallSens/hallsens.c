@@ -58,14 +58,16 @@ void hallsens_init(void)
     vHallSens_handler.currTick = 0;
     vHallSens_handler.deltaTick = 0.0f;
     vHallSens_handler.rawMtrRPM = 0;
-    vHallSens_handler.filteredMtrRPM = 0;
+    vHallSens_handler.new_MtrRPM = 0;
+    vHallSens_handler.old_MtrRPM = 0;
+    vHallSens_handler.zeroSpd_cnt = 0;
 
     hallsens_update_hallSeq();
 
     vHallSens_handler.is_initialized = true;
 }
 
-static void hallsens_set_PWMduty(typMtrPhase phases[])
+inline static void hallsens_set_PWMduty(typMtrPhase phases[])
 {
     uint8_t idx;
     uint32_t tempCCR_refVal = mtrCtrl_getFinalCCR_refVal();
@@ -75,8 +77,8 @@ static void hallsens_set_PWMduty(typMtrPhase phases[])
 
     if (tempCCR_refVal == 0 || mtrCtrl_getCtrlContinue() == false)
     {
-		tim_Pwm1_Mute_channel(TIM_SELECT_ALL_LINE);
-		tim_Pwm1_setCmpVal(TIM_SELECT_ALL_LINE, 0);
+		tim_Pwm1_Mute_channel(TIM_SELECT_OUTPUT_FLG);
+		tim_Pwm1_setCmpVal(TIM_SELECT_OUTPUT_FLG, 0);
 		return;
 	}
 
@@ -104,14 +106,14 @@ static void hallsens_set_PWMduty(typMtrPhase phases[])
 		}
 		else // (0) 플로팅 상 (STP)
 		{
-			// CCR 값과 상관없이 출력을 아예 차단(Floating)
+			// CCR 값과 상관없이 출력을 아예 차단 (floating)
 			tim_Pwm1_Mute_channel(tempLineNum);
 		}
 	}
 }
 
 #if (MOTOR_DIR == MOTOR_DIR_CW)
-static void hallsens_setPhase_FWD(void)
+inline static void hallsens_setPhase_FWD(void)
 {
     typMtrPhase phases[HALLSENS_PH_NUM] = {0};
     
@@ -144,7 +146,7 @@ static void hallsens_setPhase_FWD(void)
 #endif
 
 #if (MOTOR_DIR == MOTOR_DIR_CCW)
-static void hallsens_setPhase_REV(void)
+inline static void hallsens_setPhase_REV(void)
 {
     typMtrPhase phases[HALLSENS_PH_NUM] = {0};
 
@@ -210,11 +212,27 @@ void hallsens_cal_motorRPM(void)
         vHallSens_handler.rawMtrRPM = HALLSENS_CAL_MOTOR_RPM(vHallSens_handler.deltaTick);
 
         // 저역통과필터 적용
-        vHallSens_handler.filteredMtrRPM = utils_LPF_RPM_filter(vHallSens_handler.rawMtrRPM);
+        vHallSens_handler.new_MtrRPM = utils_LPF_RPM_filter(vHallSens_handler.rawMtrRPM);
     }
+}
+
+void hallsens_check_zeroSpd(void)
+{
+	if(vHallSens_handler.new_MtrRPM == vHallSens_handler.old_MtrRPM)
+	{
+		vHallSens_handler.zeroSpd_cnt++;
+
+		if(vHallSens_handler.zeroSpd_cnt >= HALLSENS_ZEROSPD_CNT)
+		{
+			vHallSens_handler.new_MtrRPM = 0.f;
+			vHallSens_handler.zeroSpd_cnt = 0;
+		}
+	}
+
+	vHallSens_handler.old_MtrRPM = vHallSens_handler.new_MtrRPM;
 }
 
 float hallsens_get_motorRPM(void)
 {
-    return vHallSens_handler.filteredMtrRPM;
+    return vHallSens_handler.new_MtrRPM;
 }

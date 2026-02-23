@@ -15,7 +15,7 @@
 
 typedef enum tim_sigLineNum
 {
-    TIM_SELECT_ALL_LINE = 0,
+    TIM_SELECT_OUTPUT_FLG = 0,
     TIM_SELECT_U_LINE,
     TIM_SELECT_V_LINE,
     TIM_SELECT_W_LINE

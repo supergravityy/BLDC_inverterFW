@@ -11,7 +11,9 @@
 #define HALLSENS_U_IDX              (MTRCTRL_PHASE_CURR_U_IDX)
 #define HALLSENS_V_IDX              (MTRCTRL_PHASE_CURR_V_IDX)    
 #define HALLSENS_W_IDX              (MTRCTRL_PHASE_CURR_W_IDX)
-#define HALLSENS_DUTY_MAX           (PWM1_PERIOD_TICK)
+#define HALLSENS_DUTY_MAX           (PWM1_PERIOD_TICK)\
+
+#define HALLSENS_ZEROSPD_CNT		(50U) // 500ms
 
 typedef enum mtrPhase
 {
@@ -31,12 +33,14 @@ typedef struct hall_handle
     uint8_t curr_hallSum;                        // 1~6 사이의 HallSum 값
     uint8_t prev_hallSum;
     
-    // 속도측정
+    // rpm측정
     volatile uint32_t prevTick;
     volatile uint32_t currTick;
     volatile uint32_t deltaTick;
     volatile float rawMtrRPM;
-    float filteredMtrRPM;
+    float new_MtrRPM;
+    float old_MtrRPM;
+    volatile uint16_t zeroSpd_cnt;
 
     bool is_initialized;
 }typHall_Handle;
@@ -45,4 +49,5 @@ void hallsens_update_hallSeq(void);
 void hallsens_init(void);
 void hallsens_update_swtPattern(void);
 void hallsens_cal_motorRPM(void);
+void hallsens_check_zeroSpd(void);
 float hallsens_get_motorRPM(void);

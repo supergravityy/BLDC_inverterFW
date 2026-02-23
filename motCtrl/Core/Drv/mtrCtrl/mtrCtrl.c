@@ -102,40 +102,6 @@ void mtrCtrl_PI_update(void)
     }
 }
 
-bool mtrCtrl_check_RPM_timeout(void)
-{
-    vMotorCtrl_manager.new_rpm = hallsens_get_motorRPM();
-
-	if (throttle_get_validateFlg() == false)
-	{
-		vMotorCtrl_manager.rpm_timeout_cnt = 0;
-		return false;
-	}
-
-    if ((vMotorCtrl_manager.new_rpm != 0) && (vMotorCtrl_manager.new_rpm == vMotorCtrl_manager.old_rpm))
-    {
-        vMotorCtrl_manager.rpm_timeout_cnt++;
-
-        if (vMotorCtrl_manager.rpm_timeout_cnt >= MTRCTRL_RPM_TIMEOUT_MAXCNT)
-        {
-            vMotorCtrl_manager.new_rpm = 0;
-
-#if (INWHEEL != 1)
-            if (mtrCtrl_getSelCtrlMode() == MTRCTRL_CTRL_PI)
-            	mtrCtrl_PI_clearTerms(); // PI 제어시 RPM 계산 타임아웃이 발생하면 PI 제어 초기화하여 모터가 멈추도록 함
-#endif
-            return true; // 타임아웃 발생
-        }
-    }
-    else
-    {
-    	vMotorCtrl_manager.rpm_timeout_cnt = 0;
-    }
-
-    vMotorCtrl_manager.old_rpm = vMotorCtrl_manager.new_rpm;
-    return false; // 타임아웃 없음
-}
-
 void mtrCtrl_objInit(float Kp, float Ki)
 {
     mtrCtrl_PI_init(Kp, Ki);
@@ -145,9 +111,7 @@ void mtrCtrl_objInit(float Kp, float Ki)
     vMotorCtrl_manager.piCtrl = &vPiCtrl_handler;
     vMotorCtrl_manager.final_CCR_refVal = 0;
 
-    vMotorCtrl_manager.new_rpm = 0.0f;
-    vMotorCtrl_manager.old_rpm = 0.0f;
-    vMotorCtrl_manager.rpm_timeout_cnt = 0;
+    vMotorCtrl_manager.motor_RPM = 0.0f;
     vMotorCtrl_manager.overCurr_cnt = 0;
 
     vMotorCtrl_manager.motor_speed_KMH = 0.0f;
@@ -158,7 +122,8 @@ void mtrCtrl_objInit(float Kp, float Ki)
 
 void mtrCtrl_calc_mtrSpeed(void)
 {
-    vMotorCtrl_manager.motor_speed_KMH = UTILS_RPM_TO_KMH(vMotorCtrl_manager.new_rpm);
+	vMotorCtrl_manager.motor_RPM = hallsens_get_motorRPM();
+    vMotorCtrl_manager.motor_speed_KMH = UTILS_RPM_TO_KMH(vMotorCtrl_manager.motor_RPM);
 }
 
 float mtrCtrl_getMotorSpeed_KMH(void)
@@ -168,11 +133,13 @@ float mtrCtrl_getMotorSpeed_KMH(void)
 
 void mtrCtrl_setFinalCCR_refVal(void)
 {
-    if (mtrCtrl_getSelCtrlMode() == MTRCTRL_CTRL_THROTTLE)
+	typMtrCtrl_selCtrl_mode mode = mtrCtrl_getSelCtrlMode();
+
+    if (mode == MTRCTRL_CTRL_THROTTLE)
     {
         vMotorCtrl_manager.final_CCR_refVal = vMotorCtrl_manager.throttleCtrl->CCR_refVal;
     }
-    else if (mtrCtrl_getSelCtrlMode() == MTRCTRL_CTRL_PI)
+    else if (mode == MTRCTRL_CTRL_PI)
     {
         vMotorCtrl_manager.final_CCR_refVal = vMotorCtrl_manager.piCtrl->CCR_refVal;
     }
@@ -274,15 +241,6 @@ void mtrCtrl_chkErrSt(typMtrCtrl_errCode setErr) // 입력 : 어떤 에러체크
         // todo : 과전압 에러 체크 로직 추가 (예: dcVolt_getOverVolt_st() 함수 구현 후 호출)
         break;
 
-    case MTRCTRL_ERR_RPM_CALC_TIMEOUT:
-
-#if (INWHEEL != 1)                                          // 인휠 모터가 아닌 테스트 용이라면 RPM 계산 타임아웃 체크 로직 활성화
-        if (vMotorCtrl_manager.errCode == MTRCTRL_ERR_NONE) // 현재 에러가 없을 때만 기록
-        {
-            vMotorCtrl_manager.errCode = mtrCtrl_check_RPM_timeout() ? MTRCTRL_ERR_RPM_CALC_TIMEOUT : MTRCTRL_ERR_NONE;
-        }
-#endif
-        break;
     default:
         // do nothing
         break;

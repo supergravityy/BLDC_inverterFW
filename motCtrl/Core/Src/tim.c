@@ -103,27 +103,36 @@ void tim_init(void)
     tim_pwm1_init();
     tim_tim2_init();
 
-    tim_Pwm1_Mute_channel(TIM_SELECT_ALL_LINE);
+    tim_Pwm1_Mute_channel(TIM_SELECT_OUTPUT_FLG);
+    tim_Pwm1_Mute_channel(TIM_SELECT_U_LINE);
+    tim_Pwm1_Mute_channel(TIM_SELECT_V_LINE);
+    tim_Pwm1_Mute_channel(TIM_SELECT_W_LINE);
 }
 
 void tim_Pwm1_Mute_channel(typTim_sigLineNum chNum)
 {
     switch(chNum)
     {
-        case TIM_SELECT_ALL_LINE:
+        case TIM_SELECT_OUTPUT_FLG:
             vPwm1_handler.inst->BDTR &= ~(TIM_BDTR_MOE);
             vPwm1_handler.is_outputing = TIM_DET_OUTPUT_FLAG(vPwm1_handler.inst->BDTR);
-            tim_Pwm1_Mute_channel(TIM_SELECT_U_LINE);
+            vPwm1_handler.inst->CCR1 = 0;
+            vPwm1_handler.inst->CCR2 = 0;
+            vPwm1_handler.inst->CCR3 = 0;
+            /* tim_Pwm1_Mute_channel(TIM_SELECT_U_LINE);
             tim_Pwm1_Mute_channel(TIM_SELECT_V_LINE);
-            tim_Pwm1_Mute_channel(TIM_SELECT_W_LINE);
+            tim_Pwm1_Mute_channel(TIM_SELECT_W_LINE); */
             break;
         case TIM_SELECT_U_LINE:
+        	vPwm1_handler.inst->CCR1 = 0;
             vPwm1_handler.inst->CCER &= ~(TIM_CCER_CC1E | TIM_CCER_CC1NE);
             break;
         case TIM_SELECT_V_LINE:
+        	vPwm1_handler.inst->CCR2 = 0;
             vPwm1_handler.inst->CCER &= ~(TIM_CCER_CC2E | TIM_CCER_CC2NE);
             break;
         case TIM_SELECT_W_LINE:
+        	vPwm1_handler.inst->CCR3 = 0;
             vPwm1_handler.inst->CCER &= ~(TIM_CCER_CC3E | TIM_CCER_CC3NE);
             break;
         default:
@@ -131,14 +140,14 @@ void tim_Pwm1_Mute_channel(typTim_sigLineNum chNum)
     }
 }
 
-void tim_Pwm1_Unmute_channel(typTim_sigLineNum chNum)
+inline void tim_Pwm1_Unmute_channel(typTim_sigLineNum chNum)
 {   
     switch(chNum)
     {
-        case TIM_SELECT_ALL_LINE:
-            tim_Pwm1_Unmute_channel(TIM_SELECT_U_LINE);
+        case TIM_SELECT_OUTPUT_FLG:
+            /* tim_Pwm1_Unmute_channel(TIM_SELECT_U_LINE);
             tim_Pwm1_Unmute_channel(TIM_SELECT_V_LINE);
-            tim_Pwm1_Unmute_channel(TIM_SELECT_W_LINE);
+            tim_Pwm1_Unmute_channel(TIM_SELECT_W_LINE); */
             vPwm1_handler.inst->BDTR |= TIM_BDTR_MOE;
             vPwm1_handler.is_outputing = TIM_DET_OUTPUT_FLAG(vPwm1_handler.inst->BDTR);
             break;
@@ -156,7 +165,7 @@ void tim_Pwm1_Unmute_channel(typTim_sigLineNum chNum)
     }
 }
 
-void tim_Pwm1_setCmpVal(typTim_sigLineNum chNum, uint32_t ch_duty)
+inline void tim_Pwm1_setCmpVal(typTim_sigLineNum chNum, uint32_t ch_duty)
 {
     float max_tick = (float)vPwm1_handler.inst->ARR;
     if (max_tick == 0) return;
@@ -165,7 +174,7 @@ void tim_Pwm1_setCmpVal(typTim_sigLineNum chNum, uint32_t ch_duty)
 
     switch(chNum)
     {
-        case TIM_SELECT_ALL_LINE:
+        case TIM_SELECT_OUTPUT_FLG:
             vPwm1_handler.inst->CCR1 = ch_duty;
             vPwm1_handler.inst->CCR2 = ch_duty;
             vPwm1_handler.inst->CCR3 = ch_duty;

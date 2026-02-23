@@ -81,7 +81,7 @@ void gpio_toggle_pin(GPIO_TypeDef* gpio, uint8_t pin)
     gpio->ODR ^= UTILS_BIT_SHIFT(pin,1);
 }
 
-uint8_t gpio_read_pin(GPIO_TypeDef* gpio, uint8_t pin)
+inline uint8_t gpio_read_pin(GPIO_TypeDef* gpio, uint8_t pin)
 {
     return (uint8_t)((gpio->IDR & UTILS_BIT_SHIFT(pin, 1)) ? 1 : 0);
 }
