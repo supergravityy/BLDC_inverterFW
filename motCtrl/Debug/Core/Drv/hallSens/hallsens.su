@@ -2,7 +2,7 @@
 ../Core/Drv/hallSens/hallsens.c:38:6:hallsens_init	8	static
 ../Core/Drv/hallSens/hallsens.c:70:20:hallsens_set_PWMduty	32	static
 ../Core/Drv/hallSens/hallsens.c:116:20:hallsens_setPhase_FWD	16	static
-../Core/Drv/hallSens/hallsens.c:182:6:hallsens_update_swtPattern	8	static
-../Core/Drv/hallSens/hallsens.c:195:6:hallsens_cal_motorRPM	8	static
-../Core/Drv/hallSens/hallsens.c:219:6:hallsens_check_zeroSpd	4	static
-../Core/Drv/hallSens/hallsens.c:235:7:hallsens_get_motorRPM	4	static
+../Core/Drv/hallSens/hallsens.c:155:6:hallsens_update_swtPattern	8	static
+../Core/Drv/hallSens/hallsens.c:168:6:hallsens_cal_motorRPM	8	static
+../Core/Drv/hallSens/hallsens.c:192:6:hallsens_check_zeroSpd	4	static
+../Core/Drv/hallSens/hallsens.c:208:7:hallsens_get_motorRPM	4	static

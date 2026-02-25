@@ -21,7 +21,7 @@
 *   ramp함수 통과용 유닛
 */
 
-#define SENSING_ADC_2_VOLT      (ADC_VREF / ADC_FS)
+#define SENSING_ADC_2_VOLT      (UTILS_ADC_VREF / UTILS_ADC_MAXVAL)
 
 #define THROTTLE_OFF_VOLT       (1.0f)
 #define THROTTLE_ON_VOLT        (1.05f)
@@ -34,11 +34,7 @@
 #define NTC_OVERHEAT_CELCIUS    (100.0f) // NTC 과열 판단 기준 전압 (예시값, 실제로는 센서 특성에 따라 다름)
 #define NTC_NORMAL_CELCIUS      (90.0f) // NTC 정상 판단 기준 전압 (예시값)
 
-#if (USE_INWHEEL == 1)
-#define DC_VOLT_LOW_THRESH      (32.0f) // 저전압 판단 기준 전압 
-#else
-#define DC_VOLT_LOW_THRESH      (20.0f) // 저전압 판단 기준 전압
-#endif
+#define DC_VOLT_LOW_THRESH      (23.0f) // 저전압 판단 기준 전압
 
 #define IPHASE_CURR_NUM         (3UL)
 #define IPHASE_U_IDX            (0UL)

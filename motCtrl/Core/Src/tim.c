@@ -46,41 +46,39 @@ static float tim_pwm1_cal_period_us(void)
 
 static void tim_pwm1_init(void)
 {
-    // U-Phase PWM 설정
+    // 1. PWM 채널 핀 설정
     gpio_set_alterFunc(PWM_U_TOP_Port, 9, 1, GPIO_SPD_VERY_HIGH);
     gpio_set_alterFunc(PWM_U_BOT_Port, 8, 1, GPIO_SPD_VERY_HIGH);
 
-    // V-Phase PWM 설정
     gpio_set_alterFunc(PWM_V_TOP_Port, 11, 1, GPIO_SPD_VERY_HIGH);
     gpio_set_alterFunc(PWM_V_BOT_Port, 10, 1, GPIO_SPD_VERY_HIGH);
 
-    // W-Phase PWM 설정
     gpio_set_alterFunc(PWM_W_TOP_Port, 13, 1, GPIO_SPD_VERY_HIGH);
     gpio_set_alterFunc(PWM_W_BOT_Port, 12, 1, GPIO_SPD_VERY_HIGH);
 
+    // 2. 타이머 주기 설정
     vPwm1_handler.inst = TIM1;
-
     vPwm1_handler.inst->PSC = PWM1_PRESCALER_CNT; // 216MHz/(0+1) = 216MHz
     vPwm1_handler.inst->ARR = PWM1_PERIOD_TICK;   // 216MHz/CNT_MAX/2 = 20kHz -> center allign
     
-    // TIM1_CH1,2,3 = PWM mode 2
+    // 3. PWM 모드2 설정 및 프리로드 기능 활성화
     vPwm1_handler.inst->CCMR1 &= (~TIM_CCMR1_CC1S_Msk); // PWM 출력모드로사용
     vPwm1_handler.inst->CCMR1 |= TIM_CCMR1_OC1PE | TIM_CCMR1_OC1M_0 | TIM_CCMR1_OC1M_1 | TIM_CCMR1_OC1M_2 ;
     vPwm1_handler.inst->CCMR1 &= (~TIM_CCMR1_CC2S_Msk);
     vPwm1_handler.inst->CCMR1 |= TIM_CCMR1_OC2PE | TIM_CCMR1_OC2M_0 | TIM_CCMR1_OC2M_1 | TIM_CCMR1_OC2M_2;
     vPwm1_handler.inst->CCMR2 &= (~TIM_CCMR2_CC3S_Msk);
     vPwm1_handler.inst->CCMR2 |= TIM_CCMR2_OC3PE | TIM_CCMR2_OC3M_0 | TIM_CCMR2_OC3M_1 | TIM_CCMR2_OC3M_2 ;
-    
-    vPwm1_handler.inst->CCER = 0x0;
-    vPwm1_handler.inst->CCER = TIM_CCER_CC1E | TIM_CCER_CC1NE | TIM_CCER_CC2E | TIM_CCER_CC2NE | TIM_CCER_CC3E | TIM_CCER_CC3NE;
 
+    // 4. 데드타임 설정
     vPwm1_handler.inst->BDTR = TIM_BDTR_OSSI | TIM_BDTR_OSSR | TIM_BDTR_MOE;
     vPwm1_handler.inst->BDTR |= PWM1_DEADTIME_1US_BIT;
 
+    // 5. 카운터 세팅 및 카운트 시작
     vPwm1_handler.inst->CR2 = TIM_CR2_MMS_1; // 안정적인 전류센싱을 위해 CNT의 한주기가 끝나면 ADC에 신호를 보냄
     vPwm1_handler.inst->CR1 = TIM_CR1_CEN | TIM_CR1_CMS_0 | TIM_CR1_CMS_1 | TIM_CR1_URS;
-    // 센터 얼리인 모드 확정(카운터가 증가->감소가 완벽히 이루어져야 intrpt 실행) + 카운트 시작 + CCR 업데이트 시점 (글리칭현상) =update 인터럽트 발생시점
+    // 센터 얼리인 모드 확정(카운터가 증가->감소가 완벽히 이루어져야 intrpt 실행) + 카운트 시작 + CCR 업데이트 시점 (글리칭현상) = update 인터럽트 발생시점
 
+    // 6. 나머지 객체 멤버 설정
     vPwm1_handler.period_us = tim_pwm1_cal_period_us();
     vPwm1_handler.is_running = TIM_DET_RUNNING_FLAG(vPwm1_handler.inst->CR1);
     vPwm1_handler.is_outputing = TIM_DET_OUTPUT_FLAG(vPwm1_handler.inst->BDTR);
@@ -119,9 +117,6 @@ void tim_Pwm1_Mute_channel(typTim_sigLineNum chNum)
             vPwm1_handler.inst->CCR1 = 0;
             vPwm1_handler.inst->CCR2 = 0;
             vPwm1_handler.inst->CCR3 = 0;
-            /* tim_Pwm1_Mute_channel(TIM_SELECT_U_LINE);
-            tim_Pwm1_Mute_channel(TIM_SELECT_V_LINE);
-            tim_Pwm1_Mute_channel(TIM_SELECT_W_LINE); */
             break;
         case TIM_SELECT_U_LINE:
         	vPwm1_handler.inst->CCR1 = 0;
@@ -145,9 +140,7 @@ inline void tim_Pwm1_Unmute_channel(typTim_sigLineNum chNum)
     switch(chNum)
     {
         case TIM_SELECT_OUTPUT_FLG:
-            /* tim_Pwm1_Unmute_channel(TIM_SELECT_U_LINE);
-            tim_Pwm1_Unmute_channel(TIM_SELECT_V_LINE);
-            tim_Pwm1_Unmute_channel(TIM_SELECT_W_LINE); */
+
             vPwm1_handler.inst->BDTR |= TIM_BDTR_MOE;
             vPwm1_handler.is_outputing = TIM_DET_OUTPUT_FLAG(vPwm1_handler.inst->BDTR);
             break;

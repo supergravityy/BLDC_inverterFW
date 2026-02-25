@@ -10,7 +10,7 @@
 #define HALLSENS_CNT_MAXTICK                (TIM2_PERIOD_TICK)
 #define HALLSENS_CLK_FREQ                   (54000000.0f)
 #define HALLSENS_MIN_DELTA_TICK             (500UL)
-#define HALLSENS_EDGES_PER_REV              (HALL_EDGES_PER_REV)
+#define HALLSENS_EDGES_PER_REV              (UTILS_HALL_EDGES_PER_REV)
 
 // delta_time이 0이 아닐 때만 RPM 계산
 // 가정: 한 회전당 6개의 홀 센서 이벤트 발생 (6 edges per revolution)
@@ -112,24 +112,12 @@ inline static void hallsens_set_PWMduty(typMtrPhase phases[])
 	}
 }
 
-#if (MOTOR_DIR == MOTOR_DIR_CW)
+#if (UTILS_MOTOR_DIR == UTILS_MOTOR_DIR_CW)
 inline static void hallsens_setPhase_FWD(void)
 {
     typMtrPhase phases[HALLSENS_PH_NUM] = {0};
     
-#if (USE_INWHEEL == 1)
-    switch(vHallSens_handler.curr_hallSum)
-    {
-        case 5:  phases[HALLSENS_U_IDX] = MTR_DIR_STP; phases[HALLSENS_V_IDX] = MTR_DIR_REV; phases[HALLSENS_W_IDX] = MTR_DIR_FWD; break;
-        case 3:  phases[HALLSENS_U_IDX] = MTR_DIR_REV; phases[HALLSENS_V_IDX] = MTR_DIR_FWD; phases[HALLSENS_W_IDX] = MTR_DIR_STP; break;
-        case 1:  phases[HALLSENS_U_IDX] = MTR_DIR_REV; phases[HALLSENS_V_IDX] = MTR_DIR_STP; phases[HALLSENS_W_IDX] = MTR_DIR_FWD; break;
-        case 6:  phases[HALLSENS_U_IDX] = MTR_DIR_FWD; phases[HALLSENS_V_IDX] = MTR_DIR_STP; phases[HALLSENS_W_IDX] = MTR_DIR_REV; break;
-        case 4:  phases[HALLSENS_U_IDX] = MTR_DIR_FWD; phases[HALLSENS_V_IDX] = MTR_DIR_REV; phases[HALLSENS_W_IDX] = MTR_DIR_STP; break;
-        case 2:  phases[HALLSENS_U_IDX] = MTR_DIR_STP; phases[HALLSENS_V_IDX] = MTR_DIR_FWD; phases[HALLSENS_W_IDX] = MTR_DIR_REV; break;
-        default: phases[HALLSENS_U_IDX] = MTR_DIR_STP; phases[HALLSENS_V_IDX] = MTR_DIR_STP; phases[HALLSENS_W_IDX] = MTR_DIR_STP; break;
-    }
-#else
-    // 소형 BLDC 매핑 (Original Switch-Case 반영)
+
     switch(vHallSens_handler.curr_hallSum)
     {
         case 6:  phases[HALLSENS_U_IDX] = MTR_DIR_STP; phases[HALLSENS_V_IDX] = MTR_DIR_REV; phases[HALLSENS_W_IDX] = MTR_DIR_FWD; break;
@@ -140,29 +128,15 @@ inline static void hallsens_setPhase_FWD(void)
         case 2:  phases[HALLSENS_U_IDX] = MTR_DIR_FWD; phases[HALLSENS_V_IDX] = MTR_DIR_REV; phases[HALLSENS_W_IDX] = MTR_DIR_STP; break;
         default: phases[HALLSENS_U_IDX] = MTR_DIR_STP; phases[HALLSENS_V_IDX] = MTR_DIR_STP; phases[HALLSENS_W_IDX] = MTR_DIR_STP; break;
     }
-#endif
     hallsens_set_PWMduty(phases);
 }
 #endif
 
-#if (MOTOR_DIR == MOTOR_DIR_CCW)
+#if (UTILS_MOTOR_DIR == UTILS_MOTOR_DIR_CCW)
 inline static void hallsens_setPhase_REV(void)
 {
     typMtrPhase phases[HALLSENS_PH_NUM] = {0};
 
-#if (USE_INWHEEL == 1)
-    // 인휠모터 역방향 매핑
-    switch(vHallSens_handler.curr_hallSum)
-    {
-        case 5:  phases[HALLSENS_U_IDX] = MTR_DIR_STP; phases[HALLSENS_V_IDX] = MTR_DIR_FWD; phases[HALLSENS_W_IDX] = MTR_DIR_REV; break;
-        case 3:  phases[HALLSENS_U_IDX] = MTR_DIR_FWD; phases[HALLSENS_V_IDX] = MTR_DIR_REV; phases[HALLSENS_W_IDX] = MTR_DIR_STP; break;
-        case 1:  phases[HALLSENS_U_IDX] = MTR_DIR_FWD; phases[HALLSENS_V_IDX] = MTR_DIR_STP; phases[HALLSENS_W_IDX] = MTR_DIR_REV; break;
-        case 6:  phases[HALLSENS_U_IDX] = MTR_DIR_REV; phases[HALLSENS_V_IDX] = MTR_DIR_STP; phases[HALLSENS_W_IDX] = MTR_DIR_FWD; break;
-        case 4:  phases[HALLSENS_U_IDX] = MTR_DIR_REV; phases[HALLSENS_V_IDX] = MTR_DIR_FWD; phases[HALLSENS_W_IDX] = MTR_DIR_STP; break;
-        case 2:  phases[HALLSENS_U_IDX] = MTR_DIR_STP; phases[HALLSENS_V_IDX] = MTR_DIR_REV; phases[HALLSENS_W_IDX] = MTR_DIR_FWD; break;
-        default: phases[HALLSENS_U_IDX] = MTR_DIR_STP; phases[HALLSENS_V_IDX] = MTR_DIR_STP; phases[HALLSENS_W_IDX] = MTR_DIR_STP; break;
-    }
-#else
     // 소형 BLDC 역방향 매핑
     switch(vHallSens_handler.curr_hallSum)
     {
@@ -174,14 +148,13 @@ inline static void hallsens_setPhase_REV(void)
         case 2:  phases[HALLSENS_U_IDX] = MTR_DIR_REV; phases[HALLSENS_V_IDX] = MTR_DIR_FWD; phases[HALLSENS_W_IDX] = MTR_DIR_STP; break;
         default: phases[HALLSENS_U_IDX] = MTR_DIR_STP; phases[HALLSENS_V_IDX] = MTR_DIR_STP; phases[HALLSENS_W_IDX] = MTR_DIR_STP; break;
     }
-#endif
     hallsens_set_PWMduty(phases);
 }
 #endif
 
 void hallsens_update_swtPattern(void)
 {
-	#if (MOTOR_DIR == MOTOR_DIR_CW)
+	#if (UTILS_MOTOR_DIR == UTILS_MOTOR_DIR_CW)
 		hallsens_setPhase_FWD();
 	#else
 		hallsens_setPhase_REV();

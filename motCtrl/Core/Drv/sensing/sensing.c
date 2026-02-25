@@ -13,9 +13,9 @@
 #define NTC_VOLT_2_TEMPER(volt)  (-11.48f*volt*volt*volt+63.23*volt*volt-149.02*volt+181.97f) 
 
 // 저항분배 비율고려 -> 회로도 참고
-#define DCVOLT_VOLT_2_ACTUAL(volt)  (volt / VDIV_RATIO)
+#define DCVOLT_VOLT_2_ACTUAL(volt)  (volt / UTILS_VDIV_RATIO)
 
-#define SENSING_ADC_2_CURR(val) ((val * (ADC_VREF / ADC_FS)) / OPAMP_GAIN)
+#define SENSING_ADC_2_CURR(val) ((val * (UTILS_ADC_VREF / UTILS_ADC_MAXVAL)) / UTILS_OPAMP_GAIN)
 
 
 typThrottle_handle vThrottle_handler;

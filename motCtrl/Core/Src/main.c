@@ -12,7 +12,7 @@
 
 int main(void)
 {
-    system_clock_init();
+    system_mcu_init();
     system_sysTick_init();
     gpio_init();
     tim_init();
@@ -84,6 +84,7 @@ int main(void)
  * 타임아웃 에러코드 및 체크 로직 삭제 -> 10ms 태스크에서 모터 정지 체크 로직 새로 정의 및 kmh 계산로직과 10ms 태스크에서 호출
  * Unmute_channel 및 Mute_channel 함수의 내용에서 전체선택 케이스를 MOE만 다루게 변경 + 초기화 과정에서 MOE 및 모든채널 뮤트하도록 변경
  * Unmute_channel 에서 stop상에서 채널을 mute하면 그에 따른 CCR값도 초기화 + mtrCtrl_setFinalCCR_refVal을 1ms 태스크에서 호출
+ * utils.h에 존재하던 이름규칙 안지키던 디파인문들 전부 교체
  * --------------------------------------*/
 
 // todo : utils의 내용을 변경 -> 인휠모터 삭제 및 디파인문 오토사에 맞게 변경

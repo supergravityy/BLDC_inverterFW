@@ -48,7 +48,7 @@ static inline void system_clock_periperals(void)
         RCC_APB2ENR_ADC3EN | RCC_APB2ENR_SYSCFGEN);
 }
 
-void system_clock_init(void)
+void system_mcu_init(void)
 {
     /* 1. L1 캐시 활성화 (고속 실행) */
     SCB_EnableICache();

@@ -3,5 +3,5 @@
 ../Core/Src/system.c:3:20:system_clock_pll_init	4
 ../Core/Src/system.c:26:20:system_clock_pll_init2	2
 ../Core/Src/system.c:37:20:system_clock_periperals	1
-../Core/Src/system.c:51:6:system_clock_init	5
+../Core/Src/system.c:51:6:system_mcu_init	5
 ../Core/Src/system.c:92:6:system_sysTick_init	1
