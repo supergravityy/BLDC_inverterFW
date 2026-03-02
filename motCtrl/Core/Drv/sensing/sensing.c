@@ -248,6 +248,11 @@ bool sensingCurr_getOverCurrent_st(void)
     return vSensingCurr_handler.is_overCurrent;
 }
 
+float sensing_getIphase_max(void)
+{
+	return vSensingCurr_handler.Iphase_max;
+}
+
 void sensing_objs_Init(void)
 {
     throttle_init();

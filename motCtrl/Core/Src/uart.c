@@ -227,18 +227,14 @@ void uart_AT09_sendFloat_polling(float val, uint8_t decimals)
     uart_sendFloat(&uart3_handler, val, decimals);
 }
 
-void uart_debug_reportSeq_polling(float rpm, float spd)
-{
-    uart_sendStr_polling(&uart2_handler, "속도: ", 9);      // 한글 “속도: ”
-    uart_sendFloat(&uart2_handler, spd, 2);
-    uart_sendStr_polling(&uart2_handler, ", RPM: ", 8);      // “ RPM: ”
-    uart_sendFloat(&uart2_handler, rpm, 0);                 // 소수점 0자리
-    uart_sendStr_polling(&uart2_handler, "\r\n\n", 3);    // 단위 표시
-}
-
 void uart_debug_sendStr_polling(char* str, uint32_t len)
 {
     uart_sendStr_polling(&uart2_handler, str, len);
+}
+
+void uart_debug_sendInt_polling(int val)
+{
+	uart_send_int(&uart2_handler, val);
 }
 
 void uart_debug_sendFloat_polling(float val, uint8_t decimals)

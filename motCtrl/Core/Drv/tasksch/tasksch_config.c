@@ -81,18 +81,36 @@ void Task_100ms(void)
 {
     if(mtrCtrl_getSelCtrlMode() == MTRCTRL_CTRL_THROTTLE)
     {
-        uart_debug_sendStr_polling("reference voltage : ", strlen("reference voltage : "));
+        uart_debug_sendStr_polling(">refVolt:", strlen(">refVolt:"));
         uart_debug_sendFloat_polling(throttle_get_refVolt(),2);
-        uart_debug_sendStr_polling("\r\n", strlen("\r\n"));
+        uart_debug_sendStr_polling("\n", strlen("\n"));
     }
     else
     {
-        uart_debug_sendStr_polling("reference RPM : ", strlen("reference RPM : "));
+        uart_debug_sendStr_polling(">refRPM:", strlen(">refRPM:"));
         uart_debug_sendFloat_polling(mtrCtrl_PI_getRPMRef(),2);
-        uart_debug_sendStr_polling("\r\n", strlen("\r\n"));
+        uart_debug_sendStr_polling("\n", strlen("\n"));
     }
 
-    uart_debug_reportSeq_polling(hallsens_get_motorRPM(), mtrCtrl_getMotorSpeed_KMH());
+	uart_debug_sendStr_polling(">refCCR:", strlen(">refCCR:"));
+	uart_debug_sendInt_polling(mtrCtrl_getFinalCCR_refVal());
+	uart_debug_sendStr_polling("\n", strlen("\n"));
+}
+
+void Task_100ms_2(void)
+{
+	uart_debug_sendStr_polling(">RPM:", strlen(">RPM:"));
+	uart_debug_sendFloat_polling(hallsens_get_motorRPM(),1);
+	uart_debug_sendStr_polling("\n", strlen("\n"));
+
+	uart_debug_sendStr_polling(">Imax:", strlen(">Imax:"));
+	uart_debug_sendFloat_polling(sensing_getIphase_max(),1);
+	uart_debug_sendStr_polling("\n", strlen("\n"));
+}
+
+void Task_100ms_3(void)
+{
+
 }
 
 void Task_500ms(void)
@@ -114,7 +132,7 @@ void Task_500ms(void)
 
     uart_AT09_sendStr_polling("\r\n\n",strlen("\r\n\n"));
 
-    gpio_toggle_pin(GPIOC, 6);
+    gpio_toggle_pin(FLT_LED_Port, 6);
 }
 
 void Task_1sec(void)
@@ -138,13 +156,17 @@ void tasksch_init_RegiTaskObj(void)
     vUserRegiTaskObj[2].regiTaskOffset_ms = 0;
     vUserRegiTaskObj[2].regiTaskPeriod_ms = 100;
 
-    vUserRegiTaskObj[3].regiTaskFunc_ptr = Task_500ms;
-    vUserRegiTaskObj[3].regiTaskOffset_ms = 0;
-    vUserRegiTaskObj[3].regiTaskPeriod_ms = 500;
+    vUserRegiTaskObj[3].regiTaskFunc_ptr = Task_100ms_2;
+    vUserRegiTaskObj[3].regiTaskOffset_ms = 20;
+    vUserRegiTaskObj[3].regiTaskPeriod_ms = 100;
 
-    vUserRegiTaskObj[4].regiTaskFunc_ptr = Task_1sec;
+    vUserRegiTaskObj[4].regiTaskFunc_ptr = Task_500ms;
     vUserRegiTaskObj[4].regiTaskOffset_ms = 0;
-    vUserRegiTaskObj[4].regiTaskPeriod_ms = 1000;
+    vUserRegiTaskObj[4].regiTaskPeriod_ms = 500;
+
+    vUserRegiTaskObj[5].regiTaskFunc_ptr = Task_1sec;
+	vUserRegiTaskObj[5].regiTaskOffset_ms = 0;
+	vUserRegiTaskObj[5].regiTaskPeriod_ms = 1000;
 }
 
 /* Override your __weak Functions */

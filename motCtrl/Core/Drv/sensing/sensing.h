@@ -98,5 +98,7 @@ float NTC_getTemper(void);
 float dcVolt_voltage(void);
 bool dcVolt_getLowVolt_st(void);
 
-void sensing_objs_Init(void);
+float sensing_getIphase_max(void);
 bool sensingCurr_getOverCurrent_st(void);
+
+void sensing_objs_Init(void);
