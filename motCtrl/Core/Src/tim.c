@@ -31,19 +31,6 @@ static void tim_tim2_init(void)
     vTim2_handler.is_initialized = true;
 }
 
-static float tim_pwm1_cal_period_us(void)
-{
-    float f_clk_mhz = UTILS_F_CLK_MZ;
-    float psc = (float)(vPwm1_handler.inst->PSC + 1);
-    float arr = (float)(vPwm1_handler.inst->ARR);
-    bool ctrAlgn = ((vPwm1_handler.inst->CR1 & TIM_CR1_CMS_Msk) != 0);
-
-    if(ctrAlgn)
-        return (psc * arr * 2.0f) / f_clk_mhz;
-    else
-        return (psc * arr) / f_clk_mhz;
-}
-
 static void tim_pwm1_init(void)
 {
     // 1. PWM 채널 핀 설정
@@ -79,7 +66,6 @@ static void tim_pwm1_init(void)
     // 센터 얼리인 모드 확정(카운터가 증가->감소가 완벽히 이루어져야 intrpt 실행) + 카운트 시작 + CCR 업데이트 시점 (글리칭현상) = update 인터럽트 발생시점
 
     // 6. 나머지 객체 멤버 설정
-    vPwm1_handler.period_us = tim_pwm1_cal_period_us();
     vPwm1_handler.is_running = TIM_DET_RUNNING_FLAG(vPwm1_handler.inst->CR1);
     vPwm1_handler.is_outputing = TIM_DET_OUTPUT_FLAG(vPwm1_handler.inst->BDTR);
     vPwm1_handler.is_initialized = true;
@@ -87,7 +73,7 @@ static void tim_pwm1_init(void)
 
 void tim_pwm1_nvic_counterSet(void)
 {
-    vPwm1_handler.inst->DIER = TIM_DIER_UIE; // 오버플로 인터럽트 사용
+    vPwm1_handler.inst->DIER = TIM_DIER_UIE; // 업데이트 인터럽트 사용
 
     NVIC_EnableIRQ(TIM1_UP_TIM10_IRQn);
 

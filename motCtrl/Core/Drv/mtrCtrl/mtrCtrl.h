@@ -13,7 +13,7 @@
 
 #define MTRCTRL_OVERCURR_MAXCNT      (1000UL) // 50ms 동안 확인
 
-#define MTRCTRL_PI_CTRL_MS          (1)
+#define MTRCTRL_PI_CTRL_MS          (1.f)
 #define MTRCTRL_PI_CTRL_PERIOD_SEC  ((float)(MTRCTRL_PI_CTRL_MS) / 1000.0f)
 #define MTRCTRL_PI_iTERM_MAXVAL     ((float)(THROTTLE_PWM_PERIOD_VAL) * .4f) // PI 제어의 적분항 최대값 제한
 #define MTRCTRL_KICK_SRT_REF_THRES  (100.f) // 모터가 이 RPM보다 낮으면 "거의 정지 상태"로 간주하고 킥스타트 모드 진입

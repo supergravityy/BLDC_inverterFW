@@ -8,7 +8,8 @@
 #include "../hallsens/hallsens.h"
 #include "../sensing/sensing.h"
 
-#define MTRCTRL_PI_MAX_CCR_VAL (THROTTLE_CCR_MAXVAL) // PI 제어로 계산된 CCR 값이 최대 듀티 카운트 값을 넘지 않도록 제한
+#define MTRCTRL_PI_MAX_CCR_VAL 	(THROTTLE_CCR_MAXVAL) // PI 제어로 계산된 CCR 값이 최대 듀티 카운트 값을 넘지 않도록 제한
+#define MTRCTRL_PI_PERIOD		(MTRCTRL_PI_CTRL_MS / 1000.f)
 
 typMtrCtrl_manager vMotorCtrl_manager;
 typMtrCtrl_handle_byPI vPiCtrl_handler;
@@ -17,7 +18,6 @@ extern typThrottle_handle vThrottle_handler; // sensing.c의 스로틀 핸들러
 
 void mtrCtrl_PI_clearTerms(void)
 {
-    vPiCtrl_handler.rpm_error = 0.0f;
     vPiCtrl_handler.P_term = 0.0f;
     vPiCtrl_handler.I_term = 0.0f;
     vPiCtrl_handler.PI_term = 0.0f;
@@ -51,55 +51,40 @@ float mtrCtrl_PI_getRPMRef(void)
     return vPiCtrl_handler.rpm_refVal;
 }
 
+// NOTE : 지령주었을 때 정상상태 도달까지의 시간 100ms, 속도리플 5% 미만, 오버슛/언더슛 제한 10%
+// todo : 제일먼저 순수 PI제어 기법으로 돌려보고 파형 캡처
+// todo : 요구사항에 맞는 PI 게인값 튜닝
+// todo : iterm / piterm 클램핑 후 파형캡처
+// todo : 스로틀 valid 처리 후 파형캡처
+// todo : 에러값 램프처리후 파형캡처
+
 void mtrCtrl_PI_update(void)
 {
-    float currRPM = hallsens_get_motorRPM();
+	float currRPM = hallsens_get_motorRPM();
 
-    if (mtrCtrl_getSelCtrlMode() == MTRCTRL_CTRL_PI)
-    {
-        // 제어1. kick-start
-        if ((currRPM < MTRCTRL_KICK_SRT_RPM_THRES) && (vPiCtrl_handler.rpm_refVal > MTRCTRL_KICK_SRT_REF_THRES))
-        {
-            mtrCtrl_PI_clearTerms();                              // 과거의 값 모두 삭제
-            vPiCtrl_handler.CCR_refVal = MTRCTRL_KICK_SRT_CCRVAL; // 고정된 힘으로 모터를 동작시킴
-        }
+	if(mtrCtrl_getSelCtrlMode() == MTRCTRL_CTRL_PI)
+	{
+		vPiCtrl_handler.rpm_error = vPiCtrl_handler.rpm_refVal - currRPM;
 
-        // 제어2. PI 제어
-        else
-        {
-            vPiCtrl_handler.rpm_error = vPiCtrl_handler.rpm_refVal - currRPM; // 에러계산
+		vPiCtrl_handler.P_term = vPiCtrl_handler.Kp * vPiCtrl_handler.rpm_error;
+		vPiCtrl_handler.I_term += vPiCtrl_handler.Ki * vPiCtrl_handler.rpm_error * MTRCTRL_PI_PERIOD;
+		vPiCtrl_handler.PI_term = vPiCtrl_handler.P_term + vPiCtrl_handler.I_term;
 
-            vPiCtrl_handler.P_term = vPiCtrl_handler.Kp * vPiCtrl_handler.rpm_error;
-            vPiCtrl_handler.I_term += vPiCtrl_handler.Ki * vPiCtrl_handler.rpm_error * MTRCTRL_PI_CTRL_PERIOD_SEC; // 적분항 누적
+		if(vPiCtrl_handler.PI_term > MTRCTRL_PI_MAX_CCR_VAL)
+		{
+			vPiCtrl_handler.PI_term = MTRCTRL_PI_MAX_CCR_VAL;
+		}
+		else if(vPiCtrl_handler.PI_term < 0)
+		{
+			vPiCtrl_handler.PI_term = 0;
+		}
 
-            // 2.1 적분항 최대값 제한 -> windup 현상 방지
-            if (vPiCtrl_handler.I_term > MTRCTRL_PI_iTERM_MAXVAL)
-            {
-                vPiCtrl_handler.I_term = MTRCTRL_PI_iTERM_MAXVAL;
-            }
-            else if (vPiCtrl_handler.I_term < 0.0f)
-            {
-                vPiCtrl_handler.I_term = 0.0f;
-            }
-            vPiCtrl_handler.PI_term = vPiCtrl_handler.P_term + vPiCtrl_handler.I_term;
-
-            // 2.2 출력 클램핑
-            if (vPiCtrl_handler.PI_term > MTRCTRL_PI_MAX_CCR_VAL)
-            {
-                vPiCtrl_handler.PI_term = MTRCTRL_PI_MAX_CCR_VAL;
-            }
-            else if (vPiCtrl_handler.I_term < 0.0f)
-            {
-                vPiCtrl_handler.I_term = 0.0f;
-            }
-
-            vPiCtrl_handler.CCR_refVal = (uint32_t)vPiCtrl_handler.PI_term;
-        }
-    }
-    else
-    {
-        mtrCtrl_PI_clearTerms(); // PI 제어 초기화
-    }
+		vPiCtrl_handler.CCR_refVal = (uint32_t)vPiCtrl_handler.PI_term;
+	}
+	else
+	{
+		mtrCtrl_PI_clearTerms(); // PI 제어 초기화
+	}
 }
 
 void mtrCtrl_objInit(float Kp, float Ki)

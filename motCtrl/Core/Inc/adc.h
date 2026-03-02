@@ -3,13 +3,11 @@
 #include "stm32f767xx.h"
 #include "utils.h"
 
-#define ADC_PERIPH_NUM      (3UL)
-
-#pragma pack(push,1)
+#define ADC_MODULE_NUM      (3UL)
 
 typedef struct adc_handle
 {
-    ADC_TypeDef* moduleInst;
+    ADC_TypeDef* inst;
 
     // 데이터 저장 (Raw 값)
     uint16_t curr_rawVal;   // 전류 측정값 -> main
@@ -20,8 +18,6 @@ typedef struct adc_handle
 
     bool is_initialized;
 }typAdc_handle;
-
-#pragma pack(pop)
 
 void adc_init(void);
 uint16_t adc_conv_rawNTC_polling(void);
