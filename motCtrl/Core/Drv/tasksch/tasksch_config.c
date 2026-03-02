@@ -62,7 +62,7 @@ void Task_1ms(void)
 
 void Task_10ms(void)
 {
-	hallsens_check_zeroSpd();
+    hallsens_check_zeroSpd();
 	mtrCtrl_calc_mtrSpeed();
     mtrCtrl_setSelCtrlMode(vMtrCtrl_system.userMode);
     mtrCtrl_setCtrlContinue(vMtrCtrl_system.ctrlContinue_debug);

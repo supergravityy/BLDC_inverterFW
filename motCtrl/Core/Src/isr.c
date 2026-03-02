@@ -68,6 +68,8 @@ void TIM1_UP_TIM10_IRQHandler(void) // 20KHz 로 호출됨
             {
                 tim_Pwm1_Mute_channel(TIM_SELECT_OUTPUT_FLG);
             }
+
+            hallsens_filtering_rawRPM();
         }
     }
 }

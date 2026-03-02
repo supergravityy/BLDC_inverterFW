@@ -63,6 +63,9 @@ int main(void)
  * 									-> High Duty 상태에서 CCER만 Disable하면 내부 OCxREF는 계속 High로 유지되어 Dead-time 상태가 리셋되지 않고,
  * 									이후 Unmask 순간 내부 상태와 실제 MOSFET 상태가 어긋나면서 Arm-short가 발생해 고속 잔진동이 생긴 현상
  * 									-> 차단되어있다가 상변환에 의해서 ccer이 켜지며 oc와 ocn 신호가 나오게 되고 이 순간, 데드타임이 없이 두 신호 교차하는 시점까지 쇼트 (Arm-short)
+ *
+ * PI 제어 중, 지령값을 높였다가 내리면 piterm이 매우 큰 음수로 뜨면서 모터가 움찔거림 + 정지시키면 측정 RPM이 0이었다가 직전 RPM이었다가 왓다갔다함
+ * 									-> LPF 실행 주기의 불규칙성(원래는 exti_ISR이 아닌 tim_isr에서 실행되었어야 함) -> LPF의 coeff 설정식에서 샘플링 주기가 tim_isr 기준으로 작성됨
  * --------------------------------------*/
 
 // 질문 -> ramp 함수를 품은 모터 제어 로직이 태스크에서 돌아갈 때, 태스크 주기는 무조건 짧은게 좋음
@@ -85,10 +88,11 @@ int main(void)
  * Unmute_channel 및 Mute_channel 함수의 내용에서 전체선택 케이스를 MOE만 다루게 변경 + 초기화 과정에서 MOE 및 모든채널 뮤트하도록 변경
  * Unmute_channel 에서 stop상에서 채널을 mute하면 그에 따른 CCR값도 초기화 + mtrCtrl_setFinalCCR_refVal을 1ms 태스크에서 호출
  * utils.h에 존재하던 이름규칙 안지키던 디파인문들 전부 교체
+ * LPF 실행 주기를 맞추기 위해, 필터링 전용함수 hallsens_filtering_rawRPM 정의 및 ISR 막단에서 호출되게 변경
  * --------------------------------------*/
 
-// todo : utils의 내용을 변경 -> 인휠모터 삭제 및 디파인문 오토사에 맞게 변경
-// todo : PI제어 과정 블로그/포폴로 쓸 수 있게 처리 및 확인
+// todo : teleplot에 나오게 태스크 코드 수정
+// todo : PI제어 과정 블로그/포폴로 쓸 수 있게 처리 및 확인 -> mtrCtrl_PI_update 함수 확인
 // todo : 오실로스코프로 전해 커패시터의 충방전 시간을 기록하고 postRun 로직에 방전시간 기록 및 다른 로직 추가
 // todo : iwdg 달아보기
 // todo : 100ms의 uart 전송 로직들을 짧게 위상차를 두어서 쪼개기 + bt 전송 로직들을 짧게

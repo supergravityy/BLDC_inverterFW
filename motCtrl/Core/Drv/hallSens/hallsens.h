@@ -15,6 +15,8 @@
 
 #define HALLSENS_ZEROSPD_CNT		(50U) // 500ms
 
+// #define HALLSENS_ZEROSPD_CNT 		(20000U)
+
 typedef enum mtrPhase
 {
     MTR_DIR_REV = -1,
@@ -49,5 +51,6 @@ void hallsens_update_hallSeq(void);
 void hallsens_init(void);
 void hallsens_update_swtPattern(void);
 void hallsens_cal_motorRPM(void);
+void hallsens_filtering_rawRPM(void);
 void hallsens_check_zeroSpd(void);
 float hallsens_get_motorRPM(void);
