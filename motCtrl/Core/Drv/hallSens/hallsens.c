@@ -58,8 +58,8 @@ void hallsens_init(void)
     vHallSens_handler.currTick = 0;
     vHallSens_handler.deltaTick = 0.0f;
     vHallSens_handler.rawMtrRPM = 0;
-    vHallSens_handler.new_MtrRPM = 0;
-    vHallSens_handler.old_MtrRPM = 0;
+    vHallSens_handler.fin_MtrRPM = 0;
+    vHallSens_handler.old_rawMtrRPM = 0;
     vHallSens_handler.zeroSpd_cnt = 0;
 
     hallsens_update_hallSeq();
@@ -188,19 +188,20 @@ void hallsens_cal_motorRPM(void)
 
 void hallsens_filtering_rawRPM(void)
 {
-	// 저역통과필터 적용
-	vHallSens_handler.new_MtrRPM = utils_LPF_RPM_filter(vHallSens_handler.rawMtrRPM);
+	// 저역통과필터 적용 (IIR)
+	vHallSens_handler.fin_MtrRPM = utils_LPF_RPM_filter(vHallSens_handler.rawMtrRPM);
 }
 
 void hallsens_check_zeroSpd(void)
 {
-	if(vHallSens_handler.new_MtrRPM == vHallSens_handler.old_MtrRPM)
+	if(vHallSens_handler.rawMtrRPM == vHallSens_handler.old_rawMtrRPM)
 	{
 		vHallSens_handler.zeroSpd_cnt++;
 
 		if(vHallSens_handler.zeroSpd_cnt >= HALLSENS_ZEROSPD_CNT)
 		{
-			vHallSens_handler.new_MtrRPM = 0.f;
+			vHallSens_handler.rawMtrRPM = 0.f;
+
 			vHallSens_handler.zeroSpd_cnt = 0;
 		}
 	}
@@ -209,10 +210,10 @@ void hallsens_check_zeroSpd(void)
 		vHallSens_handler.zeroSpd_cnt = 0;
 	}
 
-	vHallSens_handler.old_MtrRPM = vHallSens_handler.new_MtrRPM;
+	vHallSens_handler.old_rawMtrRPM = vHallSens_handler.rawMtrRPM;
 }
 
 float hallsens_get_motorRPM(void)
 {
-    return vHallSens_handler.new_MtrRPM;
+    return vHallSens_handler.fin_MtrRPM;
 }

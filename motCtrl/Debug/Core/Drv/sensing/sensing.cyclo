@@ -14,4 +14,5 @@
 ../Core/Drv/sensing/sensing.c:172:6:dcVolt_getLowVolt_st	2
 ../Core/Drv/sensing/sensing.c:189:6:sensingCurr_init	2
 ../Core/Drv/sensing/sensing.c:204:6:sensingCurr_getOverCurrent_st	17
-../Core/Drv/sensing/sensing.c:251:6:sensing_objs_Init	1
+../Core/Drv/sensing/sensing.c:251:7:sensing_getIphase_max	1
+../Core/Drv/sensing/sensing.c:256:6:sensing_objs_Init	1

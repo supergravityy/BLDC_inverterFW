@@ -48,6 +48,7 @@ void EXTI2_IRQHandler(void)
 void TIM1_UP_TIM10_IRQHandler(void) // 20KHz 로 호출됨
 {
 	isr_pwm1_intrrpt_cnt_debug++;
+	hallsens_check_zeroSpd();
 	mtrCtrl_chkErrSt(MTRCTRL_ERR_OVER_CURRENT);
 
     if (tim_getPwm1_ISR_flg() == true)

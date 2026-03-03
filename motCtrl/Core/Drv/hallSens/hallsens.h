@@ -13,9 +13,7 @@
 #define HALLSENS_W_IDX              (MTRCTRL_PHASE_CURR_W_IDX)
 #define HALLSENS_DUTY_MAX           (PWM1_PERIOD_TICK)\
 
-#define HALLSENS_ZEROSPD_CNT		(50U) // 500ms
-
-// #define HALLSENS_ZEROSPD_CNT 		(20000U)
+#define HALLSENS_ZEROSPD_CNT 		(20000U)
 
 typedef enum mtrPhase
 {
@@ -40,8 +38,8 @@ typedef struct hall_handle
     volatile uint32_t currTick;
     volatile uint32_t deltaTick;
     volatile float rawMtrRPM;
-    float new_MtrRPM;
-    float old_MtrRPM;
+    float fin_MtrRPM;
+    float old_rawMtrRPM;
     volatile uint16_t zeroSpd_cnt;
 
     bool is_initialized;

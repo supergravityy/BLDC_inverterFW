@@ -12,6 +12,6 @@
 ../Core/Src/uart.c:215:6:uart_AT09_recvStr_polling	1
 ../Core/Src/uart.c:220:6:uart_AT09_sendInteger_polling	1
 ../Core/Src/uart.c:225:6:uart_AT09_sendFloat_polling	1
-../Core/Src/uart.c:230:6:uart_debug_reportSeq_polling	1
-../Core/Src/uart.c:239:6:uart_debug_sendStr_polling	1
-../Core/Src/uart.c:244:6:uart_debug_sendFloat_polling	1
+../Core/Src/uart.c:230:6:uart_debug_sendStr_polling	1
+../Core/Src/uart.c:235:6:uart_debug_sendInt_polling	1
+../Core/Src/uart.c:240:6:uart_debug_sendFloat_polling	1

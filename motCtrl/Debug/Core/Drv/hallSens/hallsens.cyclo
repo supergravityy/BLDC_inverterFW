@@ -4,5 +4,6 @@
 ../Core/Drv/hallSens/hallsens.c:116:20:hallsens_setPhase_FWD	7
 ../Core/Drv/hallSens/hallsens.c:155:6:hallsens_update_swtPattern	1
 ../Core/Drv/hallSens/hallsens.c:168:6:hallsens_cal_motorRPM	3
-../Core/Drv/hallSens/hallsens.c:192:6:hallsens_check_zeroSpd	3
-../Core/Drv/hallSens/hallsens.c:208:7:hallsens_get_motorRPM	1
+../Core/Drv/hallSens/hallsens.c:189:6:hallsens_filtering_rawRPM	1
+../Core/Drv/hallSens/hallsens.c:195:6:hallsens_check_zeroSpd	3
+../Core/Drv/hallSens/hallsens.c:216:7:hallsens_get_motorRPM	1

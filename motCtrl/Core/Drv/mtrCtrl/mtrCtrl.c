@@ -74,17 +74,17 @@ void mtrCtrl_PI_update(void)
 		{
 			vPiCtrl_handler.PI_term = MTRCTRL_PI_MAX_CCR_VAL;
 		}
-		else if(vPiCtrl_handler.PI_term < 0)
+		/*else if(vPiCtrl_handler.PI_term < 0)
 		{
 			vPiCtrl_handler.PI_term = 0;
-		}
+		}*/
 
 		vPiCtrl_handler.CCR_refVal = (uint32_t)vPiCtrl_handler.PI_term;
 	}
-	else
+	/*else
 	{
 		mtrCtrl_PI_clearTerms(); // PI 제어 초기화
-	}
+	}*/
 }
 
 void mtrCtrl_objInit(float Kp, float Ki)

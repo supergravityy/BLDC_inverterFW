@@ -62,7 +62,6 @@ void Task_1ms(void)
 
 void Task_10ms(void)
 {
-    hallsens_check_zeroSpd();
 	mtrCtrl_calc_mtrSpeed();
     mtrCtrl_setSelCtrlMode(vMtrCtrl_system.userMode);
     mtrCtrl_setCtrlContinue(vMtrCtrl_system.ctrlContinue_debug);
@@ -106,11 +105,6 @@ void Task_100ms_2(void)
 	uart_debug_sendStr_polling(">Imax:", strlen(">Imax:"));
 	uart_debug_sendFloat_polling(sensing_getIphase_max(),1);
 	uart_debug_sendStr_polling("\n", strlen("\n"));
-}
-
-void Task_100ms_3(void)
-{
-
 }
 
 void Task_500ms(void)
