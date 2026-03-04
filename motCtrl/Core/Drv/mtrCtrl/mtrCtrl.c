@@ -21,6 +21,7 @@ void mtrCtrl_PI_clearTerms(void)
     vPiCtrl_handler.P_term = 0.0f;
     vPiCtrl_handler.I_term = 0.0f;
     vPiCtrl_handler.PI_term = 0.0f;
+    vPiCtrl_handler.rpm_rampVal = 0.f;
     vPiCtrl_handler.CCR_refVal = 0.f;
 }
 
@@ -33,7 +34,6 @@ void mtrCtrl_PI_setTunings(float Kp, float Ki)
 void mtrCtrl_PI_setRPMRef(float rpm_ref)
 {
     vPiCtrl_handler.rpm_refVal = rpm_ref;
-    vPiCtrl_handler.rpm_rampVal = rpm_ref;
 }
 
 static void mtrCtrl_PI_init(float Kp, float Ki)
@@ -53,26 +53,6 @@ float mtrCtrl_PI_getRPMRef(void)
 }
 
 // NOTE : 지령주었을 때 정상상태 도달까지의 시간 100ms, 속도리플 5% 미만, 오버슛/언더슛 제한 10%
-// todo : 에러값 램프처리후 파형캡처
-// todo : 요구사항에 맞는 PI 게인값 튜닝
-
-/* void error_rampFunc(float RpmRef, float* CurrentRpmRef, float max_step)
-{
-    float diff = RpmRef - *CurrentRpmRef;
-
-    if (diff > max_step)
-    {
-        return CurrentRpmRef + max_step; // 가속 제한
-    }
-    else if (diff < -max_step)
-    {
-        return CurrentRpmRef - max_step; // 감속 제한
-    }
-    else
-    {
-        return RpmRef; // 목표치 도달 (오차 범위 내)
-    }
-} */
 
 void mtrCtrl_PI_update(void)
 {
