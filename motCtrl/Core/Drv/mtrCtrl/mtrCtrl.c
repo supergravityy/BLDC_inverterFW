@@ -33,6 +33,7 @@ void mtrCtrl_PI_setTunings(float Kp, float Ki)
 void mtrCtrl_PI_setRPMRef(float rpm_ref)
 {
     vPiCtrl_handler.rpm_refVal = rpm_ref;
+    vPiCtrl_handler.rpm_rampVal = rpm_ref;
 }
 
 static void mtrCtrl_PI_init(float Kp, float Ki)
@@ -55,24 +56,48 @@ float mtrCtrl_PI_getRPMRef(void)
 // todo : 에러값 램프처리후 파형캡처
 // todo : 요구사항에 맞는 PI 게인값 튜닝
 
+/* void error_rampFunc(float RpmRef, float* CurrentRpmRef, float max_step)
+{
+    float diff = RpmRef - *CurrentRpmRef;
+
+    if (diff > max_step)
+    {
+        return CurrentRpmRef + max_step; // 가속 제한
+    }
+    else if (diff < -max_step)
+    {
+        return CurrentRpmRef - max_step; // 감속 제한
+    }
+    else
+    {
+        return RpmRef; // 목표치 도달 (오차 범위 내)
+    }
+} */
+
 void mtrCtrl_PI_update(void)
 {
 	float currRPM = hallsens_get_motorRPM();
 
 	if((mtrCtrl_getSelCtrlMode() == MTRCTRL_CTRL_PI) && (throttle_get_validateFlg() == true))
 	{
-		vPiCtrl_handler.rpm_error = vPiCtrl_handler.rpm_refVal - currRPM;
+        // 듀티값이 순간적으로 튀는 걸 방지하기 위해, 지령값에 ramp처리를 한다.
+        utils_ramp2Tgt(vPiCtrl_handler.rpm_refVal, &vPiCtrl_handler.rpm_rampVal, MTRCTRL_PI_RAMP_MAXVAL);
+
+		// vPiCtrl_handler.rpm_error = vPiCtrl_handler.rpm_refVal - currRPM;
+        vPiCtrl_handler.rpm_error = vPiCtrl_handler.rpm_rampVal - currRPM;
 
 		vPiCtrl_handler.P_term = vPiCtrl_handler.Kp * vPiCtrl_handler.rpm_error;
 		vPiCtrl_handler.I_term += vPiCtrl_handler.Ki * vPiCtrl_handler.rpm_error * MTRCTRL_PI_PERIOD;
 
+        // I-clamping
 		if(vPiCtrl_handler.I_term > MTRCTRL_PI_MAX_CCR_VAL)		vPiCtrl_handler.I_term = MTRCTRL_PI_MAX_CCR_VAL;
 		else if (vPiCtrl_handler.I_term < 0)					vPiCtrl_handler.I_term = 0;
 
 		vPiCtrl_handler.PI_term = vPiCtrl_handler.P_term + vPiCtrl_handler.I_term;
 
+        // PI-clamping
 		if(vPiCtrl_handler.PI_term > MTRCTRL_PI_MAX_CCR_VAL)	vPiCtrl_handler.PI_term = MTRCTRL_PI_MAX_CCR_VAL;
-		else if (vPiCtrl_handler.I_term < 0) 					vPiCtrl_handler.I_term = 0;
+		else if (vPiCtrl_handler.PI_term < 0) 					vPiCtrl_handler.PI_term = 0;
 
 		vPiCtrl_handler.CCR_refVal = (uint32_t)vPiCtrl_handler.PI_term;
 	}
