@@ -8,3 +8,4 @@
 ../Core/Src/utils.c:340:6:utils_LPF_phaseCurr_init	1
 ../Core/Src/utils.c:349:7:utils_LPF_RPM_filter	3
 ../Core/Src/utils.c:368:7:utils_LPF_phaseCurr_filter	3
+../Core/Src/utils.c:392:6:utils_ramp2Tgt	5

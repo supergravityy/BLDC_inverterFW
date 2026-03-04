@@ -383,3 +383,28 @@ float utils_LPF_phaseCurr_filter(float input)
 		return vLPF_phaseCurr_obj.prev_out;
 	}
 }
+
+/*----------------------------*/
+// Ramp Func
+/*----------------------------*/
+
+// 한번에 너무 급격히 변화하지 않고 점진적으로 지령값에 도달하도록 처리하는 함수
+void utils_ramp2Tgt(float command, float *output, float maxUnit)
+{
+    if(command > *output)
+    {
+        *output += maxUnit;
+
+        if(*output > command)   *output = command;
+    }
+    else if(command < *output)
+    {
+        *output -= maxUnit;
+
+        if(*output < command)   *output = command;
+    }
+    else
+    {
+        // do nothing
+    }
+}

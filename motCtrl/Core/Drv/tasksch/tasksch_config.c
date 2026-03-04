@@ -109,7 +109,7 @@ void Task_100ms_2(void)
 
 void Task_500ms(void)
 {
-    uart_AT09_sendStr_polling("Spd : ", strlen("Spd : "));
+    /* uart_AT09_sendStr_polling("Spd : ", strlen("Spd : "));
     uart_AT09_sendFloat_polling(mtrCtrl_getMotorSpeed_KMH(),2);
 
     uart_AT09_sendStr_polling("\r\nRPM : ", strlen("\r\nRPM : "));
@@ -124,7 +124,7 @@ void Task_500ms(void)
     uart_AT09_sendStr_polling("\r\nfaultNum : ", strlen("\r\nfaultNum : "));
     uart_AT09_sendFloat_polling(mtrCtrl_getErrCode(),1);
 
-    uart_AT09_sendStr_polling("\r\n\n",strlen("\r\n\n"));
+    uart_AT09_sendStr_polling("\r\n\n",strlen("\r\n\n")); */
 
     gpio_toggle_pin(FLT_LED_Port, 6);
 }

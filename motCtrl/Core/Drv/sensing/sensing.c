@@ -54,27 +54,6 @@ static void throttle_sensing(void)
     }
 }
 
-static void throttle_ramp2Tgt(float command, float *output, float ramp_unit)
-// 한번에 너무 급격히 변화하지 않고 점진적으로 지령값에 도달하도록 처리하는 함수
-{
-    if(command > *output)
-    {
-        *output += ramp_unit;
-
-        if(*output > command)   *output = command;
-    }
-    else if(command < *output)
-    {
-        *output -= ramp_unit;
-
-        if(*output < command)   *output = command;
-    }
-    else
-    {
-        // do nothing
-    }
-}
-
 static void throttle_postProcess(void)
 {
     // 4. 스로틀 유효값 처리 및 제어신호 변환
@@ -89,7 +68,7 @@ static void throttle_postProcess(void)
     }
 
     // 5. 스로틀 램프함수 처리
-    throttle_ramp2Tgt(vThrottle_handler.refVal, &vThrottle_handler.rampVal, THROTTLE_RAMP_UNIT);
+    utils_ramp2Tgt(vThrottle_handler.refVal, &vThrottle_handler.rampVal, THROTTLE_RAMP_UNIT);
 }
 
 // adc 값을 읽어서 사용하기 적절한 pwm신호로 출력하여 모터제어에 사용할 수 있게 함

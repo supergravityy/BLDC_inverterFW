@@ -21,7 +21,8 @@ void mtrCtrl_PI_clearTerms(void)
     vPiCtrl_handler.P_term = 0.0f;
     vPiCtrl_handler.I_term = 0.0f;
     vPiCtrl_handler.PI_term = 0.0f;
-    vPiCtrl_handler.CCR_refVal = 0UL;
+    vPiCtrl_handler.rpm_rampVal = 0.f;
+    vPiCtrl_handler.CCR_refVal = 0.f;
 }
 
 void mtrCtrl_PI_setTunings(float Kp, float Ki)
@@ -52,39 +53,38 @@ float mtrCtrl_PI_getRPMRef(void)
 }
 
 // NOTE : 지령주었을 때 정상상태 도달까지의 시간 100ms, 속도리플 5% 미만, 오버슛/언더슛 제한 10%
-// todo : 제일먼저 순수 PI제어 기법으로 돌려보고 파형 캡처
-// todo : 요구사항에 맞는 PI 게인값 튜닝
-// todo : iterm / piterm 클램핑 후 파형캡처
-// todo : 스로틀 valid 처리 후 파형캡처
-// todo : 에러값 램프처리후 파형캡처
 
 void mtrCtrl_PI_update(void)
 {
 	float currRPM = hallsens_get_motorRPM();
 
-	if(mtrCtrl_getSelCtrlMode() == MTRCTRL_CTRL_PI)
+	if((mtrCtrl_getSelCtrlMode() == MTRCTRL_CTRL_PI) && (throttle_get_validateFlg() == true))
 	{
-		vPiCtrl_handler.rpm_error = vPiCtrl_handler.rpm_refVal - currRPM;
+        // 듀티값이 순간적으로 튀는 걸 방지하기 위해, 지령값에 ramp처리를 한다.
+        utils_ramp2Tgt(vPiCtrl_handler.rpm_refVal, &vPiCtrl_handler.rpm_rampVal, MTRCTRL_PI_RAMP_MAXVAL);
+
+		// vPiCtrl_handler.rpm_error = vPiCtrl_handler.rpm_refVal - currRPM;
+        vPiCtrl_handler.rpm_error = vPiCtrl_handler.rpm_rampVal - currRPM;
 
 		vPiCtrl_handler.P_term = vPiCtrl_handler.Kp * vPiCtrl_handler.rpm_error;
 		vPiCtrl_handler.I_term += vPiCtrl_handler.Ki * vPiCtrl_handler.rpm_error * MTRCTRL_PI_PERIOD;
+
+        // I-clamping
+		if(vPiCtrl_handler.I_term > MTRCTRL_PI_MAX_CCR_VAL)		vPiCtrl_handler.I_term = MTRCTRL_PI_MAX_CCR_VAL;
+		else if (vPiCtrl_handler.I_term < 0)					vPiCtrl_handler.I_term = 0;
+
 		vPiCtrl_handler.PI_term = vPiCtrl_handler.P_term + vPiCtrl_handler.I_term;
 
-		if(vPiCtrl_handler.PI_term > MTRCTRL_PI_MAX_CCR_VAL)
-		{
-			vPiCtrl_handler.PI_term = MTRCTRL_PI_MAX_CCR_VAL;
-		}
-		/*else if(vPiCtrl_handler.PI_term < 0)
-		{
-			vPiCtrl_handler.PI_term = 0;
-		}*/
+        // PI-clamping
+		if(vPiCtrl_handler.PI_term > MTRCTRL_PI_MAX_CCR_VAL)	vPiCtrl_handler.PI_term = MTRCTRL_PI_MAX_CCR_VAL;
+		else if (vPiCtrl_handler.PI_term < 0) 					vPiCtrl_handler.PI_term = 0;
 
 		vPiCtrl_handler.CCR_refVal = (uint32_t)vPiCtrl_handler.PI_term;
 	}
-	/*else
+	else
 	{
-		mtrCtrl_PI_clearTerms(); // PI 제어 초기화
-	}*/
+		mtrCtrl_PI_clearTerms();
+	}
 }
 
 void mtrCtrl_objInit(float Kp, float Ki)

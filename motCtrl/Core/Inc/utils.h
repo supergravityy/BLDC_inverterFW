@@ -75,3 +75,4 @@ uint32_t utils_ipol_u16u32(const uint16_t* mapX, const uint32_t* mapY, uint16_t 
 int16_t utils_ipol_s16s16(const int16_t* mapX, const int16_t* mapY, uint16_t mapSize, int16_t input);
 int16_t utils_ipol_s16u16(const int16_t* mapX, const uint16_t* mapY, uint16_t mapSize, int16_t input);
 int16_t utils_ipol_u32s16(const uint32_t* mapX, const int16_t* mapY, uint16_t mapSize, uint32_t input);
+void utils_ramp2Tgt(float command, float *output, float maxUnit);
