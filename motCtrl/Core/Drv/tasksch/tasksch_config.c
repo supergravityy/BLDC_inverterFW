@@ -71,12 +71,9 @@ void Task_10ms(void)
     	mtrCtrl_PI_setTunings(vMtrCtrl_system.userKp, vMtrCtrl_system.userKi);
     	mtrCtrl_PI_setRPMRef(vMtrCtrl_system.userRefRPM);
     }
-        
-    mtrCtrl_chkErrSt(MTRCTRL_ERR_MOS_HOT);
-    mtrCtrl_chkErrSt(MTRCTRL_ERR_UNDER_VOLT);
 }
 
-void Task_100ms(void)
+void Task_10ms_2(void)
 {
     if(mtrCtrl_getSelCtrlMode() == MTRCTRL_CTRL_THROTTLE)
     {
@@ -90,21 +87,33 @@ void Task_100ms(void)
         uart_debug_sendFloat_polling(mtrCtrl_PI_getRPMRef(),2);
         uart_debug_sendStr_polling("\n", strlen("\n"));
     }
+}
 
+void Task_10ms_4(void)
+{
+	uart_debug_sendStr_polling(">RPM:", strlen(">RPM:"));
+	uart_debug_sendFloat_polling(hallsens_get_motorRPM(),1);
+	uart_debug_sendStr_polling("\n", strlen("\n"));
+}
+
+void Task_10ms_6(void)
+{
+	uart_debug_sendStr_polling(">Imax:", strlen(">Imax:"));
+	uart_debug_sendFloat_polling(sensing_getIphase_max(), 1);
+	uart_debug_sendStr_polling("\n", strlen("\n"));
+}
+
+void Task_10ms_8(void)
+{
 	uart_debug_sendStr_polling(">refCCR:", strlen(">refCCR:"));
 	uart_debug_sendInt_polling(mtrCtrl_getFinalCCR_refVal());
 	uart_debug_sendStr_polling("\n", strlen("\n"));
 }
 
-void Task_100ms_2(void)
+void Task_100ms(void)
 {
-	uart_debug_sendStr_polling(">RPM:", strlen(">RPM:"));
-	uart_debug_sendFloat_polling(hallsens_get_motorRPM(),1);
-	uart_debug_sendStr_polling("\n", strlen("\n"));
-
-	uart_debug_sendStr_polling(">Imax:", strlen(">Imax:"));
-	uart_debug_sendFloat_polling(sensing_getIphase_max(),1);
-	uart_debug_sendStr_polling("\n", strlen("\n"));
+	mtrCtrl_chkErrSt(MTRCTRL_ERR_MOS_HOT);
+	mtrCtrl_chkErrSt(MTRCTRL_ERR_UNDER_VOLT);
 }
 
 void Task_500ms(void)
@@ -126,7 +135,7 @@ void Task_500ms(void)
 
     uart_AT09_sendStr_polling("\r\n\n",strlen("\r\n\n")); */
 
-    gpio_toggle_pin(FLT_LED_Port, 6);
+	gpio_toggle_pin(FLT_LED_Port, 6);
 }
 
 void Task_1sec(void)
@@ -138,29 +147,50 @@ void tasksch_init_RegiTaskObj(void)
 {
     /* hard-coded Registor task initialization */
 
+    // 1. 1ms 핵심 제어 태스크
     vUserRegiTaskObj[0].regiTaskFunc_ptr = Task_1ms;
     vUserRegiTaskObj[0].regiTaskOffset_ms = 0;
     vUserRegiTaskObj[0].regiTaskPeriod_ms = 1;
 
+    // 2. 10ms 모터 상태 연산 태스크
     vUserRegiTaskObj[1].regiTaskFunc_ptr = Task_10ms;
     vUserRegiTaskObj[1].regiTaskOffset_ms = 0;
     vUserRegiTaskObj[1].regiTaskPeriod_ms = 10;
 
-    vUserRegiTaskObj[2].regiTaskFunc_ptr = Task_100ms;
-    vUserRegiTaskObj[2].regiTaskOffset_ms = 0;
-    vUserRegiTaskObj[2].regiTaskPeriod_ms = 100;
+    // 3. 10ms UART 분산 전송 태스크 (Phase: 2ms)
+    vUserRegiTaskObj[2].regiTaskFunc_ptr = Task_10ms_2;
+    vUserRegiTaskObj[2].regiTaskOffset_ms = 2;
+    vUserRegiTaskObj[2].regiTaskPeriod_ms = 10;
 
-    vUserRegiTaskObj[3].regiTaskFunc_ptr = Task_100ms_2;
-    vUserRegiTaskObj[3].regiTaskOffset_ms = 20;
-    vUserRegiTaskObj[3].regiTaskPeriod_ms = 100;
+    // 4. 10ms UART 분산 전송 태스크 (Phase: 4ms)
+    vUserRegiTaskObj[3].regiTaskFunc_ptr = Task_10ms_4;
+    vUserRegiTaskObj[3].regiTaskOffset_ms = 4;
+    vUserRegiTaskObj[3].regiTaskPeriod_ms = 10;
 
-    vUserRegiTaskObj[4].regiTaskFunc_ptr = Task_500ms;
-    vUserRegiTaskObj[4].regiTaskOffset_ms = 0;
-    vUserRegiTaskObj[4].regiTaskPeriod_ms = 500;
+    // 5. 10ms UART 분산 전송 태스크 (Phase: 6ms)
+    vUserRegiTaskObj[4].regiTaskFunc_ptr = Task_10ms_6;
+    vUserRegiTaskObj[4].regiTaskOffset_ms = 6;
+    vUserRegiTaskObj[4].regiTaskPeriod_ms = 10;
 
-    vUserRegiTaskObj[5].regiTaskFunc_ptr = Task_1sec;
-	vUserRegiTaskObj[5].regiTaskOffset_ms = 0;
-	vUserRegiTaskObj[5].regiTaskPeriod_ms = 1000;
+    // 6. 10ms UART 분산 전송 태스크 (Phase: 8ms)
+    vUserRegiTaskObj[5].regiTaskFunc_ptr = Task_10ms_8;
+    vUserRegiTaskObj[5].regiTaskOffset_ms = 8;
+    vUserRegiTaskObj[5].regiTaskPeriod_ms = 10;
+
+    // 7. 100ms 에러 감시 태스크
+    vUserRegiTaskObj[6].regiTaskFunc_ptr = Task_100ms;
+    vUserRegiTaskObj[6].regiTaskOffset_ms = 0;
+    vUserRegiTaskObj[6].regiTaskPeriod_ms = 100;
+
+    // 8. 500ms 시스템 상태 표시 (하트비트 LED)
+    vUserRegiTaskObj[7].regiTaskFunc_ptr = Task_500ms;
+    vUserRegiTaskObj[7].regiTaskOffset_ms = 0;
+    vUserRegiTaskObj[7].regiTaskPeriod_ms = 500;
+
+    // 9. 1sec 시스템
+    vUserRegiTaskObj[8].regiTaskFunc_ptr = Task_1sec;
+    vUserRegiTaskObj[8].regiTaskOffset_ms = 0;
+    vUserRegiTaskObj[8].regiTaskPeriod_ms = 1000;
 }
 
 /* Override your __weak Functions */

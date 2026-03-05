@@ -25,7 +25,7 @@
 
 #define TASKSCH_STM32_HAL_USE // example for watchdog 
 
-#define TASKSCH_NUMBER                      (6)                             // NOTE : USER DEFINE
+#define TASKSCH_NUMBER                      (9)                             // NOTE : USER DEFINE
 
 #define TASKSCH_DISABLE_ISR()   		    __disable_irq();                // NOTE : USER DEFINE
 #define TASKSCH_ENABLE_ISR()    		    __enable_irq();                 // NOTE : USER DEFINE
