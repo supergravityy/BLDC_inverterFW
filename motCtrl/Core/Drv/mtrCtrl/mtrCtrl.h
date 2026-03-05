@@ -16,7 +16,7 @@
 #define MTRCTRL_PI_CTRL_MS          (1.f)
 #define MTRCTRL_PI_CTRL_PERIOD_SEC  ((float)(MTRCTRL_PI_CTRL_MS) / 1000.0f)
 #define MTRCTRL_PI_iTERM_MAXVAL     ((float)(THROTTLE_PWM_PERIOD_VAL) * .4f) // PI 제어의 적분항 최대값 제한
-#define MTRCTRL_PI_RAMP_MAXVAL      (3.3f)
+#define MTRCTRL_PI_RAMP_MAXVAL      (200.f) // RPM / dt
 
 typedef enum motorCtrl_errCode // 위험한 순으로 정렬 (에러 코드가 높을수록 더 심각한 에러로 판단)
 {
