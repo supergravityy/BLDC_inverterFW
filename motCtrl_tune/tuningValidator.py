@@ -49,8 +49,8 @@ from tuningValidator_cls import tuneJudge
 # 초기설정 및 요구스펙
 CONFIG_INIT = {
     'COM_PORT'      : 'COM12',
-    'BAUDRATE'      : '9600',
-    'MSG_PERIOD'    : 0.001,    # uart 메시지 주기
+    'BAUDRATE'      : 9600,
+    'MSG_PERIOD'    : 0.01,    # uart 메시지 주기 10ms
     'CSV_NAME'      : 'tuning_result.csv',
     'COM_PREFIX'    : '>',
     'COM_SUFFIX'    : '\n'
@@ -63,7 +63,7 @@ CONFIG_JUDGE = {
     'DETECT_REF_SEC': 300.0,    # 목표지령값 대기 시간 (5분)
     'INIT_REF_RPM'  : 0,        # 초기 지령값(시작) (RPM)
     'BAND_MARGIN'   : 0.05,     # ±5%
-    'OVER_MARGIN'   : 0.1,      # ±10%
+    'SHOOT_MARGIN'  : 0.1,      # ±10%
 }
 
 
