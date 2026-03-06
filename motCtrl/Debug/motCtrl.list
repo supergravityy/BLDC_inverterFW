@@ -6075,17 +6075,17 @@ int main(void)
  800287c:	f7ff fc4a 	bl	8002114 <adc_init>
     dac_init();
  8002880:	f7ff fe36 	bl	80024f0 <dac_init>
-    uart_AT09_init(9600, 8, 1, UART_PARITY_NONE);
+    uart_AT09_init(115200, 8, 1, UART_PARITY_NONE);
  8002884:	2300      	movs	r3, #0
  8002886:	2201      	movs	r2, #1
  8002888:	2108      	movs	r1, #8
- 800288a:	f44f 5016 	mov.w	r0, #9600	@ 0x2580
+ 800288a:	f44f 30e1 	mov.w	r0, #115200	@ 0x1c200
  800288e:	f000 fc85 	bl	800319c <uart_AT09_init>
-    uart_debug_init(9600, 8, 1, UART_PARITY_NONE);
+    uart_debug_init(115200, 8, 1, UART_PARITY_NONE);
  8002892:	2300      	movs	r3, #0
  8002894:	2201      	movs	r2, #1
  8002896:	2108      	movs	r1, #8
- 8002898:	f44f 5016 	mov.w	r0, #9600	@ 0x2580
+ 8002898:	f44f 30e1 	mov.w	r0, #115200	@ 0x1c200
  800289c:	f000 fcae 	bl	80031fc <uart_debug_init>
     tasksch_init();
  80028a0:	f7fe fea2 	bl	80015e8 <tasksch_init>

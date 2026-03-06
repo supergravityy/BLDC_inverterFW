@@ -19,8 +19,8 @@ int main(void)
     exti_init();
     adc_init();
     dac_init();
-    uart_AT09_init(9600, 8, 1, UART_PARITY_NONE);
-    uart_debug_init(9600, 8, 1, UART_PARITY_NONE);
+    uart_AT09_init(115200, 8, 1, UART_PARITY_NONE);
+    uart_debug_init(115200, 8, 1, UART_PARITY_NONE);
     tasksch_init();
     mtrCtrl_objInit(0,0);
     mtrCtrl_setPeriphInit();
@@ -77,6 +77,8 @@ int main(void)
  * PI 제어시, 현재보다 조금 더 큰 지령값을 주더라도 모터가 순간 급발진을 해버림 -> P게인값으로 인해 순간적으로 듀티값(CCR)이 크게 튐 -> 이는 모터가 순간적으로 움찔거리게 함
  *
  * 게인값 튜닝은 100ms의 시간제한을 두는데, 데이터를 100ms로 보내는건 말이 안됨
+ *
+ * 통신하는 태스크를 10ms 단위로 여러번 쪼갰더니 스케줄링 지연현상 발생 -> 9600보드레이트로는 통신지연을 감당할 수 없음 -> 115200 보드레이트로 변경필요
  * --------------------------------------*/
 
 /*---------------------------------------
@@ -102,6 +104,7 @@ int main(void)
  * PI 제어 함수에서 PIterm, Iterm에 클램핑을 적용함 + 스로틀이 동작하지 않을때는 mtrCtrl_PI_clearTerms이 호출되게 수정
  * PI 제어 함수에서 듀티값이 순간적으로 튀는 걸 방지하기 위해, 지령값에 ramp처리를 하게 수정
  * 기존의 uart 통신 태스크를 다 쪼개서 위상차를 준다음 10ms 단위로 호출시킴
+ * 보드레잇을 115200으로 상승시킴
  * --------------------------------------*/
 
 // todo : PWM 파형 오실로스코프로 찍어보기
