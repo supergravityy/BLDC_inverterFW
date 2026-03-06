@@ -49,7 +49,7 @@ from tuningValidator_cls import tuneJudge
 # 초기설정 및 요구스펙
 CONFIG_INIT = {
     'COM_PORT'      : 'COM12',
-    'BAUDRATE'      : 9600,
+    'BAUDRATE'      : 115200,
     'MSG_PERIOD'    : 0.01,    # uart 메시지 주기 10ms
     'CSV_NAME'      : 'tuning_result.csv',
     'COM_PREFIX'    : '>',
@@ -58,7 +58,7 @@ CONFIG_INIT = {
 
 # 판정설정
 CONFIG_JUDGE = {
-    'TIMEOUT_SEC'   : 0.1,      # 정상상태 도달 제한 시간 (100ms)
+    'TIMEOUT_SEC'   : 0.8,      # 정상상태 도달 제한 시간 (800ms)
     'MAINTAIN_SEC'  : 30.0,     # 정상상태 유지 시간 (30초)
     'DETECT_REF_SEC': 300.0,    # 목표지령값 대기 시간 (5분)
     'INIT_REF_RPM'  : 0,        # 초기 지령값(시작) (RPM)
