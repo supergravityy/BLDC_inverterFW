@@ -37,11 +37,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  16 .debug_macro  00027151  00000000  00000000  0000cc4b  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   0000a5e5  00000000  00000000  00033d9c  2**0
+ 17 .debug_line   0000a5e8  00000000  00000000  00033d9c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    000ed36b  00000000  00000000  0003e381  2**0
+ 18 .debug_str    000ed369  00000000  00000000  0003e384  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000043  00000000  00000000  0012b6ec  2**0
+ 19 .comment      00000043  00000000  00000000  0012b6ed  2**0
                   CONTENTS, READONLY
  20 .debug_frame  000018fc  00000000  00000000  0012b730  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -852,120 +852,122 @@ void mtrCtrl_PI_update(void)
 	{
         // 듀티값이 순간적으로 튀는 걸 방지하기 위해, 지령값에 ramp처리를 한다.
         utils_ramp2Tgt(vPiCtrl_handler.rpm_refVal, &vPiCtrl_handler.rpm_rampVal, MTRCTRL_PI_RAMP_MAXVAL);
- 8000710:	4b41      	ldr	r3, [pc, #260]	@ (8000818 <mtrCtrl_PI_update+0x12c>)
+ 8000710:	4b42      	ldr	r3, [pc, #264]	@ (800081c <mtrCtrl_PI_update+0x130>)
  8000712:	edd3 7a03 	vldr	s15, [r3, #12]
- 8000716:	eddf 0a41 	vldr	s1, [pc, #260]	@ 800081c <mtrCtrl_PI_update+0x130>
+ 8000716:	eef1 0a0c 	vmov.f32	s1, #28	@ 0x40e00000  7.0
  800071a:	4841      	ldr	r0, [pc, #260]	@ (8000820 <mtrCtrl_PI_update+0x134>)
  800071c:	eeb0 0a67 	vmov.f32	s0, s15
  8000720:	f002 ffdc 	bl	80036dc <utils_ramp2Tgt>
 
 		// vPiCtrl_handler.rpm_error = vPiCtrl_handler.rpm_refVal - currRPM;
         vPiCtrl_handler.rpm_error = vPiCtrl_handler.rpm_rampVal - currRPM;
- 8000724:	4b3c      	ldr	r3, [pc, #240]	@ (8000818 <mtrCtrl_PI_update+0x12c>)
+ 8000724:	4b3d      	ldr	r3, [pc, #244]	@ (800081c <mtrCtrl_PI_update+0x130>)
  8000726:	ed93 7a04 	vldr	s14, [r3, #16]
  800072a:	edd7 7a01 	vldr	s15, [r7, #4]
  800072e:	ee77 7a67 	vsub.f32	s15, s14, s15
- 8000732:	4b39      	ldr	r3, [pc, #228]	@ (8000818 <mtrCtrl_PI_update+0x12c>)
+ 8000732:	4b3a      	ldr	r3, [pc, #232]	@ (800081c <mtrCtrl_PI_update+0x130>)
  8000734:	edc3 7a02 	vstr	s15, [r3, #8]
 
 		vPiCtrl_handler.P_term = vPiCtrl_handler.Kp * vPiCtrl_handler.rpm_error;
- 8000738:	4b37      	ldr	r3, [pc, #220]	@ (8000818 <mtrCtrl_PI_update+0x12c>)
+ 8000738:	4b38      	ldr	r3, [pc, #224]	@ (800081c <mtrCtrl_PI_update+0x130>)
  800073a:	ed93 7a00 	vldr	s14, [r3]
- 800073e:	4b36      	ldr	r3, [pc, #216]	@ (8000818 <mtrCtrl_PI_update+0x12c>)
+ 800073e:	4b37      	ldr	r3, [pc, #220]	@ (800081c <mtrCtrl_PI_update+0x130>)
  8000740:	edd3 7a02 	vldr	s15, [r3, #8]
  8000744:	ee67 7a27 	vmul.f32	s15, s14, s15
- 8000748:	4b33      	ldr	r3, [pc, #204]	@ (8000818 <mtrCtrl_PI_update+0x12c>)
+ 8000748:	4b34      	ldr	r3, [pc, #208]	@ (800081c <mtrCtrl_PI_update+0x130>)
  800074a:	edc3 7a05 	vstr	s15, [r3, #20]
 		vPiCtrl_handler.I_term += vPiCtrl_handler.Ki * vPiCtrl_handler.rpm_error * MTRCTRL_PI_PERIOD;
- 800074e:	4b32      	ldr	r3, [pc, #200]	@ (8000818 <mtrCtrl_PI_update+0x12c>)
+ 800074e:	4b33      	ldr	r3, [pc, #204]	@ (800081c <mtrCtrl_PI_update+0x130>)
  8000750:	ed93 7a06 	vldr	s14, [r3, #24]
- 8000754:	4b30      	ldr	r3, [pc, #192]	@ (8000818 <mtrCtrl_PI_update+0x12c>)
+ 8000754:	4b31      	ldr	r3, [pc, #196]	@ (800081c <mtrCtrl_PI_update+0x130>)
  8000756:	edd3 6a01 	vldr	s13, [r3, #4]
- 800075a:	4b2f      	ldr	r3, [pc, #188]	@ (8000818 <mtrCtrl_PI_update+0x12c>)
+ 800075a:	4b30      	ldr	r3, [pc, #192]	@ (800081c <mtrCtrl_PI_update+0x130>)
  800075c:	edd3 7a02 	vldr	s15, [r3, #8]
  8000760:	ee66 7aa7 	vmul.f32	s15, s13, s15
  8000764:	eddf 6a2f 	vldr	s13, [pc, #188]	@ 8000824 <mtrCtrl_PI_update+0x138>
  8000768:	ee67 7aa6 	vmul.f32	s15, s15, s13
  800076c:	ee77 7a27 	vadd.f32	s15, s14, s15
- 8000770:	4b29      	ldr	r3, [pc, #164]	@ (8000818 <mtrCtrl_PI_update+0x12c>)
+ 8000770:	4b2a      	ldr	r3, [pc, #168]	@ (800081c <mtrCtrl_PI_update+0x130>)
  8000772:	edc3 7a06 	vstr	s15, [r3, #24]
 
         // I-clamping
 		if(vPiCtrl_handler.I_term > MTRCTRL_PI_MAX_CCR_VAL)		vPiCtrl_handler.I_term = MTRCTRL_PI_MAX_CCR_VAL;
- 8000776:	4b28      	ldr	r3, [pc, #160]	@ (8000818 <mtrCtrl_PI_update+0x12c>)
+ 8000776:	4b29      	ldr	r3, [pc, #164]	@ (800081c <mtrCtrl_PI_update+0x130>)
  8000778:	edd3 7a06 	vldr	s15, [r3, #24]
  800077c:	ed9f 7a2a 	vldr	s14, [pc, #168]	@ 8000828 <mtrCtrl_PI_update+0x13c>
  8000780:	eef4 7ac7 	vcmpe.f32	s15, s14
  8000784:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
  8000788:	dd03      	ble.n	8000792 <mtrCtrl_PI_update+0xa6>
- 800078a:	4b23      	ldr	r3, [pc, #140]	@ (8000818 <mtrCtrl_PI_update+0x12c>)
+ 800078a:	4b24      	ldr	r3, [pc, #144]	@ (800081c <mtrCtrl_PI_update+0x130>)
  800078c:	4a27      	ldr	r2, [pc, #156]	@ (800082c <mtrCtrl_PI_update+0x140>)
  800078e:	619a      	str	r2, [r3, #24]
  8000790:	e00b      	b.n	80007aa <mtrCtrl_PI_update+0xbe>
 		else if (vPiCtrl_handler.I_term < 0)					vPiCtrl_handler.I_term = 0;
- 8000792:	4b21      	ldr	r3, [pc, #132]	@ (8000818 <mtrCtrl_PI_update+0x12c>)
+ 8000792:	4b22      	ldr	r3, [pc, #136]	@ (800081c <mtrCtrl_PI_update+0x130>)
  8000794:	edd3 7a06 	vldr	s15, [r3, #24]
  8000798:	eef5 7ac0 	vcmpe.f32	s15, #0.0
  800079c:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
  80007a0:	d503      	bpl.n	80007aa <mtrCtrl_PI_update+0xbe>
- 80007a2:	4b1d      	ldr	r3, [pc, #116]	@ (8000818 <mtrCtrl_PI_update+0x12c>)
+ 80007a2:	4b1e      	ldr	r3, [pc, #120]	@ (800081c <mtrCtrl_PI_update+0x130>)
  80007a4:	f04f 0200 	mov.w	r2, #0
  80007a8:	619a      	str	r2, [r3, #24]
 
 		vPiCtrl_handler.PI_term = vPiCtrl_handler.P_term + vPiCtrl_handler.I_term;
- 80007aa:	4b1b      	ldr	r3, [pc, #108]	@ (8000818 <mtrCtrl_PI_update+0x12c>)
+ 80007aa:	4b1c      	ldr	r3, [pc, #112]	@ (800081c <mtrCtrl_PI_update+0x130>)
  80007ac:	ed93 7a05 	vldr	s14, [r3, #20]
- 80007b0:	4b19      	ldr	r3, [pc, #100]	@ (8000818 <mtrCtrl_PI_update+0x12c>)
+ 80007b0:	4b1a      	ldr	r3, [pc, #104]	@ (800081c <mtrCtrl_PI_update+0x130>)
  80007b2:	edd3 7a06 	vldr	s15, [r3, #24]
  80007b6:	ee77 7a27 	vadd.f32	s15, s14, s15
- 80007ba:	4b17      	ldr	r3, [pc, #92]	@ (8000818 <mtrCtrl_PI_update+0x12c>)
+ 80007ba:	4b18      	ldr	r3, [pc, #96]	@ (800081c <mtrCtrl_PI_update+0x130>)
  80007bc:	edc3 7a07 	vstr	s15, [r3, #28]
 
         // PI-clamping
 		if(vPiCtrl_handler.PI_term > MTRCTRL_PI_MAX_CCR_VAL)	vPiCtrl_handler.PI_term = MTRCTRL_PI_MAX_CCR_VAL;
- 80007c0:	4b15      	ldr	r3, [pc, #84]	@ (8000818 <mtrCtrl_PI_update+0x12c>)
+ 80007c0:	4b16      	ldr	r3, [pc, #88]	@ (800081c <mtrCtrl_PI_update+0x130>)
  80007c2:	edd3 7a07 	vldr	s15, [r3, #28]
  80007c6:	ed9f 7a18 	vldr	s14, [pc, #96]	@ 8000828 <mtrCtrl_PI_update+0x13c>
  80007ca:	eef4 7ac7 	vcmpe.f32	s15, s14
  80007ce:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
  80007d2:	dd03      	ble.n	80007dc <mtrCtrl_PI_update+0xf0>
- 80007d4:	4b10      	ldr	r3, [pc, #64]	@ (8000818 <mtrCtrl_PI_update+0x12c>)
+ 80007d4:	4b11      	ldr	r3, [pc, #68]	@ (800081c <mtrCtrl_PI_update+0x130>)
  80007d6:	4a15      	ldr	r2, [pc, #84]	@ (800082c <mtrCtrl_PI_update+0x140>)
  80007d8:	61da      	str	r2, [r3, #28]
  80007da:	e00b      	b.n	80007f4 <mtrCtrl_PI_update+0x108>
 		else if (vPiCtrl_handler.PI_term < 0) 					vPiCtrl_handler.PI_term = 0;
- 80007dc:	4b0e      	ldr	r3, [pc, #56]	@ (8000818 <mtrCtrl_PI_update+0x12c>)
+ 80007dc:	4b0f      	ldr	r3, [pc, #60]	@ (800081c <mtrCtrl_PI_update+0x130>)
  80007de:	edd3 7a07 	vldr	s15, [r3, #28]
  80007e2:	eef5 7ac0 	vcmpe.f32	s15, #0.0
  80007e6:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
  80007ea:	d503      	bpl.n	80007f4 <mtrCtrl_PI_update+0x108>
- 80007ec:	4b0a      	ldr	r3, [pc, #40]	@ (8000818 <mtrCtrl_PI_update+0x12c>)
+ 80007ec:	4b0b      	ldr	r3, [pc, #44]	@ (800081c <mtrCtrl_PI_update+0x130>)
  80007ee:	f04f 0200 	mov.w	r2, #0
  80007f2:	61da      	str	r2, [r3, #28]
 
 		vPiCtrl_handler.CCR_refVal = (uint32_t)vPiCtrl_handler.PI_term;
- 80007f4:	4b08      	ldr	r3, [pc, #32]	@ (8000818 <mtrCtrl_PI_update+0x12c>)
+ 80007f4:	4b09      	ldr	r3, [pc, #36]	@ (800081c <mtrCtrl_PI_update+0x130>)
  80007f6:	edd3 7a07 	vldr	s15, [r3, #28]
  80007fa:	eefc 7ae7 	vcvt.u32.f32	s15, s15
  80007fe:	ee17 2a90 	vmov	r2, s15
- 8000802:	4b05      	ldr	r3, [pc, #20]	@ (8000818 <mtrCtrl_PI_update+0x12c>)
+ 8000802:	4b06      	ldr	r3, [pc, #24]	@ (800081c <mtrCtrl_PI_update+0x130>)
  8000804:	621a      	str	r2, [r3, #32]
- 8000806:	e002      	b.n	800080e <mtrCtrl_PI_update+0x122>
+ 8000806:	e005      	b.n	8000814 <mtrCtrl_PI_update+0x128>
 	}
 	else
 	{
 		mtrCtrl_PI_clearTerms();
  8000808:	f7ff ff06 	bl	8000618 <mtrCtrl_PI_clearTerms>
+		vPiCtrl_handler.rpm_rampVal = currRPM;
+ 800080c:	4a03      	ldr	r2, [pc, #12]	@ (800081c <mtrCtrl_PI_update+0x130>)
+ 800080e:	687b      	ldr	r3, [r7, #4]
+ 8000810:	6113      	str	r3, [r2, #16]
 	}
 }
- 800080c:	bf00      	nop
- 800080e:	bf00      	nop
- 8000810:	3708      	adds	r7, #8
- 8000812:	46bd      	mov	sp, r7
- 8000814:	bd80      	pop	{r7, pc}
- 8000816:	bf00      	nop
- 8000818:	2000007c 	.word	0x2000007c
- 800081c:	43480000 	.word	0x43480000
+ 8000812:	bf00      	nop
+ 8000814:	bf00      	nop
+ 8000816:	3708      	adds	r7, #8
+ 8000818:	46bd      	mov	sp, r7
+ 800081a:	bd80      	pop	{r7, pc}
+ 800081c:	2000007c 	.word	0x2000007c
  8000820:	2000008c 	.word	0x2000008c
  8000824:	3a83126f 	.word	0x3a83126f
  8000828:	45a59800 	.word	0x45a59800

@@ -5137,46 +5137,46 @@ LOAD C:/ST/STM32CubeIDE_1.19.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_macro   0x00026e4f      0x209 ./Core/Src/uart.o
  .debug_macro   0x00027058       0xf9 ./Core/Src/utils.o
 
-.debug_line     0x00000000     0xa5e5
+.debug_line     0x00000000     0xa5e8
  .debug_line    0x00000000      0xa54 ./Core/Drv/hallSens/hallsens.o
- .debug_line    0x00000a54      0xb2d ./Core/Drv/mtrCtrl/mtrCtrl.o
- .debug_line    0x00001581      0xb64 ./Core/Drv/sensing/sensing.o
- .debug_line    0x000020e5      0xcd0 ./Core/Drv/tasksch/tasksch.o
- .debug_line    0x00002db5      0xc60 ./Core/Drv/tasksch/tasksch_config.o
- .debug_line    0x00003a15      0x8da ./Core/Src/Gpio.o
- .debug_line    0x000042ef      0xb7c ./Core/Src/adc.o
- .debug_line    0x00004e6b      0x7ae ./Core/Src/dac.o
- .debug_line    0x00005619      0x840 ./Core/Src/exti.o
- .debug_line    0x00005e59      0x91a ./Core/Src/isr.o
- .debug_line    0x00006773      0x84b ./Core/Src/main.o
- .debug_line    0x00006fbe      0x7bc ./Core/Src/stm32f7xx_it.o
- .debug_line    0x0000777a      0x774 ./Core/Src/system.o
- .debug_line    0x00007eee      0x781 ./Core/Src/system_stm32f7xx.o
- .debug_line    0x0000866f      0xa93 ./Core/Src/tim.o
- .debug_line    0x00009102      0xa8d ./Core/Src/uart.o
- .debug_line    0x00009b8f      0x9dc ./Core/Src/utils.o
- .debug_line    0x0000a56b       0x7a ./Core/Startup/startup_stm32f767vitx.o
+ .debug_line    0x00000a54      0xb30 ./Core/Drv/mtrCtrl/mtrCtrl.o
+ .debug_line    0x00001584      0xb64 ./Core/Drv/sensing/sensing.o
+ .debug_line    0x000020e8      0xcd0 ./Core/Drv/tasksch/tasksch.o
+ .debug_line    0x00002db8      0xc60 ./Core/Drv/tasksch/tasksch_config.o
+ .debug_line    0x00003a18      0x8da ./Core/Src/Gpio.o
+ .debug_line    0x000042f2      0xb7c ./Core/Src/adc.o
+ .debug_line    0x00004e6e      0x7ae ./Core/Src/dac.o
+ .debug_line    0x0000561c      0x840 ./Core/Src/exti.o
+ .debug_line    0x00005e5c      0x91a ./Core/Src/isr.o
+ .debug_line    0x00006776      0x84b ./Core/Src/main.o
+ .debug_line    0x00006fc1      0x7bc ./Core/Src/stm32f7xx_it.o
+ .debug_line    0x0000777d      0x774 ./Core/Src/system.o
+ .debug_line    0x00007ef1      0x781 ./Core/Src/system_stm32f7xx.o
+ .debug_line    0x00008672      0xa93 ./Core/Src/tim.o
+ .debug_line    0x00009105      0xa8d ./Core/Src/uart.o
+ .debug_line    0x00009b92      0x9dc ./Core/Src/utils.o
+ .debug_line    0x0000a56e       0x7a ./Core/Startup/startup_stm32f767vitx.o
 
-.debug_str      0x00000000    0xed36b
- .debug_str     0x00000000    0xed36b ./Core/Drv/hallSens/hallsens.o
-                              0xe7a4f (size before relaxing)
- .debug_str     0x000ed36b    0xe7ada ./Core/Drv/mtrCtrl/mtrCtrl.o
- .debug_str     0x000ed36b    0xe7866 ./Core/Drv/sensing/sensing.o
- .debug_str     0x000ed36b    0xe7bce ./Core/Drv/tasksch/tasksch.o
- .debug_str     0x000ed36b    0xeb155 ./Core/Drv/tasksch/tasksch_config.o
- .debug_str     0x000ed36b    0xe71a0 ./Core/Src/Gpio.o
- .debug_str     0x000ed36b    0xe73e4 ./Core/Src/adc.o
- .debug_str     0x000ed36b    0xe715a ./Core/Src/dac.o
- .debug_str     0x000ed36b    0xe78ae ./Core/Src/exti.o
- .debug_str     0x000ed36b    0xe7c42 ./Core/Src/isr.o
- .debug_str     0x000ed36b    0xe7abb ./Core/Src/main.o
- .debug_str     0x000ed36b    0xe709a ./Core/Src/stm32f7xx_it.o
- .debug_str     0x000ed36b    0xa2ff2 ./Core/Src/system.o
- .debug_str     0x000ed36b    0xe6930 ./Core/Src/system_stm32f7xx.o
- .debug_str     0x000ed36b    0xe7b34 ./Core/Src/tim.o
- .debug_str     0x000ed36b    0xe73f1 ./Core/Src/uart.o
- .debug_str     0x000ed36b    0xa3315 ./Core/Src/utils.o
- .debug_str     0x000ed36b       0x71 ./Core/Startup/startup_stm32f767vitx.o
+.debug_str      0x00000000    0xed369
+ .debug_str     0x00000000    0xed369 ./Core/Drv/hallSens/hallsens.o
+                              0xe7a4d (size before relaxing)
+ .debug_str     0x000ed369    0xe7ad8 ./Core/Drv/mtrCtrl/mtrCtrl.o
+ .debug_str     0x000ed369    0xe7866 ./Core/Drv/sensing/sensing.o
+ .debug_str     0x000ed369    0xe7bce ./Core/Drv/tasksch/tasksch.o
+ .debug_str     0x000ed369    0xeb153 ./Core/Drv/tasksch/tasksch_config.o
+ .debug_str     0x000ed369    0xe71a0 ./Core/Src/Gpio.o
+ .debug_str     0x000ed369    0xe73e4 ./Core/Src/adc.o
+ .debug_str     0x000ed369    0xe715a ./Core/Src/dac.o
+ .debug_str     0x000ed369    0xe78ae ./Core/Src/exti.o
+ .debug_str     0x000ed369    0xe7c40 ./Core/Src/isr.o
+ .debug_str     0x000ed369    0xe7ab9 ./Core/Src/main.o
+ .debug_str     0x000ed369    0xe709a ./Core/Src/stm32f7xx_it.o
+ .debug_str     0x000ed369    0xa2ff2 ./Core/Src/system.o
+ .debug_str     0x000ed369    0xe6930 ./Core/Src/system_stm32f7xx.o
+ .debug_str     0x000ed369    0xe7b34 ./Core/Src/tim.o
+ .debug_str     0x000ed369    0xe73f1 ./Core/Src/uart.o
+ .debug_str     0x000ed369    0xa3315 ./Core/Src/utils.o
+ .debug_str     0x000ed369       0x71 ./Core/Startup/startup_stm32f767vitx.o
 
 .comment        0x00000000       0x43
  .comment       0x00000000       0x43 ./Core/Drv/hallSens/hallsens.o

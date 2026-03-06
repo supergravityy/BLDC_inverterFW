@@ -84,6 +84,7 @@ void mtrCtrl_PI_update(void)
 	else
 	{
 		mtrCtrl_PI_clearTerms();
+		vPiCtrl_handler.rpm_rampVal = currRPM;
 	}
 }
 
