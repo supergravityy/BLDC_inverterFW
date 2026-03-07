@@ -33,6 +33,7 @@ class tuneJudge:
         self.cfg_judge = cfg_judge
 
         # 2. 시스템 상태 및 통신 객체 초기화
+        self.stMachine_cnt = 0
         self.curr_state = State.INIT
         self.prev_state = State.INIT
         self.serial = serialHandler(
@@ -113,13 +114,18 @@ class tuneJudge:
                 pass
             
             case State.IDLE:
-                if (len(self.buff_records) > 0) and (self.idle_tgtRPM_Same == False):
+                # 10번 이상 루프를 돌았고 (판정이 끝났고), 초기 RPM이 다를 경우 에러
+                if (self.idle_waitCnt >= 10) and (self.idle_tgtRPM_Same == False):
                     self.faultCode = FaultCode.NOT_CURR_RPM
                     next_state = State.DONE
+                
+                # 대기 시간 초과
                 elif self.idle_waitCnt >= self.idle_maxTick:
                     self.faultCode = FaultCode.DET_TIMEOUT
                     next_state = State.DONE
-                elif (self.idle_tgtRPM_Same == True) and (self.idle_prev_tgtRPM != self.idle_curr_tgtRPM):
+                
+                # 정상적인 지령값 변경 감지 (10번 루프 이후에만 유효)
+                elif (self.idle_waitCnt >= 10) and (self.idle_tgtRPM_Same == True) and (self.idle_prev_tgtRPM != self.idle_curr_tgtRPM):
                     next_state = State.TRAN
                 pass
             
@@ -218,33 +224,29 @@ class tuneJudge:
     def stMachine_doAction(self):
         match(self.curr_state):
             case State.INIT:
-                if self.serial.openPort() == True:
-                    self.openSerial = True
-                else:
-                    self.openSerial = False
+                # do nothing
                 pass
             case State.IDLE:
                 self.idle_curr_tgtRPM = self.mcu_buffer.get('refRPM', 0.0)
                 init_rpm = self.cfg_judge['INIT_REF_RPM']
                 
-                if len(self.buff_records) == 0:
+                self.idle_waitCnt += 1
+                # 통신이 안정화되었다고 판단되는 시점 (예: 10번째 루프)에만 초기 RPM을 검증
+                if self.idle_waitCnt == 10: 
                     if self.idle_curr_tgtRPM == init_rpm:
                         self.idle_tgtRPM_Same = True
-                    else : 
+                    else: 
                         self.idle_tgtRPM_Same = False
-                        
-                if self.idle_prev_tgtRPM == self.idle_curr_tgtRPM:
-                    self.idle_waitCnt += 1
                 
-                self.idle_prev_tgtRPM = self.idle_curr_tgtRPM
+                # 10번째 루프 이후부터는 지령값이 바뀌면 (TRAN으로 넘어가기 위해) 값을 기억
+                if self.idle_waitCnt >= 10:
+                    self.idle_prev_tgtRPM = self.idle_curr_tgtRPM
                 pass
             case State.TRAN:
                 self.tran_currRPM = self.mcu_buffer.get('RPM', 0.0)
                 
                 if not (self.tran_shoot_minAllowed <= self.tran_currRPM <= self.tran_shoot_maxAllowed):
                     self.tran_shootFlg = True
-                else :
-                    self.tran_shootFlg = False
 
                 self.tran_waitCnt += 1
                 pass
@@ -253,8 +255,6 @@ class tuneJudge:
                 
                 if not (self.stdy_minAllowed <= self.stdy_currRPM <= self.stdy_maxAllowed):
                     self.stdy_dropFlg = True
-                else :
-                    self.stdy_dropFlg = False
                 
                 self.stdy_maintainCnt += 1
                 pass
@@ -319,4 +319,12 @@ class tuneJudge:
             self.buff_records.append(record)
             
         self.prev_state = self.curr_state
+        self.stMachine_cnt+=1
+        return
+    
+    def stMachine_init(self):
+        if self.serial.openPort() == True:
+            self.openSerial = True
+        else:
+            self.openSerial = False
         return

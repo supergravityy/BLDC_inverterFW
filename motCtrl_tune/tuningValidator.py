@@ -2,10 +2,6 @@
 # date : 26.02.28
 # script name : tuningValidator.py
 
-import serial 
-import time
-import csv
-from enum import Enum
 from tuningValidator_cls import tuneJudge
 
 # 개요
@@ -66,12 +62,13 @@ CONFIG_JUDGE = {
     'SHOOT_MARGIN'  : 0.1,      # ±10%
 }
 
-
 if __name__ == '__main__':
 
     print('START motor PI tuner !!\n')
 
     judge = tuneJudge(CONFIG_INIT, CONFIG_JUDGE)
+    
+    judge.stMachine_init()
     
     print('START motor PI tuner !!\n')
 
