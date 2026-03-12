@@ -32,7 +32,7 @@
 #define UTILS_THRTTL_ON                 (1.05f)
 
 #define UTILS_OVERCURR_LVL              (35.0f)
-#define UTILS_RPM_TO_KMH(rpm)                 ((rpm) * (UTILS_WHEEL_CIRCUM_M) * 60.0f / 1000.0f)
+#define UTILS_RPM_TO_KMH(rpm)           ((rpm) * (UTILS_WHEEL_CIRCUM_M) * 60.0f / 1000.0f)
 
 /* ---------- LPF ---------- */ 
 #define UTILS_SAMPLING_TIME_SEC         (0.00005f)  // 20kHz 샘플링 기준 (PWM 주기-> center-aligned PWM)

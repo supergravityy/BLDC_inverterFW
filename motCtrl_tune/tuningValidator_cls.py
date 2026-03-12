@@ -25,6 +25,9 @@ class FaultCode(Enum):
     STDY_DROPOUT = 6        # 정상상태에서 대역유지 실패
     CSV_WRITE_FAIL = 7      # CSV 파일 쓰기 실패
     USER_ABORT = 8          # 사용자 종료
+    
+    # todo : 대기 시간 초과에서의 수를 더 크게 늘리고 다시 테스트
+    # todo : 각종 상수들 define 화 시키기
 
 class tuneJudge:
     def __init__(self, cfg_init, cfg_judge):
@@ -125,7 +128,7 @@ class tuneJudge:
                     next_state = State.DONE
                 
                 # 정상적인 지령값 변경 감지 (10번 루프 이후에만 유효)
-                elif (self.idle_waitCnt >= 10) and (self.idle_tgtRPM_Same == True) and (self.idle_prev_tgtRPM != self.idle_curr_tgtRPM):
+                elif (self.idle_waitCnt >= 200) and (self.idle_tgtRPM_Same == True) and (self.idle_prev_tgtRPM != self.idle_curr_tgtRPM):
                     next_state = State.TRAN
                 pass
             
