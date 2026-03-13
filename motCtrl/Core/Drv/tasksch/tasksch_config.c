@@ -17,6 +17,7 @@
 #include "../hallSens/hallsens.h"
 #include "../sensing/sensing.h"
 #include "../mtrCtrl/mtrCtrl.h"
+#include "../../Inc/iwdg.h"
 #include <string.h>
 
 // NOTE : Declare user includes
@@ -239,9 +240,9 @@ bool tasksch_initWatchdog(void)
 
 #if (TASKSCH_TASK_WATCHDOG == TASKSCH_WATCHDOG_ENABLE) // just example how to write
 
-#ifdef TASKSCH_STM32_HAL_USE
-    result = true;
-#endif
+    result = iwdg_init(IWDG_DIV_256, TASKSCH_WATCHDOG_TIMEOUT_CNT);
+
+
 #else
     result = true;
 #endif
@@ -254,17 +255,7 @@ bool tasksch_beginWatchdog(void)
     bool result = false;
 
 #if (TASKSCH_TASK_WATCHDOG == TASKSCH_WATCHDOG_ENABLE) // just example how to write
-
-#ifdef TASKSCH_STM32_HAL_USE
-    // Start the watchdog -> Initialize the IWDG peripheral (in HAL)
-
-    hiwdg.Instance = IWDG;
-    hiwdg.Init.Prescaler = TASKSCH_WATCHDOG_PRSCLAER_BITS;
-    hiwdg.Init.Reload = TASKSCH_WATCHDOG_TIMEOUT_CNT; // 375 * 8ms = 3s
-
-    result = (HAL_IWDG_Init(&hiwdg) != HAL_OK) ? false : true;
-#endif
-
+   result = iwdg_start();
 #else
     result = true;
 #endif
@@ -277,11 +268,7 @@ bool tasksch_feedWatchdog(void)
     bool result = false;
 
 #if (TASKSCH_TASK_WATCHDOG == TASKSCH_WATCHDOG_ENABLE) // just example how to write
-    #ifdef TASKSCH_STM32_HAL_USE
-    // refresh the watchdog
-    result = (HAL_IWDG_Refresh(&hiwdg) != HAL_OK) ? false : true;
-    #endif
-	
+    result = iwdg_feed();
 #else
     result = true;
 #endif
