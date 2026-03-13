@@ -26,7 +26,6 @@ class FaultCode(Enum):
     CSV_WRITE_FAIL = 7      # CSV 파일 쓰기 실패
     USER_ABORT = 8          # 사용자 종료
     
-    # todo : 대기 시간 초과에서의 수를 더 크게 늘리고 다시 테스트
     # todo : 각종 상수들 define 화 시키기
 
 class tuneJudge:
@@ -128,7 +127,7 @@ class tuneJudge:
                     next_state = State.DONE
                 
                 # 정상적인 지령값 변경 감지 (10번 루프 이후에만 유효)
-                elif (self.idle_waitCnt >= 200) and (self.idle_tgtRPM_Same == True) and (self.idle_prev_tgtRPM != self.idle_curr_tgtRPM):
+                elif (self.idle_waitCnt > 10) and (self.idle_tgtRPM_Same == True) and (self.idle_prev_tgtRPM != self.mcu_buffer.get('refRPM', 0.0)):
                     next_state = State.TRAN
                 pass
             
@@ -136,7 +135,7 @@ class tuneJudge:
                 if self.tran_shootFlg == True:
                     self.faultCode = FaultCode.TRAN_SHOOT
                     next_state = State.DONE
-                elif (self.tran_shootFlg == False) and (self.stdy_minAllowed <= self.tran_currRPM <= self.stdy_maxAllowed):
+                elif (self.tran_shootFlg == False) and (self.tran_minAllowed <= self.tran_currRPM <= self.tran_maxAllowed):
                     next_state = State.STDY
                 elif self.tran_waitCnt >= self.tran_maxTick:
                     self.faultCode = FaultCode.TRAN_TIMEOUT
@@ -166,7 +165,7 @@ class tuneJudge:
                 # do nothing
                 pass
             case State.IDLE:
-                self.Target_RPM = self.idle_curr_tgtRPM
+                self.Target_RPM = self.mcu_buffer.get('refRPM', 0.0)
                 pass
             case State.TRAN:
                 # do nothing
@@ -187,12 +186,14 @@ class tuneJudge:
                 # do nothing
                 pass
             case State.IDLE:
+                print('ENTER IDLE ST')
                 self.idle_waitCnt = 0
                 self.idle_curr_tgtRPM = 0
                 self.idle_prev_tgtRPM = 0
                 self.idle_tgtRPM_Same = False
                 pass
             case State.TRAN:
+                print('ENTER TRAN ST')
                 self.s_time = time.time()
                 # 10% 슈트 마진 계산
                 shoot_margin = self.cfg_judge['SHOOT_MARGIN']
@@ -209,6 +210,7 @@ class tuneJudge:
                 self.tran_waitCnt = 0
                 pass
             case State.STDY:
+                print('ENTER STDY ST')
                 self.stdy_minAllowed = self.tran_minAllowed
                 self.stdy_maxAllowed = self.tran_maxAllowed
                 self.stdy_currRPM = 0
@@ -216,6 +218,7 @@ class tuneJudge:
                 self.stdy_maintainCnt = 0
                 pass
             case State.DONE:
+                print('ENTER DONE ST')
                 self.e_time = time.time()
                 self.done_csvOpened_flg = False
                 self.done_csvWrote_flg = False
@@ -238,17 +241,15 @@ class tuneJudge:
                 if self.idle_waitCnt == 10: 
                     if self.idle_curr_tgtRPM == init_rpm:
                         self.idle_tgtRPM_Same = True
+                        self.idle_prev_tgtRPM = self.idle_curr_tgtRPM
                     else: 
                         self.idle_tgtRPM_Same = False
-                
-                # 10번째 루프 이후부터는 지령값이 바뀌면 (TRAN으로 넘어가기 위해) 값을 기억
-                if self.idle_waitCnt >= 10:
-                    self.idle_prev_tgtRPM = self.idle_curr_tgtRPM
+
                 pass
             case State.TRAN:
                 self.tran_currRPM = self.mcu_buffer.get('RPM', 0.0)
                 
-                if not (self.tran_shoot_minAllowed <= self.tran_currRPM <= self.tran_shoot_maxAllowed):
+                if self.tran_currRPM > self.tran_shoot_maxAllowed:
                     self.tran_shootFlg = True
 
                 self.tran_waitCnt += 1
@@ -314,7 +315,7 @@ class tuneJudge:
             self.stMachine_entryAction()
             self.stMachine_doAction()
 
-        # 3. 현재 상태를 이전 상태로 업데이트 및 기록 업데이트 (Output) 
+        # 3. 현재 상태를 이전 상태로 업데이트 및 기록 업데이트 (Output)
         # INIT, DONE 상태가 아닐 때만 기록 (가비지 데이터 방지)
         if self.curr_state not in [State.INIT, State.DONE]:
             record = self.mcu_buffer.copy()

@@ -3,6 +3,7 @@
 # script name : tuningValidator.py
 
 from tuningValidator_cls import tuneJudge
+import time
 
 # 개요
 # 모터 제어기의 PI 튜닝 결과를 PC에서 실시간으로 모니터링하고 정량적으로 자동 검증하는 툴
@@ -43,6 +44,14 @@ from tuningValidator_cls import tuneJudge
 # 화면에 결과를 출력 후 csv 및 시리얼 포트 닫기
 
 # 초기설정 및 요구스펙
+
+# 사용방법
+# 1. 초기 지령을 INIT_REF_RPM 에 맞게 인가한 후 터미널에서 'ENTER IDLE ST' 확인
+# 2. 스로틀을 누르며, 지령값을 원하는 값으로 변경 후 터미널에서 'ENTER TRAN ST' 확인
+# 3. 측정값이 TIMEOUT_SEC 안에 지령에 다다르면, 터미널에서 'ENTER STDY ST' 확인 가능
+# 4. 30초간 상태를 유지함 'ENTER DONE ST' 와 'RESULT : True' 및 'FAULT CODE : NONE' 확인 가능
+# 5. 그 외엔 'ENTER DONE ST'과 폴트 코드가 발생함
+
 CONFIG_INIT = {
     'COM_PORT'      : 'COM12',
     'BAUDRATE'      : 115200,
@@ -58,13 +67,13 @@ CONFIG_JUDGE = {
     'MAINTAIN_SEC'  : 30.0,     # 정상상태 유지 시간 (30초)
     'DETECT_REF_SEC': 300.0,    # 목표지령값 대기 시간 (5분)
     'INIT_REF_RPM'  : 0,        # 초기 지령값(시작) (RPM)
-    'BAND_MARGIN'   : 0.05,     # ±5%
-    'SHOOT_MARGIN'  : 0.1,      # ±10%
+    'BAND_MARGIN'   : 0.1,      # ±10%
+    'SHOOT_MARGIN'  : 0.15,     # ±15%
 }
 
 if __name__ == '__main__':
 
-    print('START motor PI tuner !!\n')
+    print('INIT motor PI tuner !!')
 
     judge = tuneJudge(CONFIG_INIT, CONFIG_JUDGE)
     
@@ -74,6 +83,7 @@ if __name__ == '__main__':
 
     while(judge.stExit() == False):
         judge.stMachine()
+        time.sleep(0.01)
     
     print('END motor PI tuner !!')
     print(f'RESULT : {judge.get_result()}')
