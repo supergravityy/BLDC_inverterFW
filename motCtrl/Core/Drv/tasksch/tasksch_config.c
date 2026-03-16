@@ -225,7 +225,14 @@ void tasksch_userInitCmpltHook(void)
     vMtrCtrl_system.userRefRPM = 0;
     vMtrCtrl_system.turnOff = false;
 
+    uart_debug_sendStr_polling("inverter start!\n\n", strlen("inverter start!\n\n"));
+
     mtrCtrl_setAppInit_flg();
+}
+
+void tasksch_user_preExit_schedulerHook(void)
+{
+    uart_debug_sendStr_polling("inverter end!\n", strlen("inverter end!\n"));
 }
 
 bool tasksch_requestExit(void)
