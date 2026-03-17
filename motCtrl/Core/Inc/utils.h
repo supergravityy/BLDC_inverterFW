@@ -3,6 +3,10 @@
 #include "stm32f767xx.h"
 #include <stdbool.h>
 
+#define MTR_INVTR_CTRL_DEBUG    (0UL)
+#define MTR_INVTR_CTRL_APP      (1UL)
+#define MTR_INVTR_CTRL_MODE     (MTR_INVTR_CTRL_APP)
+
 /* ---------- math ---------- */ 
 #define PI                              (3.14159f)
 

@@ -4,8 +4,8 @@
 #include "main.h"
 #include "../Inc/Gpio.h"
 
-#define UART_STOPBIT_1        (0)
-#define UART_STOPBIT_2        (2UL)
+#define UART_STOPBIT_1          (0)
+#define UART_STOPBIT_2          (2UL)
 
 typUart_handle uart3_handler;
 typUart_handle uart2_handler;
@@ -44,9 +44,19 @@ static void uart_base_init(typUart_handle* hUart, uint32_t baudrate, uint8_t dat
         hUart->inst->CR2 |= UTILS_BIT_SHIFT(USART_CR2_STOP_Pos, UART_STOPBIT_1);
 
     // 5) TE, RE, UE 활성화
-    hUart->inst->CR1 |= (USART_CR1_TE | USART_CR1_RE | USART_CR1_UE);
+    hUart->inst->CR1 |= (USART_CR1_TE | USART_CR1_RE | USART_CR1_UE | USART_CR1_RXNEIE);
 
     hUart->is_initialized = true;
+}
+
+static void uart_rxbuff_clrBuff(typUart_rxBuff* buff)
+{
+    for(uint16_t i = 0; i < UART_RX_RING_BUFF_SIZE; i++)  
+        buff->buffer[i] = 0x0;
+
+    buff->setIdx = 0;
+    buff->getIdx = 0;
+    buff->msg_rdy = false;
 }
 
 // UART3 (Bluetooth - AT09) 초기화
@@ -60,6 +70,7 @@ void uart_AT09_init(uint32_t baudrate, uint8_t dataBits, uint8_t stopBits, typUa
 
     // 공용 로직 호출
     uart_base_init(&uart3_handler, baudrate, dataBits, stopBits, parity);
+    uart_rxbuff_clrBuff(&uart3_handler.rxBuff);
 }
 
 // UART2 (Debug) 초기화
@@ -73,6 +84,7 @@ void uart_debug_init(uint32_t baudrate, uint8_t dataBits, uint8_t stopBits, typU
 
     // 공용 로직 호출
     uart_base_init(&uart2_handler, baudrate, dataBits, stopBits, parity);
+    uart_rxbuff_clrBuff(&uart2_handler.rxBuff);
 }
 
 static inline void uart_sendChar_polling(typUart_handle* hUart, char c)
@@ -160,6 +172,71 @@ static inline void uart_sendFloat(typUart_handle* hUart, float val, uint8_t deci
     }
 }
 
+inline static void uart_recv_ISR_handler(typUart_handle* huart)
+{
+    char rxData = 0;
+
+    // 1. 오버런 에러(ORE)가 발생했는지 확인
+    if ((huart->inst->ISR & USART_ISR_ORE) != 0)
+    {
+        // ICR(Interrupt Clear Register)의 ORECF 비트를 세팅하여 에러 플래그 강제 클리어
+        // ORE가 안꺼지고 RXNE만 찾으면, ISR 무한루프에 걸릴 수 있음
+        huart->inst->ICR |= USART_ICR_ORECF; 
+    }
+
+    // 2. 정상적인 데이터 수신(RXNE) 확인
+    if ((huart->inst->ISR & USART_ISR_RXNE) != 0)
+    {
+        rxData = (char)(huart->inst->RDR & 0xFF); 
+
+        // 엔터키(\n, \r)는 버퍼에 넣지 않고 플래그만 세팅
+        if (rxData == '\n' || rxData == '\r')
+        {
+            huart->rxBuff.msg_rdy = true; 
+        }
+        else
+        {
+            // 일반 문자는 버퍼에 저장하고 setIdx 전진
+            huart->rxBuff.buffer[huart->rxBuff.setIdx] = rxData;
+            huart->rxBuff.setIdx = (huart->rxBuff.setIdx + 1) % UART_RX_RING_BUFF_SIZE;
+        }
+    }
+}
+
+static bool uart_recvExtract_string(typUart_handle* uart, char* retBuff, uint16_t* strSize, uint16_t buffSize)
+{
+    char ch = 0;
+    uint16_t rxSize = 0;
+
+    // 1. 포인터 및 사이즈 방어 코드
+    if(retBuff == NULL || buffSize == 0 || strSize == NULL)
+        return false;
+    
+    // 2. 가져올 메시지가 없다면 false를 반환하여 상위 태스크가 무시하도록 함
+    if(uart->rxBuff.msg_rdy == false)
+    {
+        return true; 
+    }
+    else
+    {
+        uart->rxBuff.msg_rdy = false;
+        
+        // 3. 하나씩 가져오기
+        while( (uart->rxBuff.getIdx != uart->rxBuff.setIdx) && (rxSize < buffSize - 1) )
+        {
+            ch = uart->rxBuff.buffer[uart->rxBuff.getIdx];
+            uart->rxBuff.getIdx = (uart->rxBuff.getIdx + 1) % UART_RX_RING_BUFF_SIZE;
+            retBuff[rxSize++] = ch;
+        }
+
+        retBuff[rxSize] = '\0';
+        *strSize = rxSize;
+        
+        // 메시지를 성공적으로 추출했으므로 true 반환
+        return true; 
+    }
+}
+
 void uart_AT09_sendStr_polling(char* str, uint32_t len)
 {
     uart_sendStr_polling(&uart3_handler, str, len);
@@ -188,4 +265,23 @@ void uart_debug_sendInt_polling(int val)
 void uart_debug_sendFloat_polling(float val, uint8_t decimals)
 {
     uart_sendFloat(&uart2_handler, val, decimals);
+}
+
+void uart_debug_enable_rxInterrupt(void) // 상위 계층의 초기화가 전부 이루어지면 호출해서 start
+{
+    NVIC_SetPriority(USART2_IRQn, 3); // 우선순위를 모터 제어 타이머보다 낮게 설정
+    NVIC_EnableIRQ(USART2_IRQn);
+}
+
+// TODO : 파싱하는 상위계층 함수 만들기
+// TODO : MTR_INVTR_CTRL_MODE에 따라 10MS 태스크 동작 변화시키기
+
+bool uart_debug_recvExtract_string(char* retBuff, uint16_t* strSize, uint16_t buffSize)
+{
+    return uart_recvExtract_string(&uart2_handler, retBuff, strSize, buffSize);
+}
+
+void USART2_IRQHandler(void)
+{
+    uart_recv_ISR_handler(&uart2_handler);
 }

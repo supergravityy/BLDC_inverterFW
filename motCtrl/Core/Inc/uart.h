@@ -4,7 +4,7 @@
 #include "utils.h"
 
 #define UART_PCLK_FREQ_HZ           (54000000UL)  // APB1 버스 클럭 주파수 (50 MHz)
-#define UART_RX_BUFF_SIZE           (64UL)
+#define UART_RX_RING_BUFF_SIZE      (64UL)
 
 #pragma pack(push,1)
 
@@ -15,10 +15,13 @@ typedef enum uart_parity
     UART_PARITY_ODD
 }typUart_parity;
 
-typedef struct uart_rxHandle
+typedef struct uart_rxBuff
 {
-
-}typUart_rxHandle;
+    char buffer[UART_RX_RING_BUFF_SIZE];
+    volatile uint16_t setIdx;
+    volatile uint16_t getIdx;
+    volatile bool msg_rdy; // 개행(\n, \r) 수신 플래그
+}typUart_rxBuff;
 
 typedef struct uart_handle
 {
@@ -29,7 +32,7 @@ typedef struct uart_handle
     uint8_t stopBits;
     typUart_parity parity;
 
-    typUart_rxHandle rxhandle;
+    typUart_rxBuff rxBuff;
 
     bool is_initialized;
 }typUart_handle;
@@ -42,6 +45,9 @@ void uart_AT09_sendFloat_polling(float val, uint8_t decimals);
 void uart_debug_sendStr_polling(char* str, uint32_t len);
 void uart_debug_sendFloat_polling(float val, uint8_t decimals);
 void uart_debug_sendInt_polling(int val);
+
+void uart_debug_enable_rxInterrupt(void);
+bool uart_debug_recvExtract_string(char* retBuff, uint16_t* strSize, uint16_t buffSize);
 
 void uart_AT09_init(uint32_t baudrate, uint8_t dataBits, uint8_t stopBits, typUart_parity parity);
 void uart_debug_init(uint32_t baudrate, uint8_t dataBits, uint8_t stopBits, typUart_parity parity);
