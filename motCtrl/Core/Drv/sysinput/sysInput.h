@@ -26,7 +26,7 @@ q> 종료
 #define SYSINPUT_CMD_MODE_THROTTLE      "th"
 #define SYSINPUT_CMD_MODE_PI            "pi"
 #define SYSINPUT_KP_MAXVAL              (5.f)
-#define SYSINPUT_KI_MAXVAL              (5.f)
+#define SYSINPUT_KI_MAXVAL              (10.f)
 #define SYSINPUT_REF_MAXVAL             (4000UL)
 
 #define SYSINTPUT_OPTI_KP_VAL           (3.4f)
