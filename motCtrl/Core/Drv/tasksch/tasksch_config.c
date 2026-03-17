@@ -18,7 +18,8 @@
 #include "../sensing/sensing.h"
 #include "../mtrCtrl/mtrCtrl.h"
 #include "../../Inc/iwdg.h"
-#include <string.h>
+#include "../sysinput/sysInput.h"
+#include "string.h"
 
 // NOTE : Declare user includes
 
@@ -34,21 +35,6 @@ static IWDG_HandleTypeDef hiwdg; // IWDG handle in STM32 HAL
 
 static typUserRegiTaskObj vUserRegiTaskObj[TASKSCH_NUMBER];
 
-/* user 변수 */
-typedef struct mtrCtrl_sys
-{
-    float userKp;
-    float userKi;
-    float userRefRPM;
-
-    bool ctrlContinue_debug;
-    bool turnOff;
-    typMtrCtrl_selCtrl_mode userMode;
-}typMtrCtrl_sys;
-
-typMtrCtrl_sys vMtrCtrl_system;
-
-
 /* Define your Task */
 
 // INFO : The prototype of the function is "void function01(void)"
@@ -63,14 +49,18 @@ void Task_1ms(void)
 
 void Task_10ms(void)
 {
+#if (MTR_INVTR_CTRL_MODE == MTR_INVTR_CTRL_APP)
+    sysInput_parseData();
+#endif
+
 	mtrCtrl_calc_mtrSpeed();
-    mtrCtrl_setSelCtrlMode(vMtrCtrl_system.userMode);
-    mtrCtrl_setCtrlContinue(vMtrCtrl_system.ctrlContinue_debug);
+    mtrCtrl_setSelCtrlMode(sysInput_getMode());
+    mtrCtrl_setCtrlContinue(!sysInput_getPause());
 
     if(mtrCtrl_getSelCtrlMode() == MTRCTRL_CTRL_PI)
     {
-    	mtrCtrl_PI_setTunings(vMtrCtrl_system.userKp, vMtrCtrl_system.userKi);
-    	mtrCtrl_PI_setRPMRef(vMtrCtrl_system.userRefRPM);
+    	mtrCtrl_PI_setTunings(sysInput_getKp(), sysInput_getKi());
+    	mtrCtrl_PI_setRPMRef((float)sysInput_getRefRPM());
     }
 }
 
@@ -217,13 +207,7 @@ void tasksch_userInitCmpltHook(void)
     utils_LPF_phaseCurr_init();
     hallsens_init();
     sensing_objs_Init();
-
-    vMtrCtrl_system.ctrlContinue_debug = true;
-    vMtrCtrl_system.userMode = MTRCTRL_CTRL_THROTTLE;
-    vMtrCtrl_system.userKi = 0;
-    vMtrCtrl_system.userKp = 0;
-    vMtrCtrl_system.userRefRPM = 0;
-    vMtrCtrl_system.turnOff = false;
+    sysInput_init();
 
     uart_debug_sendStr_polling("inverter start!\n\n", strlen("inverter start!\n\n"));
 
@@ -237,7 +221,7 @@ void tasksch_user_preExit_schedulerHook(void)
 
 bool tasksch_requestExit(void)
 {
-    return vMtrCtrl_system.turnOff;
+    return sysInput_getTurnOff();
 }
 
 bool tasksch_initWatchdog(void)

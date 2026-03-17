@@ -6,10 +6,10 @@
 #include "../mtrCtrl/mtrCtrl.h"
 #include "string.h"
 
-#define SYSINPUT_CMD_IDX (0UL)
-#define SYSINPUT_DIV_CH_IDX (1UL)
-#define SYSINPUT_DIV_CH '>'
-#define SYSINPUT_PARA_IDX (2UL)
+#define SYSINPUT_CMD_IDX            (0UL)
+#define SYSINPUT_DIV_CH_IDX         (1UL)
+#define SYSINPUT_DIV_CH             '>'
+#define SYSINPUT_PARA_IDX           (2UL)
 
 typSysInput vSysInput;
 
@@ -85,8 +85,7 @@ static inline float sysInput_strToFloat(const char *string)
         {
             if (isFraction == false)
             {
-                // 정수부 계산: 기존 값 * 10 + 새로운 숫자
-                floatVal = floatVal * 10.0f + (float)(*string - '0');
+                floatVal = floatVal * 10.0f + (float)(*string - '0'); // 정수부 계산: 기존 값 * 10 + 새로운 숫자
             }
             else
             {
@@ -167,6 +166,7 @@ void sysInput_parseData(void)
 
     case SYSINPUT_CMD_SYSTEM_OFF:
         vSysInput.user_turnOff = true;
+        vSysInput.userPause = true;
         break;
     }
     return;

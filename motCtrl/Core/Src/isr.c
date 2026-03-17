@@ -55,7 +55,10 @@ void TIM1_UP_TIM10_IRQHandler(void) // 20KHz 로 호출됨
     {
         tim_clrPwm1_ISR_flg();
 
-        if (mtrCtrl_getPeriphInit() == true && mtrCtrl_getAppInit_flg() == true)
+        if (mtrCtrl_getPeriphInit() == false || mtrCtrl_getAppInit_flg() == false)
+        	return;
+
+        if (mtrCtrl_getCtrlContinue() == true)
         {
             // PI제어일때도 역시 스로틀이 눌려야 실질적으로 모터가 동작함
             if(mtrCtrl_getErrCode() == MTRCTRL_ERR_NONE && throttle_get_validateFlg() == true)
