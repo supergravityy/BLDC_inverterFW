@@ -273,9 +273,6 @@ void uart_debug_enable_rxInterrupt(void) // 상위 계층의 초기화가 전부
     NVIC_EnableIRQ(USART2_IRQn);
 }
 
-// TODO : 파싱하는 상위계층 함수 만들기
-// TODO : MTR_INVTR_CTRL_MODE에 따라 10MS 태스크 동작 변화시키기
-
 bool uart_debug_recvExtract_string(char* retBuff, uint16_t* strSize, uint16_t buffSize)
 {
     return uart_recvExtract_string(&uart2_handler, retBuff, strSize, buffSize);
