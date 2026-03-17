@@ -189,6 +189,9 @@ inline static void uart_recv_ISR_handler(typUart_handle* huart)
     {
         rxData = (char)(huart->inst->RDR & 0xFF); 
 
+        uart_sendChar_polling(huart,rxData);
+        if(rxData == '\r') uart_sendChar_polling(huart,'\n');
+
         // 엔터키(\n, \r)는 버퍼에 넣지 않고 플래그만 세팅
         if (rxData == '\n' || rxData == '\r')
         {
@@ -203,7 +206,7 @@ inline static void uart_recv_ISR_handler(typUart_handle* huart)
     }
 }
 
-static bool uart_recvExtract_string(typUart_handle* uart, char* retBuff, uint16_t* strSize, uint16_t buffSize)
+static bool uart_recvExtract_string(typUart_handle* huart, char* retBuff, uint16_t* strSize, uint16_t buffSize)
 {
     char ch = 0;
     uint16_t rxSize = 0;
@@ -213,19 +216,19 @@ static bool uart_recvExtract_string(typUart_handle* uart, char* retBuff, uint16_
         return false;
     
     // 2. 가져올 메시지가 없다면 false를 반환하여 상위 태스크가 무시하도록 함
-    if(uart->rxBuff.msg_rdy == false)
+    if(huart->rxBuff.msg_rdy == false)
     {
-        return true; 
+        return false;
     }
     else
     {
-        uart->rxBuff.msg_rdy = false;
+        huart->rxBuff.msg_rdy = false;
         
         // 3. 하나씩 가져오기
-        while( (uart->rxBuff.getIdx != uart->rxBuff.setIdx) && (rxSize < buffSize - 1) )
+        while( (huart->rxBuff.getIdx != huart->rxBuff.setIdx) && (rxSize < buffSize - 1) )
         {
-            ch = uart->rxBuff.buffer[uart->rxBuff.getIdx];
-            uart->rxBuff.getIdx = (uart->rxBuff.getIdx + 1) % UART_RX_RING_BUFF_SIZE;
+            ch = huart->rxBuff.buffer[huart->rxBuff.getIdx];
+            huart->rxBuff.getIdx = (huart->rxBuff.getIdx + 1) % UART_RX_RING_BUFF_SIZE;
             retBuff[rxSize++] = ch;
         }
 
