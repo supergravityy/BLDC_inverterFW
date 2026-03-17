@@ -84,53 +84,6 @@ static inline void uart_sendChar_polling(typUart_handle* hUart, char c)
     hUart->inst->TDR = (uint8_t)c;
 }
 
-static inline char uart_recvChar_polling(typUart_handle* hUart)
-{
-    hUart->rx_timeout_Tick = 0;
-    // RXNE 플래그가 설정될 때까지 대기
-    while(!(hUart->inst->ISR & USART_ISR_RXNE))
-    {
-        if(hUart->rx_timeout_Tick >= UART_RCV_TIMEOUT_TICK)
-        {
-            return '\0';  // 타임아웃 발생 시 널 문자 반환
-        }
-        else
-        {
-            hUart->rx_timeout_Tick++;
-        }
-    }
-
-    return (char)(hUart->inst->RDR & 0xFF);
-}
-
-static inline void uart_recvStr_polling(typUart_handle* hUart, char* buff, uint32_t maxLen)
-{
-    if (buff == NULL || maxLen == 0) return;
-
-    uint32_t idx = 0;
-    char ch = 0;
-
-    while(1)
-    {
-        ch = uart_recvChar_polling(hUart);
-
-        // 종료 문자(개행) 검사
-        if (ch == '\n' || ch == '\r')
-        {
-            buff[idx] = '\0';  // 문자열 종료
-            break;
-        }
-
-        buff[idx++] = ch;
-
-        if (idx >= (maxLen - 1))
-        {
-            buff[idx] = '\0';
-            break;
-        }
-    }
-}
-
 static inline void uart_sendStr_polling(typUart_handle* hUart, char* str, uint32_t len)
 {
     if(str == NULL || len == 0) return;
@@ -210,11 +163,6 @@ static inline void uart_sendFloat(typUart_handle* hUart, float val, uint8_t deci
 void uart_AT09_sendStr_polling(char* str, uint32_t len)
 {
     uart_sendStr_polling(&uart3_handler, str, len);
-}
-
-void uart_AT09_recvStr_polling(char* buff, uint32_t len)
-{
-    uart_recvStr_polling(&uart3_handler, buff, len);
 }
 
 void uart_AT09_sendInteger_polling(int32_t val)
