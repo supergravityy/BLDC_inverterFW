@@ -66,7 +66,8 @@ void Task_10ms(void)
 
 void Task_10ms_2(void)
 {
-    /*if(mtrCtrl_getSelCtrlMode() == MTRCTRL_CTRL_THROTTLE)
+    #if (MTR_INVTR_CTRL_MODE == MTR_INVTR_CTRL_DEBUG)
+    if(mtrCtrl_getSelCtrlMode() == MTRCTRL_CTRL_THROTTLE)
     {
         uart_debug_sendStr_polling(">refVolt:", strlen(">refVolt:"));
         uart_debug_sendFloat_polling(throttle_get_refVolt(),2);
@@ -77,28 +78,35 @@ void Task_10ms_2(void)
         uart_debug_sendStr_polling(">refRPM:", strlen(">refRPM:"));
         uart_debug_sendFloat_polling(mtrCtrl_PI_getRPMRef(),2);
         uart_debug_sendStr_polling("\n", strlen("\n"));
-    }*/
+    }
+    #endif
 }
 
 void Task_10ms_4(void)
 {
-	/*uart_debug_sendStr_polling(">RPM:", strlen(">RPM:"));
+    #if (MTR_INVTR_CTRL_MODE == MTR_INVTR_CTRL_DEBUG)
+	uart_debug_sendStr_polling(">RPM:", strlen(">RPM:"));
 	uart_debug_sendFloat_polling(hallsens_get_motorRPM(),1);
-	uart_debug_sendStr_polling("\n", strlen("\n"));*/
+	uart_debug_sendStr_polling("\n", strlen("\n"));
+    #endif
 }
 
 void Task_10ms_6(void)
 {
-	/*uart_debug_sendStr_polling(">Imax:", strlen(">Imax:"));
+    #if (MTR_INVTR_CTRL_MODE == MTR_INVTR_CTRL_DEBUG)
+	uart_debug_sendStr_polling(">Imax:", strlen(">Imax:"));
 	uart_debug_sendFloat_polling(sensing_getIphase_max(), 1);
-	uart_debug_sendStr_polling("\n", strlen("\n"));*/
+	uart_debug_sendStr_polling("\n", strlen("\n"));
+    #endif
 }
 
 void Task_10ms_8(void)
 {
-	/*uart_debug_sendStr_polling(">refCCR:", strlen(">refCCR:"));
+    #if (MTR_INVTR_CTRL_MODE == MTR_INVTR_CTRL_DEBUG)
+	uart_debug_sendStr_polling(">refCCR:", strlen(">refCCR:"));
 	uart_debug_sendInt_polling(mtrCtrl_getFinalCCR_refVal());
-	uart_debug_sendStr_polling("\n", strlen("\n"));*/
+	uart_debug_sendStr_polling("\n", strlen("\n"));
+    #endif
 }
 
 void Task_100ms(void)
