@@ -206,7 +206,7 @@ inline static void uart_recv_ISR_handler(typUart_handle* huart)
     }
 }
 
-static bool uart_recvExtract_string(typUart_handle* huart, char* retBuff, uint16_t* strSize, uint16_t buffSize)
+static inline bool uart_recvExtract_string(typUart_handle* huart, char* retBuff, uint16_t* strSize, uint16_t buffSize)
 {
     char ch = 0;
     uint16_t rxSize = 0;

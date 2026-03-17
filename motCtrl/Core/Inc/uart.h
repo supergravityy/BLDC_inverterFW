@@ -47,7 +47,5 @@ void uart_debug_sendFloat_polling(float val, uint8_t decimals);
 void uart_debug_sendInt_polling(int val);
 
 void uart_debug_enable_rxInterrupt(void);
-bool uart_debug_recvExtract_string(char* retBuff, uint16_t* strSize, uint16_t buffSize);
-
 void uart_AT09_init(uint32_t baudrate, uint8_t dataBits, uint8_t stopBits, typUart_parity parity);
 void uart_debug_init(uint32_t baudrate, uint8_t dataBits, uint8_t stopBits, typUart_parity parity);
