@@ -166,7 +166,7 @@ bool mtrCtrl_getCtrlContinue(void)
     return vMotorCtrl_manager.thrttl_Ctrl;
 }
 
-// todo : 에러의 우선순위에 맞춰서 동작하게 수정하기
+// todo : 나중에 에러의 우선순위에 맞춰서 동작하게 수정하기
 void mtrCtrl_chkErrSt(typMtrCtrl_errCode setErr) // 입력 : 어떤 에러체크를 해야하는지
 {
     switch (setErr)
@@ -224,7 +224,7 @@ void mtrCtrl_chkErrSt(typMtrCtrl_errCode setErr) // 입력 : 어떤 에러체크
         break;
 
     case MTRCTRL_ERR_OVER_VOLT:
-        // todo : 과전압 에러 체크 로직 추가 (예: dcVolt_getOverVolt_st() 함수 구현 후 호출)
+        // todo : 나중에 과전압 에러 체크 로직 추가 (예: dcVolt_getOverVolt_st() 함수 구현 후 호출)
         break;
 
     default:

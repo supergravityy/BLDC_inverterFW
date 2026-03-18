@@ -6,7 +6,8 @@
 #define MTR_INVTR_CTRL_DEBUG    (0UL)
 #define MTR_INVTR_CTRL_APP      (1UL)
 #define MTR_INVTR_CTRL_MODE     (MTR_INVTR_CTRL_APP)
-/*
+
+/* 명령 표
 m>(str)     : 제어모드 변경
 r>(int)     : 지령값 전달
 p>(float)   : p게인 전달
