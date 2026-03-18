@@ -7,6 +7,7 @@
 #include "tim.h"
 #include "../hallsens/hallsens.h"
 #include "../sensing/sensing.h"
+#include "../sysinput/sysInput.h"
 
 #define MTRCTRL_PI_MAX_CCR_VAL 	(THROTTLE_CCR_MAXVAL) // PI 제어로 계산된 CCR 값이 최대 듀티 카운트 값을 넘지 않도록 제한
 #define MTRCTRL_PI_PERIOD		(MTRCTRL_PI_CTRL_MS / 1000.f)
@@ -58,7 +59,9 @@ void mtrCtrl_PI_update(void)
 {
 	float currRPM = hallsens_get_motorRPM();
 
-	if((mtrCtrl_getSelCtrlMode() == MTRCTRL_CTRL_PI) && (throttle_get_validateFlg() == true))
+	if((mtrCtrl_getSelCtrlMode() == MTRCTRL_CTRL_PI)
+			&& (throttle_get_validateFlg() == true)
+			&& (mtrCtrl_getCtrlContinue() == true))
 	{
         // 듀티값이 순간적으로 튀는 걸 방지하기 위해, 지령값에 ramp처리를 한다.
         utils_ramp2Tgt(vPiCtrl_handler.rpm_refVal, &vPiCtrl_handler.rpm_rampVal, MTRCTRL_PI_RAMP_MAXVAL);

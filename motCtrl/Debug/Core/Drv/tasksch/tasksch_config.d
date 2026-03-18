@@ -34,7 +34,9 @@ Core/Drv/tasksch/tasksch_config.o: ../Core/Drv/tasksch/tasksch_config.c \
  ../Core/Drv/tasksch/../hallSens/hallsens.h ../Core/Inc/exti.h \
  ../Core/Inc/tim.h ../Core/Drv/tasksch/../hallSens/../mtrCtrl/mtrCtrl.h \
  ../Core/Drv/tasksch/../hallSens/../mtrCtrl/../sensing/sensing.h \
- ../Core/Drv/tasksch/../hallSens/../mtrCtrl/../sensing/../../Inc/adc.h
+ ../Core/Drv/tasksch/../hallSens/../mtrCtrl/../sensing/../../Inc/adc.h \
+ ../Core/Drv/tasksch/../../Inc/iwdg.h \
+ ../Core/Drv/tasksch/../sysinput/sysInput.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal.h:
 ../Core/Inc/stm32f7xx_hal_conf.h:
@@ -74,3 +76,5 @@ Core/Drv/tasksch/tasksch_config.o: ../Core/Drv/tasksch/tasksch_config.c \
 ../Core/Drv/tasksch/../hallSens/../mtrCtrl/mtrCtrl.h:
 ../Core/Drv/tasksch/../hallSens/../mtrCtrl/../sensing/sensing.h:
 ../Core/Drv/tasksch/../hallSens/../mtrCtrl/../sensing/../../Inc/adc.h:
+../Core/Drv/tasksch/../../Inc/iwdg.h:
+../Core/Drv/tasksch/../sysinput/sysInput.h:

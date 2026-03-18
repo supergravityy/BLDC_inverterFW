@@ -31,7 +31,8 @@ Core/Drv/mtrCtrl/mtrCtrl.o: ../Core/Drv/mtrCtrl/mtrCtrl.c \
  ../Core/Drv/mtrCtrl/../sensing/sensing.h ../Core/Inc/tim.h \
  ../Core/Drv/mtrCtrl/../sensing/../../Inc/adc.h ../Core/Inc/exti.h \
  ../Core/Inc/../Inc/Gpio.h ../Core/Inc/../Inc/main.h \
- ../Core/Drv/mtrCtrl/../hallsens/hallsens.h
+ ../Core/Drv/mtrCtrl/../hallsens/hallsens.h \
+ ../Core/Drv/mtrCtrl/../sysinput/sysInput.h ../Core/Inc/uart.h
 ../Core/Drv/mtrCtrl/mtrCtrl.h:
 ../Drivers/CMSIS/Device/ST/STM32F7xx/Include/stm32f767xx.h:
 ../Drivers/CMSIS/Include/core_cm7.h:
@@ -69,3 +70,5 @@ Core/Drv/mtrCtrl/mtrCtrl.o: ../Core/Drv/mtrCtrl/mtrCtrl.c \
 ../Core/Inc/../Inc/Gpio.h:
 ../Core/Inc/../Inc/main.h:
 ../Core/Drv/mtrCtrl/../hallsens/hallsens.h:
+../Core/Drv/mtrCtrl/../sysinput/sysInput.h:
+../Core/Inc/uart.h:
