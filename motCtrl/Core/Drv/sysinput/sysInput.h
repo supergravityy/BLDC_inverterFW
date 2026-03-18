@@ -8,14 +8,6 @@
 
 #define SYSINPUT_RAW_STR_BUFF_SIZE      (20UL)
 
-/* m> 모드변경(숫자)
-r> 지령변경
-p> p게인 변경
-i> i게인 변경
-t> 제어 일시중지
-q> 종료
- */
-
 #define SYSINPUT_CMD_SEL_MODE           'm'
 #define SYSINPUT_CMD_CHNG_KP            'p'
 #define SYSINPUT_CMD_CHNG_KI            'i'

@@ -11,7 +11,10 @@
 #define SYSINPUT_DIV_CH             '>'
 #define SYSINPUT_PARA_IDX           (2UL)
 
-typSysInput vSysInput;
+typSysInput vSysInput;\
+
+bool uart_debug_recvExtract_string(char* retBuff, uint16_t* strSize, uint16_t buffSize);
+
 
 inline static void sysInput_clrBuff(void)
 {
@@ -31,11 +34,6 @@ void sysInput_init(void)
     sysInput_clrBuff();
     uart_debug_enable_rxInterrupt();
 }
-
-// TODO : 파싱하는 상위계층 함수 만들기
-// TODO : MTR_INVTR_CTRL_MODE에 따라 10MS 태스크 동작 변화시키기 (ifdef)
-
-// 10ms 태스크에서 돌려야 할거같은데 태스크의 딜레이가 발생하지 않을까 걱정
 
 static inline void sysInput_selMode(void)
 {
