@@ -20,8 +20,8 @@
 ../Core/Drv/tasksch/tasksch.c:225:13:tasksch_updateExecClock	5
 ../Core/Drv/tasksch/tasksch.c:254:14:tasksch_getCurrTime	1
 ../Core/Drv/tasksch/tasksch.c:267:10:tasksch_getOverRunCount	1
-../Core/Drv/tasksch/tasksch.c:281:20:tasksch_checkOverrunThreshold	1
-../Core/Drv/tasksch/tasksch.c:297:20:tasksch_detectOverRun	1
+../Core/Drv/tasksch/tasksch.c:281:20:tasksch_checkOverrunThreshold	2
+../Core/Drv/tasksch/tasksch.c:297:20:tasksch_detectOverRun	2
 ../Core/Drv/tasksch/tasksch.c:312:13:tasksch_infoInit	1
 ../Core/Drv/tasksch/tasksch.c:327:6:tasksch_init	5
 ../Core/Drv/tasksch/tasksch.c:389:6:tasksch_execTask	7

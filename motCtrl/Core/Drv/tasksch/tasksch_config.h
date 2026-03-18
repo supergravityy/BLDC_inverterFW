@@ -56,7 +56,7 @@
 
 #define TASKSCH_OVERRUN_HOOK_ENABLE         (1)
 #define TASKSCH_OVERRUN_HOOK_DISABLE        (0)
-#define TASKSCH_OVERRUN_HOOK                (TASKSCH_OVERRUN_HOOK_ENABLE)       // NOTE : USER DEFINE
+#define TASKSCH_OVERRUN_HOOK                (TASKSCH_OVERRUN_DETECT_DISABLE)     // NOTE : USER DEFINE
 
 #define TASKSCH_WATCHDOG_ENABLE             (1)
 #define TASKSCH_WATCHDOG_DISABLE            (0)
@@ -86,7 +86,7 @@
 #endif
 
 #if (TASKSCH_OVERRUN_DETECT == TASKSCH_OVERRUN_DETECT_ENABLE)
-    #define TASKSCH_OVERRUN_THRESHOLD_CNT   (500U)                          // NOTE : USER DEFINE
+    #define TASKSCH_OVERRUN_THRESHOLD_CNT   (3000UL)                          // NOTE : USER DEFINE
 #endif
 
 /*---- DO NOT MODIFY IT BELOW ----*/

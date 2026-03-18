@@ -1,4 +1,4 @@
-../Core/Drv/tasksch/tasksch.c:62:20:tasksch_runTime_assertFunc	4	static
+../Core/Drv/tasksch/tasksch.c:62:20:tasksch_runTime_assertFunc	8	static
 ../Core/Drv/tasksch/tasksch.c:74:13:tasksch_taskConfig	24	static
 ../Core/Drv/tasksch/tasksch.c:98:13:tasksch_initTasks	24	static
 ../Core/Drv/tasksch/tasksch.c:113:20:tasksch_startCycleMeasurement	4	static
@@ -20,7 +20,7 @@
 ../Core/Drv/tasksch/tasksch.c:225:13:tasksch_updateExecClock	4	static
 ../Core/Drv/tasksch/tasksch.c:254:14:tasksch_getCurrTime	24	static,ignoring_inline_asm
 ../Core/Drv/tasksch/tasksch.c:267:10:tasksch_getOverRunCount	16	static
-../Core/Drv/tasksch/tasksch.c:281:20:tasksch_checkOverrunThreshold	4	static
+../Core/Drv/tasksch/tasksch.c:281:20:tasksch_checkOverrunThreshold	8	static
 ../Core/Drv/tasksch/tasksch.c:297:20:tasksch_detectOverRun	16	static
 ../Core/Drv/tasksch/tasksch.c:312:13:tasksch_infoInit	4	static
 ../Core/Drv/tasksch/tasksch.c:327:6:tasksch_init	8	static

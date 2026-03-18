@@ -139,7 +139,9 @@ void Task_500ms(void)
 
 void Task_1sec(void)
 {
-
+	uart_debug_sendStr_polling("ErrorCode : ", strlen("ErrorCode : "));
+	uart_debug_sendInt_polling(mtrCtrl_getErrCode());
+	uart_debug_sendStr_polling("\n", strlen("\n"));
 }
 
 void tasksch_init_RegiTaskObj(void)
@@ -206,6 +208,11 @@ void tasksch_init_RegiTaskObj(void)
 */
 
 /* Define your Watchdog Functions */
+
+void tasksch_userOverRun_thrshldExceedHook(void)
+{
+	uart_debug_sendStr_polling("overRun exceed!\n\n", strlen("overRun exceed!\n\n"));
+}
 
 void tasksch_userInitCmpltHook(void)
 {

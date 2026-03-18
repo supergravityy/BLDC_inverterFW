@@ -25,6 +25,7 @@ SUBDIRS := \
 Core/Drv/hallSens \
 Core/Drv/mtrCtrl \
 Core/Drv/sensing \
+Core/Drv/sysinput \
 Core/Drv/tasksch \
 Core/Src \
 Core/Startup \

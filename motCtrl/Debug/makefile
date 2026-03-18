@@ -13,6 +13,7 @@ RM := rm -rf
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
 -include Core/Drv/tasksch/subdir.mk
+-include Core/Drv/sysinput/subdir.mk
 -include Core/Drv/sensing/subdir.mk
 -include Core/Drv/mtrCtrl/subdir.mk
 -include Core/Drv/hallSens/subdir.mk

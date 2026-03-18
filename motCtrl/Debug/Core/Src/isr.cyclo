@@ -2,4 +2,4 @@
 ../Core/Src/isr.c:18:6:EXTI0_IRQHandler	2
 ../Core/Src/isr.c:28:6:EXTI1_IRQHandler	2
 ../Core/Src/isr.c:38:6:EXTI2_IRQHandler	2
-../Core/Src/isr.c:48:6:TIM1_UP_TIM10_IRQHandler	6
+../Core/Src/isr.c:48:6:TIM1_UP_TIM10_IRQHandler	7
