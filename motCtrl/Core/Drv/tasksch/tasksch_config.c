@@ -209,10 +209,11 @@ void tasksch_init_RegiTaskObj(void)
 
 /* Define your Watchdog Functions */
 
-void tasksch_userOverRun_thrshldExceedHook(void)
+// todo : 차후 개선점
+/*void tasksch_userOverRun_thrshldExceedHook(void)
 {
 	uart_debug_sendStr_polling("overRun exceed!\n\n", strlen("overRun exceed!\n\n"));
-}
+}*/
 
 void tasksch_userInitCmpltHook(void)
 {
